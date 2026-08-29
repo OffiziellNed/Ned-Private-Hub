@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 // Memanggil kunci rahasia yang sudah disuntikkan Vercel secara otomatis
@@ -44,6 +44,7 @@ export default function Dashboard() {
   const [currentMonthId, setCurrentMonthId] = useState('');
   const [proofs, setProofs] = useState({});
   const [isSyncing, setIsSyncing] = useState(true);
+  const fileInputRef = useRef(null);
 
   const angsuranData = generateAngsuranData();
 
@@ -59,7 +60,6 @@ export default function Dashboard() {
     const targetId = now.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' }).replace(/ /g, '-');
     setCurrentMonthId(targetId);
 
-    // Menarik data dari Supabase saat web dibuka
     const fetchProofs = async () => {
       if (!supabase) {
         setIsSyncing(false);
@@ -87,11 +87,8 @@ export default function Dashboard() {
     
     if (input !== null) {
       const newLink = input.trim();
-      
-      // Update UI seketika biar responsif
       setProofs({ ...proofs, [no]: newLink });
 
-      // Simpan permanen ke Supabase Cloud
       if (supabase) {
         const { error } = await supabase
           .from('angsuran_rumah')
@@ -117,6 +114,44 @@ export default function Dashboard() {
     }
   };
 
+  // Fungsi Ekspor Data (Backup)
+  const handleExportData = () => {
+    const dataStr = JSON.stringify(proofs);
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+    const exportFileDefaultName = 'Backup_Angsuran_Ned.json';
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
+  // Fungsi Impor Data (Restore)
+  const handleImportData = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const importedProofs = JSON.parse(event.target.result);
+        setProofs(importedProofs);
+        
+        // Sync ke cloud jika di-restore
+        if (supabase) {
+          const upsertData = Object.keys(importedProofs).map(key => ({
+            no_angsuran: parseInt(key),
+            link_bukti: importedProofs[key]
+          }));
+          await supabase.from('angsuran_rumah').upsert(upsertData);
+        }
+        alert("Data berhasil dipulihkan!");
+      } catch (err) {
+        alert("Gagal membaca file backup.");
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = null;
+  };
+
   if (view === 'home') {
     return (
       <div className="flex flex-col items-center justify-start pt-32 sm:pt-40 min-h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30">
@@ -124,7 +159,6 @@ export default function Dashboard() {
           <span className="text-white font-bold text-3xl leading-none">N</span>
         </div>
         <h1 className="text-4xl sm:text-5xl font-bold text-slate-100 mb-12 tracking-tight">Ned Private Hub</h1>
-        
         <button 
           onClick={() => setView('finansial')}
           className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 group w-72 justify-center"
@@ -143,12 +177,12 @@ export default function Dashboard() {
       <div className="flex flex-col items-center justify-start pt-32 sm:pt-40 min-h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 relative">
         <button 
           onClick={() => setView('home')} 
-          className="absolute top-8 left-8 sm:top-12 sm:left-12 flex items-center text-slate-400 hover:text-slate-200 transition-colors px-4 py-2 rounded-lg hover:bg-slate-800/50"
+          className="absolute top-6 left-4 sm:top-12 sm:left-12 flex items-center text-slate-400 hover:text-slate-200 transition-colors px-4 py-2 rounded-lg hover:bg-slate-800/50"
         >
-          <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-5 h-5 mr-1 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          Kembali
+          <span className="text-sm sm:text-base">Kembali</span>
         </button>
 
         <div className="w-16 h-16 mb-6 rounded-2xl bg-[#111827] border border-slate-700/60 flex items-center justify-center shadow-xl shadow-indigo-500/10 text-indigo-400">
@@ -174,50 +208,69 @@ export default function Dashboard() {
   if (view === 'angsuran') {
     return (
       <div className="flex flex-col h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30">
-        <header className="py-8 bg-[#0B0F19]/90 backdrop-blur-md border-b-2 border-[#05070B] flex flex-col items-center justify-center sticky top-0 z-10 shrink-0 relative">
+        
+        {/* Header dirombak khusus Mobile agar rapi */}
+        <header className="py-6 sm:py-8 px-4 sm:px-0 bg-[#0B0F19]/90 backdrop-blur-md border-b-2 border-[#05070B] flex flex-col items-center justify-center sticky top-0 z-10 shrink-0 relative">
+          
           <button 
             onClick={() => setView('finansial')} 
-            className="absolute left-6 sm:left-12 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700/50"
+            className="absolute left-4 top-6 sm:left-12 sm:top-1/2 sm:-translate-y-1/2 p-2 sm:p-3 rounded-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700/50"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
           </button>
 
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-100 text-center">Jadwal Angsuran Rumah</h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 text-center">Monitoring progres cicilan jangka panjang</p>
+          <h2 className="text-lg sm:text-2xl font-bold text-slate-100 text-center mt-1 sm:mt-0">Jadwal Angsuran Rumah</h2>
+          <p className="text-[10px] sm:text-sm text-slate-500 mt-1 text-center">Monitoring progres cicilan jangka panjang</p>
           
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-            <div className="flex items-center space-x-2 bg-emerald-900/20 px-4 py-1.5 rounded-full border border-emerald-800/50">
-               <span className="text-xs text-emerald-500/70 uppercase tracking-wider">Klien</span>
+          <div className="mt-4 sm:mt-5 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+            <div className="flex items-center space-x-1.5 sm:space-x-2 bg-emerald-900/20 px-2 sm:px-4 py-1 sm:py-1.5 rounded-full border border-emerald-800/50">
+               <span className="text-[10px] sm:text-xs text-emerald-500/70 uppercase tracking-wider">Klien</span>
                <div className="h-3 w-px bg-emerald-800/50"></div>
-               <span className="text-sm font-semibold text-emerald-400">NED DEAN BARUS</span>
+               <span className="text-xs sm:text-sm font-semibold text-emerald-400">NED DEAN BARUS</span>
             </div>
             
             {currentDate && (
               <button 
                 onClick={scrollToCurrentMonth}
-                className="flex items-center space-x-2 bg-indigo-900/20 hover:bg-indigo-900/40 px-4 py-1.5 rounded-full border border-indigo-800/50 transition-colors cursor-pointer"
+                className="flex items-center space-x-1.5 sm:space-x-2 bg-indigo-900/20 hover:bg-indigo-900/40 px-2 sm:px-4 py-1 sm:py-1.5 rounded-full border border-indigo-800/50 transition-colors cursor-pointer"
                 title="Klik untuk melompat ke cicilan bulan ini"
               >
-                 <span className="text-xs text-indigo-400/70 uppercase tracking-wider">Hari Ini</span>
+                 <span className="text-[10px] sm:text-xs text-indigo-400/70 uppercase tracking-wider">Hari Ini</span>
                  <div className="h-3 w-px bg-indigo-800/50"></div>
-                 <span className="text-sm font-semibold text-indigo-300">{currentDate}</span>
+                 <span className="text-xs sm:text-sm font-semibold text-indigo-300">{currentDate}</span>
               </button>
             )}
+
+            <div className="flex gap-1.5 sm:gap-2 ml-0 sm:ml-2 mt-2 sm:mt-0">
+              <button onClick={handleExportData} title="Backup Data (Download)" className="p-1 sm:p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-md sm:rounded-lg border border-slate-700 transition-colors">
+                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                </svg>
+              </button>
+              <button onClick={() => fileInputRef.current.click()} title="Restore Data (Upload)" className="p-1 sm:p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-md sm:rounded-lg border border-slate-700 transition-colors">
+                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+              </button>
+              <input type="file" accept=".json" ref={fileInputRef} onChange={handleImportData} className="hidden" />
+            </div>
           </div>
         </header>
 
-        <div className="flex-1 overflow-auto p-6 sm:p-12">
-          <div className="max-w-3xl mx-auto bg-[#111827] rounded-2xl border border-slate-800/80 shadow-2xl overflow-hidden">
-            <div className="overflow-x-auto h-[calc(100vh-16rem)] relative custom-scrollbar">
-              <table className="min-w-full divide-y divide-slate-800/60 text-left border-collapse">
+        {/* Layout Tabel dirapatkan untuk Mobile (px-2 / p-2) */}
+        <div className="flex-1 overflow-auto p-2 sm:p-12">
+          <div className="max-w-3xl mx-auto bg-[#111827] rounded-xl sm:rounded-2xl border border-slate-800/80 shadow-2xl overflow-hidden">
+            <div className="overflow-x-auto h-[calc(100vh-14rem)] sm:h-[calc(100vh-16rem)] relative custom-scrollbar">
+              <table className="w-full divide-y divide-slate-800/60 text-left border-collapse">
                 <thead className="bg-[#111827]/95 backdrop-blur-sm sticky top-0 z-20 shadow-sm">
                   <tr>
-                    <th scope="col" className="py-5 pl-6 pr-3 text-xs font-semibold text-slate-400 uppercase tracking-wider w-20">No.</th>
-                    <th scope="col" className="px-4 py-5 text-xs font-semibold text-slate-400 uppercase tracking-wider">Tanggal Tagihan</th>
-                    <th scope="col" className="px-4 py-5 text-xs font-semibold text-slate-400 uppercase tracking-wider text-right">Total Bayar (Rp)</th>
-                    <th scope="col" className="py-5 pl-4 pr-6 text-xs font-semibold text-slate-400 uppercase tracking-wider text-center w-40">Bukti</th>
+                    <th scope="col" className="py-3 sm:py-5 pl-2 sm:pl-6 pr-1 sm:pr-3 text-[9px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider w-8 sm:w-20">No.</th>
+                    <th scope="col" className="px-1 sm:px-4 py-3 sm:py-5 text-[9px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Tanggal</th>
+                    <th scope="col" className="px-1 sm:px-4 py-3 sm:py-5 text-[9px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider text-right">Total (Rp)</th>
+                    <th scope="col" className="py-3 sm:py-5 px-1 sm:px-4 text-[9px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider text-center w-20 sm:w-40">Bukti</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/40 bg-[#111827]">
@@ -231,73 +284,76 @@ export default function Dashboard() {
                         id={`row-${row.monthYear}`} 
                         className={`transition-colors duration-300 group ${
                           isCurrentMonth 
-                            ? 'bg-slate-800/80 shadow-inner border-l-4 border-indigo-500' 
+                            ? 'bg-slate-800/80 shadow-inner border-l-2 sm:border-l-4 border-indigo-500' 
                             : 'hover:bg-slate-800/30'
                         }`}
                       >
-                        <td className={`whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium ${isCurrentMonth ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-300'}`}>
+                        <td className={`whitespace-nowrap py-3 sm:py-4 pl-2 sm:pl-6 pr-1 sm:pr-3 text-[11px] sm:text-sm font-medium ${isCurrentMonth ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-300'}`}>
                           {String(row.no).padStart(3, '0')}
                         </td>
-                        <td className={`whitespace-nowrap px-4 py-4 text-sm ${isCurrentMonth ? 'text-slate-100 font-semibold' : 'text-slate-300'}`}>
+                        <td className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm ${isCurrentMonth ? 'text-slate-100 font-semibold' : 'text-slate-300'}`}>
                           {row.tanggal}
-                          {isCurrentMonth && <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">CURRENT</span>}
+                          {isCurrentMonth && <span className="ml-1 sm:ml-2 inline-flex items-center px-1 sm:px-2 py-0.5 rounded text-[8px] sm:text-[10px] font-medium bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">CUR</span>}
                         </td>
-                        <td className={`whitespace-nowrap px-4 py-4 text-sm font-mono text-right ${isCurrentMonth ? 'text-indigo-300 font-semibold' : 'text-slate-200'}`}>
+                        <td className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm tracking-tighter sm:tracking-normal font-mono text-right ${isCurrentMonth ? 'text-indigo-300 font-semibold' : 'text-slate-200'}`}>
                           {row.totalBayar}
                         </td>
                         
-                        <td className="whitespace-nowrap py-4 pl-4 pr-6 text-center">
-                          <div className="flex items-center justify-center gap-2">
+                        <td className="whitespace-nowrap py-3 sm:py-4 px-1 sm:px-4 text-center">
+                          <div className="flex items-center justify-center gap-1 sm:gap-2">
+                            
+                            {/* Tombol Upload */}
                             <button
                               onClick={() => handleSaveProof(row.no)}
                               title="Input/Edit Link Bukti"
-                              className="p-2 rounded-lg bg-slate-800/50 text-slate-300 border border-slate-700/50 hover:bg-slate-700 transition-colors"
+                              className="p-1 sm:p-2 rounded-md sm:rounded-lg bg-slate-800/50 text-slate-300 border border-slate-700/50 hover:bg-slate-700 transition-colors"
                             >
-                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                               </svg>
                             </button>
 
+                            {/* Tombol Mata */}
                             {hasProof ? (
                               <a
                                 href={proofs[row.no]}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 title="Lihat Bukti"
-                                className="p-2 rounded-lg transition-colors hover:opacity-80"
+                                className="p-1 sm:p-2 rounded-md sm:rounded-lg transition-colors hover:opacity-80"
                                 style={{ backgroundColor: 'rgba(99, 102, 241, 0.15)', borderColor: 'rgba(99, 102, 241, 0.4)', borderWidth: '1px', color: '#818cf8' }}
                               >
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                 </svg>
                               </a>
                             ) : (
-                              <span className="p-2 rounded-lg bg-slate-800/20 text-slate-600 border border-slate-700/30 cursor-not-allowed" title="Belum ada bukti">
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <span className="p-1 sm:p-2 rounded-md sm:rounded-lg bg-slate-800/20 text-slate-600 border border-slate-700/30 cursor-not-allowed" title="Belum ada bukti">
+                                <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                                 </svg>
                               </span>
                             )}
 
+                            {/* Tombol Checklist */}
                             {hasProof ? (
                               <div 
                                 title="Lunas / Bukti Tersimpan" 
-                                className="p-2 rounded-lg"
+                                className="p-1 sm:p-2 rounded-md sm:rounded-lg"
                                 style={{ backgroundColor: 'rgba(16, 185, 129, 0.15)', borderColor: 'rgba(16, 185, 129, 0.4)', borderWidth: '1px', color: '#10b981', boxShadow: '0 0 10px rgba(16, 185, 129, 0.2)' }}
                               >
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                 </svg>
                               </div>
                             ) : (
-                              <div title="Menunggu" className="p-2 rounded-lg bg-slate-800/20 text-slate-600 border border-slate-700/30">
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <div title="Menunggu" className="p-1 sm:p-2 rounded-md sm:rounded-lg bg-slate-800/20 text-slate-600 border border-slate-700/30">
+                                <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                 </svg>
                               </div>
                             )}
-
                           </div>
                         </td>
                       </tr>
@@ -307,11 +363,11 @@ export default function Dashboard() {
               </table>
             </div>
             
-            <div className="bg-slate-900/50 border-t border-slate-800/60 px-8 py-4 flex justify-between items-center">
-                <span className="text-xs text-slate-500">Menampilkan 240 bulan angsuran</span>
-                <span className="text-xs font-medium text-blue-400 flex items-center">
-                  <span className="w-2 h-2 rounded-full bg-blue-500 mr-2 animate-pulse"></span>
-                  {isSyncing ? "Menghubungkan ke Cloud..." : "Tersinkronisasi dengan Supabase Cloud"}
+            <div className="bg-slate-900/50 border-t border-slate-800/60 px-4 sm:px-8 py-3 sm:py-4 flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
+                <span className="text-[10px] sm:text-xs text-slate-500">240 bulan angsuran</span>
+                <span className="text-[10px] sm:text-xs font-medium text-blue-400 flex items-center">
+                  <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-blue-500 mr-1.5 sm:mr-2 animate-pulse"></span>
+                  {isSyncing ? "Menghubungkan Cloud..." : "Tersinkronisasi ke Cloud"}
                 </span>
             </div>
           </div>
