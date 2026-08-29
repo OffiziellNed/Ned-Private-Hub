@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Data Generator berdasarkan Jadwal Angsuran Rumah NED DEAN BARUS
 const generateAngsuranData = () => {
@@ -29,7 +29,18 @@ const generateAngsuranData = () => {
 
 export default function Dashboard() {
   const [view, setView] = useState('home');
+  const [currentDate, setCurrentDate] = useState('');
   const angsuranData = generateAngsuranData();
+
+  useEffect(() => {
+    // Mengambil tanggal hari ini secara dinamis untuk menghindari hydration error
+    const today = new Date().toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+    setCurrentDate(today);
+  }, []);
 
   // 1. TAMPILAN HOME
   if (view === 'home') {
@@ -92,10 +103,10 @@ export default function Dashboard() {
     return (
       <div className="flex flex-col h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30">
         
-        {/* Header Data Tabel (Tengah & Hijau) */}
+        {/* Header Data Tabel */}
         <header className="py-8 bg-[#0B0F19]/90 backdrop-blur-md border-b border-slate-800/60 flex flex-col items-center justify-center sticky top-0 z-10 shrink-0 relative">
           
-          {/* Tombol Kembali (Tetap di kiri) */}
+          {/* Tombol Kembali */}
           <button 
             onClick={() => setView('finansial')} 
             className="absolute left-6 sm:left-12 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700/50"
@@ -109,17 +120,29 @@ export default function Dashboard() {
           <h2 className="text-xl sm:text-2xl font-bold text-slate-100 text-center">Jadwal Angsuran Rumah</h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-1 text-center">Monitoring progres cicilan jangka panjang</p>
           
-          {/* Badge Klien Warna Hijau */}
-          <div className="mt-4 flex items-center space-x-2 bg-emerald-900/20 px-4 py-1.5 rounded-full border border-emerald-800/50">
-             <span className="text-xs text-emerald-500/70 uppercase tracking-wider">Klien</span>
-             <div className="h-3 w-px bg-emerald-800/50"></div>
-             <span className="text-sm font-semibold text-emerald-400">NED DEAN BARUS</span>
+          {/* Info Badges */}
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+            {/* Badge Klien */}
+            <div className="flex items-center space-x-2 bg-emerald-900/20 px-4 py-1.5 rounded-full border border-emerald-800/50">
+               <span className="text-xs text-emerald-500/70 uppercase tracking-wider">Klien</span>
+               <div className="h-3 w-px bg-emerald-800/50"></div>
+               <span className="text-sm font-semibold text-emerald-400">NED DEAN BARUS</span>
+            </div>
+            
+            {/* Badge Tanggal Terkini */}
+            {currentDate && (
+              <div className="flex items-center space-x-2 bg-indigo-900/20 px-4 py-1.5 rounded-full border border-indigo-800/50">
+                 <span className="text-xs text-indigo-400/70 uppercase tracking-wider">Hari Ini</span>
+                 <div className="h-3 w-px bg-indigo-800/50"></div>
+                 <span className="text-sm font-semibold text-indigo-300">{currentDate}</span>
+              </div>
+            )}
           </div>
         </header>
 
-        {/* Area Tabel Dipersempit (max-w-4xl) */}
+        {/* Area Tabel Dipersempit (Menggunakan max-w-3xl) */}
         <div className="flex-1 overflow-auto p-6 sm:p-12">
-          <div className="max-w-4xl mx-auto bg-[#111827] rounded-2xl border border-slate-800/80 shadow-2xl overflow-hidden">
+          <div className="max-w-3xl mx-auto bg-[#111827] rounded-2xl border border-slate-800/80 shadow-2xl overflow-hidden">
             
             <div className="overflow-x-auto h-[calc(100vh-16rem)] relative custom-scrollbar">
               <table className="min-w-full divide-y divide-slate-800/60 text-left border-collapse">
