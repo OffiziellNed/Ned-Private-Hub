@@ -208,7 +208,6 @@ export default function Dashboard() {
     return (
       <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 overflow-hidden">
         
-        {/* Header Dikunci Solid (z-30, bg solid) */}
         <header className="shrink-0 py-6 sm:py-8 px-4 sm:px-0 bg-[#0B0F19] border-b-2 border-[#05070B] flex flex-col items-center justify-center relative z-30 shadow-md">
           <button 
             onClick={() => setView('finansial')} 
@@ -260,14 +259,11 @@ export default function Dashboard() {
           </div>
         </header>
 
-        {/* Kontainer Utama yang mengambil sisa ruang dan TIDAK scroll */}
         <div className="flex-1 p-3 sm:p-12 overflow-hidden flex flex-col w-full">
           <div className="w-full max-w-4xl mx-auto flex-1 bg-[#111827] rounded-xl sm:rounded-2xl border border-slate-800/80 shadow-2xl flex flex-col overflow-hidden">
             
-            {/* Area Tabel (Ini satu-satunya yang boleh di-scroll) */}
             <div className="flex-1 overflow-y-auto overflow-x-auto custom-scrollbar relative">
               <table className="w-full text-left border-collapse min-w-[300px]">
-                {/* Header Tabel Nempel di atas kontainer ini */}
                 <thead className="bg-[#111827] sticky top-0 z-20 shadow-[0_1px_0_0_rgba(30,41,59,0.6)]">
                   <tr>
                     <th scope="col" className="py-3 sm:py-5 pl-2 sm:pl-6 pr-1 sm:pr-3 text-[9px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider w-8 sm:w-20 bg-[#111827]">No.</th>
@@ -280,6 +276,8 @@ export default function Dashboard() {
                   {angsuranData.map((row) => {
                     const isCurrentMonth = row.monthYear === currentMonthId;
                     const hasProof = Boolean(proofs[row.no] && proofs[row.no].trim() !== "");
+                    // Logika history: cicilan 1 sampai 45 dianggap sudah terlewat
+                    const isPast = row.no <= 45; 
                     
                     return (
                       <tr 
@@ -291,21 +289,20 @@ export default function Dashboard() {
                             : 'hover:bg-slate-800/30'
                         }`}
                       >
-                        <td className={`whitespace-nowrap py-3 sm:py-4 pl-2 sm:pl-6 pr-1 sm:pr-3 text-[11px] sm:text-sm font-medium ${isCurrentMonth ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-300'}`}>
+                        <td className={`whitespace-nowrap py-3 sm:py-4 pl-2 sm:pl-6 pr-1 sm:pr-3 text-[11px] sm:text-sm font-medium ${isCurrentMonth ? 'text-indigo-400' : (isPast ? 'text-slate-600' : 'text-slate-500 group-hover:text-slate-300')}`}>
                           {String(row.no).padStart(3, '0')}
                         </td>
-                        <td className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm ${isCurrentMonth ? 'text-slate-100 font-semibold' : 'text-slate-300'}`}>
+                        <td className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm ${isCurrentMonth ? 'text-slate-100 font-semibold' : (isPast ? 'text-slate-600' : 'text-slate-300')}`}>
                           {row.tanggal}
                           {isCurrentMonth && <span className="ml-1 sm:ml-2 inline-flex items-center px-1 sm:px-2 py-0.5 rounded text-[8px] sm:text-[10px] font-medium bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">CUR</span>}
                         </td>
-                        <td className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm tracking-tighter sm:tracking-normal font-mono text-right ${isCurrentMonth ? 'text-indigo-300 font-semibold' : 'text-slate-200'}`}>
+                        <td className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm tracking-tighter sm:tracking-normal font-mono text-right ${isCurrentMonth ? 'text-indigo-300 font-semibold' : (isPast ? 'text-slate-600' : 'text-slate-200')}`}>
                           {row.totalBayar}
                         </td>
                         
                         <td className="whitespace-nowrap py-3 sm:py-4 px-1 sm:px-4 text-center">
-                          <div className="flex items-center justify-center gap-1 sm:gap-2">
+                          <div className={`flex items-center justify-center gap-1 sm:gap-2 ${isPast && !hasProof ? 'opacity-60' : ''}`}>
                             
-                            {/* Tombol Upload */}
                             <button
                               onClick={() => handleSaveProof(row.no)}
                               title="Input/Edit Link Bukti"
@@ -316,7 +313,6 @@ export default function Dashboard() {
                               </svg>
                             </button>
 
-                            {/* Tombol Mata */}
                             {hasProof ? (
                               <a
                                 href={proofs[row.no]}
@@ -339,7 +335,6 @@ export default function Dashboard() {
                               </span>
                             )}
 
-                            {/* Tombol Checklist */}
                             {hasProof ? (
                               <div 
                                 title="Lunas / Bukti Tersimpan" 
