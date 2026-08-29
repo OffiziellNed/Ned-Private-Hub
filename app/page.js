@@ -46,6 +46,12 @@ export default function Dashboard() {
   const [isSyncing, setIsSyncing] = useState(true);
   const fileInputRef = useRef(null);
 
+  // State untuk Fitur Keamanan PIN
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [showPinPrompt, setShowPinPrompt] = useState(false);
+  const [pinCode, setPinCode] = useState('');
+  const [pinError, setPinError] = useState(false);
+
   const angsuranData = generateAngsuranData();
 
   useEffect(() => {
@@ -149,6 +155,30 @@ export default function Dashboard() {
     e.target.value = null;
   };
 
+  // Logika Klik Menu Finansial
+  const handleAccessFinansial = () => {
+    if (isUnlocked) {
+      setView('finansial');
+    } else {
+      setShowPinPrompt(true);
+    }
+  };
+
+  // Logika Submit PIN
+  const handlePinSubmit = (e) => {
+    e.preventDefault();
+    if (pinCode === '010525') {
+      setIsUnlocked(true);
+      setShowPinPrompt(false);
+      setView('finansial');
+      setPinCode('');
+      setPinError(false);
+    } else {
+      setPinError(true);
+      setPinCode('');
+    }
+  };
+
   if (view === 'home') {
     return (
       <div className="flex flex-col items-center justify-start pt-32 sm:pt-40 min-h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30">
@@ -157,14 +187,72 @@ export default function Dashboard() {
         </div>
         <h1 className="text-4xl sm:text-5xl font-bold text-slate-100 mb-12 tracking-tight">Ned Private Hub</h1>
         <button 
-          onClick={() => setView('finansial')}
-          className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 group w-72 justify-center"
+          onClick={handleAccessFinansial}
+          className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 group w-72 justify-center relative"
         >
+          {/* Ikon Gembok Kecil kalau belum Unlock */}
+          {!isUnlocked && (
+            <div className="absolute -top-2 -right-2 bg-indigo-500 text-white rounded-full p-1 shadow-lg">
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z" />
+              </svg>
+            </div>
+          )}
           <svg className="w-8 h-8 text-indigo-400 group-hover:text-indigo-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <span className="text-xl font-medium text-slate-200 group-hover:text-white transition-colors">Finansial</span>
         </button>
+
+        {/* Modal Prompt PIN */}
+        {showPinPrompt && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B0F19]/80 backdrop-blur-sm px-4">
+            <div className="bg-[#111827] border border-slate-700/60 rounded-2xl p-8 max-w-sm w-full shadow-2xl shadow-indigo-500/10 flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mb-4 text-indigo-400">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-slate-100 mb-2">Akses Terkunci</h3>
+              <p className="text-sm text-slate-400 mb-6 text-center">Masukkan kode keamanan untuk mengakses menu Finansial.</p>
+              
+              <form onSubmit={handlePinSubmit} className="w-full flex flex-col gap-4">
+                <input 
+                  type="password" 
+                  autoFocus
+                  value={pinCode}
+                  onChange={(e) => {
+                    setPinCode(e.target.value);
+                    setPinError(false);
+                  }}
+                  className={`w-full bg-[#0B0F19] border ${pinError ? 'border-red-500/50 focus:border-red-500' : 'border-slate-700 focus:border-indigo-500'} rounded-xl px-4 py-3 text-center text-2xl tracking-widest text-slate-200 outline-none transition-colors`}
+                  placeholder="••••••"
+                  maxLength={6}
+                />
+                {pinError && <span className="text-xs text-red-400 text-center mt-[-8px]">Kode salah, silakan coba lagi.</span>}
+                <div className="flex gap-3 mt-2">
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setShowPinPrompt(false);
+                      setPinCode('');
+                      setPinError(false);
+                    }}
+                    className="flex-1 py-3 rounded-xl bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 transition-colors"
+                  >
+                    Batal
+                  </button>
+                  <button 
+                    type="submit"
+                    className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-500/20"
+                  >
+                    Unlock
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
