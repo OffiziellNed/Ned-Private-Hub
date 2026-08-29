@@ -182,12 +182,13 @@ export default function Dashboard() {
     e.target.value = null;
   };
 
-  // 0. TAMPILAN LOCK SCREEN (Center & Proper)
+  // 0. TAMPILAN LOCK SCREEN (Center Sempurna, Tanpa Huruf di Bawah Angka)
   if (view === 'locked') {
     return (
       <div className="flex flex-col items-center justify-center min-h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 px-4 overflow-hidden">
-        <div className="flex flex-col items-center w-full max-w-sm my-auto">
+        <div className="flex flex-col items-center justify-center w-full max-w-sm my-auto py-8">
 
+          {/* Ikon Gembok Kecil di Atas */}
           <div className="mb-3 text-slate-400">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z" />
@@ -197,6 +198,7 @@ export default function Dashboard() {
           <h3 className="text-xl sm:text-2xl font-bold text-slate-100 mb-1 tracking-tight">Ned Private Hub</h3>
           <p className="text-xs sm:text-sm text-slate-500 mb-8 text-center font-medium">Your PIN contains 6 digits.</p>
           
+          {/* PIN Display Area (Bulatan Titik / Dots) */}
           <div className="flex gap-4 mb-8 h-5 items-center justify-center">
             {[...Array(6)].map((_, i) => (
               <div 
@@ -212,22 +214,19 @@ export default function Dashboard() {
             ))}
           </div>
 
+          {/* Custom Numpad (Bulat sempurna, polosan tanpa huruf) */}
           <div className="grid grid-cols-3 gap-x-5 gap-y-3 sm:gap-x-7 sm:gap-y-4 w-full max-w-[260px] sm:max-w-[290px] justify-items-center">
-             {[
-               { num: '1', alpha: '' }, { num: '2', alpha: 'ABC' }, { num: '3', alpha: 'DEF' },
-               { num: '4', alpha: 'GHI' }, { num: '5', alpha: 'JKL' }, { num: '6', alpha: 'MNO' },
-               { num: '7', alpha: 'PQRS' }, { num: '8', alpha: 'TUV' }, { num: '9', alpha: 'WXYZ' }
-             ].map(item => (
+             {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map(num => (
                 <button 
-                  key={item.num} 
-                  onClick={() => handleNumClick(item.num)} 
-                  className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-slate-800/40 hover:bg-slate-700/60 active:bg-slate-700 active:scale-95 flex flex-col items-center justify-center transition-all border-none"
+                  key={num} 
+                  onClick={() => handleNumClick(num)} 
+                  className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-slate-800/40 hover:bg-slate-700/60 active:bg-slate-700 active:scale-95 flex items-center justify-center transition-all border-none text-2xl sm:text-3xl font-medium text-slate-200"
                 >
-                  <span className="text-2xl sm:text-3xl font-medium text-slate-200 leading-none">{item.num}</span>
-                  {item.alpha && <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 mt-1 leading-none">{item.alpha}</span>}
+                  {num}
                 </button>
              ))}
              
+             {/* Tombol Hapus (Backspace) di Kiri */}
              <button 
                onClick={handleDelete} 
                className="w-16 h-16 sm:w-18 sm:h-18 rounded-full flex items-center justify-center bg-transparent active:bg-slate-800/30 text-slate-400 hover:text-slate-200 transition-all active:scale-95 border-none"
@@ -237,13 +236,15 @@ export default function Dashboard() {
                </svg>
              </button>
              
+             {/* Angka 0 di Tengah */}
              <button 
                onClick={() => handleNumClick('0')} 
-               className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-slate-800/40 hover:bg-slate-700/60 active:bg-slate-700 active:scale-95 flex flex-col items-center justify-center transition-all border-none"
+               className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-slate-800/40 hover:bg-slate-700/60 active:bg-slate-700 active:scale-95 flex items-center justify-center transition-all border-none text-2xl sm:text-3xl font-medium text-slate-200"
              >
-               <span className="text-2xl sm:text-3xl font-medium text-slate-200 leading-none">0</span>
+               0
              </button>
              
+             {/* Tombol Clear di Kanan */}
              <button 
                onClick={() => { setPinCode(''); setPinError(false); }}
                className="w-16 h-16 sm:w-18 sm:h-18 rounded-full flex items-center justify-center bg-transparent active:bg-slate-800/30 text-xs sm:text-sm font-bold text-slate-400 hover:text-slate-200 transition-all active:scale-95 uppercase tracking-widest border-none"
