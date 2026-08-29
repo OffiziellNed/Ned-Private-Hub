@@ -114,7 +114,6 @@ export default function Dashboard() {
     }
   };
 
-  // Fungsi Ekspor Data (Backup)
   const handleExportData = () => {
     const dataStr = JSON.stringify(proofs);
     const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
@@ -125,7 +124,6 @@ export default function Dashboard() {
     linkElement.click();
   };
 
-  // Fungsi Impor Data (Restore)
   const handleImportData = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -276,8 +274,12 @@ export default function Dashboard() {
                   {angsuranData.map((row) => {
                     const isCurrentMonth = row.monthYear === currentMonthId;
                     const hasProof = Boolean(proofs[row.no] && proofs[row.no].trim() !== "");
-                    // Logika history: cicilan 1 sampai 45 dianggap sudah terlewat
-                    const isPast = row.no <= 45; 
+                    
+                    // Logika khusus: No 1 s/d 45 dianggap sudah lewat (History)
+                    const isPast = row.no <= 45;
+                    
+                    // Checklist dianggap komplit jika sudah di-upload ATAU masuk histori
+                    const isCompleted = hasProof || isPast; 
                     
                     return (
                       <tr 
@@ -289,20 +291,27 @@ export default function Dashboard() {
                             : 'hover:bg-slate-800/30'
                         }`}
                       >
+                        {/* Kolom Nomor */}
                         <td className={`whitespace-nowrap py-3 sm:py-4 pl-2 sm:pl-6 pr-1 sm:pr-3 text-[11px] sm:text-sm font-medium ${isCurrentMonth ? 'text-indigo-400' : (isPast ? 'text-slate-600' : 'text-slate-500 group-hover:text-slate-300')}`}>
                           {String(row.no).padStart(3, '0')}
                         </td>
+
+                        {/* Kolom Tanggal */}
                         <td className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm ${isCurrentMonth ? 'text-slate-100 font-semibold' : (isPast ? 'text-slate-600' : 'text-slate-300')}`}>
                           {row.tanggal}
                           {isCurrentMonth && <span className="ml-1 sm:ml-2 inline-flex items-center px-1 sm:px-2 py-0.5 rounded text-[8px] sm:text-[10px] font-medium bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">CUR</span>}
                         </td>
+
+                        {/* Kolom Total Bayar */}
                         <td className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm tracking-tighter sm:tracking-normal font-mono text-right ${isCurrentMonth ? 'text-indigo-300 font-semibold' : (isPast ? 'text-slate-600' : 'text-slate-200')}`}>
                           {row.totalBayar}
                         </td>
                         
+                        {/* Kolom Aksi */}
                         <td className="whitespace-nowrap py-3 sm:py-4 px-1 sm:px-4 text-center">
-                          <div className={`flex items-center justify-center gap-1 sm:gap-2 ${isPast && !hasProof ? 'opacity-60' : ''}`}>
+                          <div className="flex items-center justify-center gap-1 sm:gap-2">
                             
+                            {/* Tombol Upload */}
                             <button
                               onClick={() => handleSaveProof(row.no)}
                               title="Input/Edit Link Bukti"
@@ -313,6 +322,7 @@ export default function Dashboard() {
                               </svg>
                             </button>
 
+                            {/* Tombol Mata */}
                             {hasProof ? (
                               <a
                                 href={proofs[row.no]}
@@ -335,9 +345,10 @@ export default function Dashboard() {
                               </span>
                             )}
 
-                            {hasProof ? (
+                            {/* Tombol Checklist Terkunci Hijau Jika isCompleted */}
+                            {isCompleted ? (
                               <div 
-                                title="Lunas / Bukti Tersimpan" 
+                                title={isPast && !hasProof ? "Lunas (Data Historis)" : "Lunas / Bukti Tersimpan"} 
                                 className="p-1 sm:p-2 rounded-md sm:rounded-lg"
                                 style={{ backgroundColor: 'rgba(16, 185, 129, 0.15)', borderColor: 'rgba(16, 185, 129, 0.4)', borderWidth: '1px', color: '#10b981', boxShadow: '0 0 10px rgba(16, 185, 129, 0.2)' }}
                               >
@@ -352,6 +363,7 @@ export default function Dashboard() {
                                 </svg>
                               </div>
                             )}
+
                           </div>
                         </td>
                       </tr>
