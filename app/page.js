@@ -182,21 +182,22 @@ export default function Dashboard() {
     e.target.value = null;
   };
 
-  // 0. TAMPILAN LOCK SCREEN (Center Sempurna, Tanpa Huruf di Bawah Angka)
+  // 0. TAMPILAN LOCK SCREEN (Center Sempurna di Tengah Layar)
   if (view === 'locked') {
     return (
       <div className="flex flex-col items-center justify-center min-h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 px-4 overflow-hidden">
-        <div className="flex flex-col items-center justify-center w-full max-w-sm my-auto py-8">
+        <div className="flex flex-col items-center justify-center w-full max-w-sm h-[100dvh] py-6">
 
-          {/* Ikon Gembok Kecil di Atas */}
-          <div className="mb-3 text-slate-400">
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z" />
-            </svg>
+          {/* Bagian Atas: Gembok & Judul */}
+          <div className="flex flex-col items-center mb-6">
+            <div className="mb-2 text-slate-400">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z" />
+              </svg>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-100 mb-0.5 tracking-tight">Ned Private Hub</h3>
+            <p className="text-xs sm:text-sm text-slate-500 text-center font-medium">Your PIN contains 6 digits.</p>
           </div>
-
-          <h3 className="text-xl sm:text-2xl font-bold text-slate-100 mb-1 tracking-tight">Ned Private Hub</h3>
-          <p className="text-xs sm:text-sm text-slate-500 mb-8 text-center font-medium">Your PIN contains 6 digits.</p>
           
           {/* PIN Display Area (Bulatan Titik / Dots) */}
           <div className="flex gap-4 mb-8 h-5 items-center justify-center">
@@ -215,7 +216,7 @@ export default function Dashboard() {
           </div>
 
           {/* Custom Numpad (Bulat sempurna, polosan tanpa huruf) */}
-          <div className="grid grid-cols-3 gap-x-5 gap-y-3 sm:gap-x-7 sm:gap-y-4 w-full max-w-[260px] sm:max-w-[290px] justify-items-center">
+          <div className="grid grid-cols-3 gap-x-4 gap-y-3 sm:gap-x-6 sm:gap-y-4 w-full max-w-[250px] sm:max-w-[280px] justify-items-center mb-auto">
              {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map(num => (
                 <button 
                   key={num} 
