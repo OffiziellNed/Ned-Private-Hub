@@ -67,7 +67,6 @@ export default function Dashboard() {
           Kembali
         </button>
 
-        {/* Icon Transaksi & Judul Finansial */}
         <div className="w-16 h-16 mb-6 rounded-2xl bg-[#111827] border border-slate-700/60 flex items-center justify-center shadow-xl shadow-indigo-500/10 text-indigo-400">
           <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -93,34 +92,36 @@ export default function Dashboard() {
     return (
       <div className="flex flex-col h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30">
         
-        {/* Header Data Tabel */}
-        <header className="h-24 bg-[#0B0F19]/90 backdrop-blur-md border-b border-slate-800/60 flex items-center px-6 sm:px-12 justify-between sticky top-0 z-10 shrink-0">
-          <div className="flex items-center gap-6">
-            <button 
-              onClick={() => setView('finansial')} 
-              className="p-3 rounded-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700/50"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-            </button>
-            <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-100">Jadwal Angsuran Rumah</h2>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">Monitoring progres cicilan jangka panjang</p>
-            </div>
-          </div>
-          <div className="hidden sm:flex items-center space-x-3 bg-slate-800/50 px-4 py-2 rounded-full border border-slate-700/50">
-             <span className="text-xs text-slate-400 uppercase tracking-wider">Klien</span>
-             <div className="h-4 w-px bg-slate-600"></div>
-             <span className="text-sm font-semibold text-slate-200">NED DEAN BARUS</span>
+        {/* Header Data Tabel (Tengah & Hijau) */}
+        <header className="py-8 bg-[#0B0F19]/90 backdrop-blur-md border-b border-slate-800/60 flex flex-col items-center justify-center sticky top-0 z-10 shrink-0 relative">
+          
+          {/* Tombol Kembali (Tetap di kiri) */}
+          <button 
+            onClick={() => setView('finansial')} 
+            className="absolute left-6 sm:left-12 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700/50"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          </button>
+
+          {/* Judul & Subjudul Tengah */}
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-100 text-center">Jadwal Angsuran Rumah</h2>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1 text-center">Monitoring progres cicilan jangka panjang</p>
+          
+          {/* Badge Klien Warna Hijau */}
+          <div className="mt-4 flex items-center space-x-2 bg-emerald-900/20 px-4 py-1.5 rounded-full border border-emerald-800/50">
+             <span className="text-xs text-emerald-500/70 uppercase tracking-wider">Klien</span>
+             <div className="h-3 w-px bg-emerald-800/50"></div>
+             <span className="text-sm font-semibold text-emerald-400">NED DEAN BARUS</span>
           </div>
         </header>
 
-        {/* Area Tabel */}
+        {/* Area Tabel Dipersempit (max-w-4xl) */}
         <div className="flex-1 overflow-auto p-6 sm:p-12">
-          <div className="max-w-6xl mx-auto bg-[#111827] rounded-2xl border border-slate-800/80 shadow-2xl overflow-hidden">
+          <div className="max-w-4xl mx-auto bg-[#111827] rounded-2xl border border-slate-800/80 shadow-2xl overflow-hidden">
             
-            <div className="overflow-x-auto h-[calc(100vh-14rem)] relative custom-scrollbar">
+            <div className="overflow-x-auto h-[calc(100vh-16rem)] relative custom-scrollbar">
               <table className="min-w-full divide-y divide-slate-800/60 text-left border-collapse">
                 <thead className="bg-[#111827]/95 backdrop-blur-sm sticky top-0 z-20 shadow-sm">
                   <tr>
@@ -150,8 +151,8 @@ export default function Dashboard() {
             
             <div className="bg-slate-900/50 border-t border-slate-800/60 px-8 py-4 flex justify-between items-center">
                 <span className="text-xs text-slate-500">Menampilkan 240 bulan angsuran</span>
-                <span className="text-xs font-medium text-indigo-400 flex items-center">
-                  <span className="w-2 h-2 rounded-full bg-indigo-500 mr-2 animate-pulse"></span>
+                <span className="text-xs font-medium text-emerald-500 flex items-center">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
                   Data Terverifikasi
                 </span>
             </div>
