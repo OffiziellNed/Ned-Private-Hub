@@ -112,7 +112,7 @@ export default function Dashboard() {
       }
     };
     reader.readAsText(file);
-    e.target.value = null; // Reset input setelah upload
+    e.target.value = null;
   };
 
   if (view === 'home') {
@@ -208,12 +208,12 @@ export default function Dashboard() {
 
             {/* Tombol Backup & Restore Data */}
             <div className="flex gap-2 ml-2">
-              <button onClick={handleExportData} title="Backup Data" className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg border border-slate-700 transition-colors">
+              <button onClick={handleExportData} title="Backup Data (Download)" className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg border border-slate-700 transition-colors">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                 </svg>
               </button>
-              <button onClick={() => fileInputRef.current.click()} title="Restore Data" className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg border border-slate-700 transition-colors">
+              <button onClick={() => fileInputRef.current.click()} title="Restore Data (Upload)" className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg border border-slate-700 transition-colors">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -233,7 +233,7 @@ export default function Dashboard() {
                     <th scope="col" className="py-5 pl-6 pr-3 text-xs font-semibold text-slate-400 uppercase tracking-wider w-20">No.</th>
                     <th scope="col" className="px-4 py-5 text-xs font-semibold text-slate-400 uppercase tracking-wider">Tanggal Tagihan</th>
                     <th scope="col" className="px-4 py-5 text-xs font-semibold text-slate-400 uppercase tracking-wider text-right">Total Bayar (Rp)</th>
-                    <th scope="col" className="py-5 pl-4 pr-6 text-xs font-semibold text-slate-400 uppercase tracking-wider text-center w-36">Bukti</th>
+                    <th scope="col" className="py-5 pl-4 pr-6 text-xs font-semibold text-slate-400 uppercase tracking-wider text-center w-40">Bukti</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/40 bg-[#111827]">
@@ -264,51 +264,59 @@ export default function Dashboard() {
                         
                         <td className="whitespace-nowrap py-4 pl-4 pr-6 text-center">
                           <div className="flex items-center justify-center gap-2">
+                            
                             {/* Tombol Upload */}
                             <button
                               onClick={() => handleSaveProof(row.no)}
                               title="Input/Edit Link Bukti"
-                              className="p-1.5 rounded-lg bg-slate-800/50 text-slate-300 border border-slate-700/50 hover:bg-slate-700 transition-colors"
+                              className="p-2 rounded-lg bg-slate-800/50 text-slate-300 border border-slate-700/50 hover:bg-slate-700 transition-colors"
                             >
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                               </svg>
                             </button>
 
-                            {/* Tombol Mata (Link) */}
+                            {/* Tombol Mata (Link) - Menggunakan Inline Style Anti-Gagal */}
                             {hasProof ? (
                               <a
                                 href={proofs[row.no]}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 title="Lihat Bukti"
-                                className="p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400 border border-indigo-500/50 hover:bg-indigo-500/30 transition-colors"
+                                className="p-2 rounded-lg transition-colors hover:opacity-80"
+                                style={{ backgroundColor: 'rgba(99, 102, 241, 0.15)', borderColor: 'rgba(99, 102, 241, 0.4)', borderWidth: '1px', color: '#818cf8' }}
                               >
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                 </svg>
                               </a>
                             ) : (
-                              <span className="p-1.5 rounded-lg bg-slate-800/20 text-slate-600 border border-slate-700/30 cursor-not-allowed" title="Belum ada bukti">
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <span className="p-2 rounded-lg bg-slate-800/20 text-slate-600 border border-slate-700/30 cursor-not-allowed" title="Belum ada bukti">
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                                 </svg>
                               </span>
                             )}
 
-                            {/* Tombol Checklist (Indikator Hijau Statis Jika Ada Bukti) */}
-                            <div className={
-                                hasProof 
-                                ? "p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.2)]" 
-                                : "p-1.5 rounded-lg bg-slate-800/20 text-slate-600 border border-slate-700/30"
-                              }
-                              title={hasProof ? "Lunas" : "Menunggu"}
-                            >
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={hasProof ? 3 : 2} d="M5 13l4 4L19 7" />
-                              </svg>
-                            </div>
+                            {/* Tombol Checklist (Indikator Hijau Statis) - Menggunakan Inline Style Anti-Gagal */}
+                            {hasProof ? (
+                              <div 
+                                title="Lunas / Bukti Tersimpan" 
+                                className="p-2 rounded-lg"
+                                style={{ backgroundColor: 'rgba(16, 185, 129, 0.15)', borderColor: 'rgba(16, 185, 129, 0.4)', borderWidth: '1px', color: '#10b981', boxShadow: '0 0 10px rgba(16, 185, 129, 0.2)' }}
+                              >
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                </svg>
+                              </div>
+                            ) : (
+                              <div title="Menunggu" className="p-2 rounded-lg bg-slate-800/20 text-slate-600 border border-slate-700/30">
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                              </div>
+                            )}
 
                           </div>
                         </td>
