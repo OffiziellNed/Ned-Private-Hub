@@ -197,7 +197,7 @@ export default function Dashboard() {
                     <th scope="col" className="py-5 pl-6 pr-3 text-xs font-semibold text-slate-400 uppercase tracking-wider w-20">No.</th>
                     <th scope="col" className="px-4 py-5 text-xs font-semibold text-slate-400 uppercase tracking-wider">Tanggal Tagihan</th>
                     <th scope="col" className="px-4 py-5 text-xs font-semibold text-slate-400 uppercase tracking-wider text-right">Total Bayar (Rp)</th>
-                    <th scope="col" className="py-5 pl-4 pr-6 text-xs font-semibold text-slate-400 uppercase tracking-wider text-center w-28">Bukti</th>
+                    <th scope="col" className="py-5 pl-4 pr-6 text-xs font-semibold text-slate-400 uppercase tracking-wider text-center w-36">Bukti</th>
                   </tr>
                 </thead>
                 
@@ -226,10 +226,10 @@ export default function Dashboard() {
                         <td className={`whitespace-nowrap px-4 py-4 text-sm font-mono text-right ${isCurrentMonth ? 'text-indigo-300 font-semibold' : 'text-slate-200'}`}>
                           {row.totalBayar}
                         </td>
-                        {/* Kolom Aksi: Icon Upload & Icon Mata */}
+                        {/* Kolom Aksi: Upload, Mata, dan Checklist */}
                         <td className="whitespace-nowrap py-4 pl-4 pr-6 text-center">
                           <div className="flex items-center justify-center gap-2">
-                            {/* Tombol Upload / Input Link */}
+                            {/* Tombol Upload */}
                             <button
                               onClick={() => handleSaveProof(row.no)}
                               title={hasProof ? "Ubah Link Bukti" : "Input Link Bukti Transaksi"}
@@ -240,11 +240,11 @@ export default function Dashboard() {
                               }`}
                             >
                               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round5" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                               </svg>
                             </button>
 
-                            {/* Tombol Mata (Muncul jika link sudah diisi) */}
+                            {/* Tombol Mata */}
                             {hasProof ? (
                               <a
                                 href={proofs[row.no]}
@@ -265,6 +265,16 @@ export default function Dashboard() {
                                 </svg>
                               </span>
                             )}
+
+                            {/* Icon Checklist Status */}
+                            <div 
+                              title={hasProof ? "Lunas / Bukti Tersimpan" : "Menunggu Bukti"} 
+                              className={`p-1.5 flex items-center justify-center transition-colors ${hasProof ? 'text-emerald-500' : 'text-slate-600'}`}
+                            >
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
                           </div>
                         </td>
                       </tr>
