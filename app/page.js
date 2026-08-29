@@ -55,7 +55,7 @@ export default function Dashboard() {
     const targetId = now.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' }).replace(/ /g, '-');
     setCurrentMonthId(targetId);
 
-    // Load data bukti transaksi yang tersimpan di browser sebelumnya
+    // Load data bukti transaksi yang tersimpan di browser
     const savedProofs = localStorage.getItem('ned_angsuran_proofs');
     if (savedProofs) {
       try {
@@ -71,6 +71,7 @@ export default function Dashboard() {
     const currentLink = proofs[no] || '';
     const input = prompt("Masukkan URL Lightshot / Bukti Transaksi:", currentLink);
     
+    // Kalau user klik OK dan input tidak kosong
     if (input !== null) {
       const updatedProofs = { ...proofs, [no]: input.trim() };
       setProofs(updatedProofs);
@@ -188,7 +189,7 @@ export default function Dashboard() {
 
         {/* Area Tabel */}
         <div className="flex-1 overflow-auto p-6 sm:p-12">
-          <div className="max-w-4xl mx-auto bg-[#111827] rounded-2xl border border-slate-800/80 shadow-2xl overflow-hidden">
+          <div className="max-w-3xl mx-auto bg-[#111827] rounded-2xl border border-slate-800/80 shadow-2xl overflow-hidden">
             
             <div className="overflow-x-auto h-[calc(100vh-16rem)] relative custom-scrollbar">
               <table className="min-w-full divide-y divide-slate-800/60 text-left border-collapse">
@@ -204,7 +205,8 @@ export default function Dashboard() {
                 <tbody className="divide-y divide-slate-800/40 bg-[#111827]">
                   {angsuranData.map((row) => {
                     const isCurrentMonth = row.monthYear === currentMonthId;
-                    const hasProof = Boolean(proofs[row.no]);
+                    // Cek apakah ada proof dan tidak kosong string-nya
+                    const hasProof = Boolean(proofs[row.no] && proofs[row.no].trim() !== "");
                     
                     return (
                       <tr 
@@ -226,6 +228,7 @@ export default function Dashboard() {
                         <td className={`whitespace-nowrap px-4 py-4 text-sm font-mono text-right ${isCurrentMonth ? 'text-indigo-300 font-semibold' : 'text-slate-200'}`}>
                           {row.totalBayar}
                         </td>
+                        
                         {/* Kolom Aksi: Upload, Mata, dan Checklist */}
                         <td className="whitespace-nowrap py-4 pl-4 pr-6 text-center">
                           <div className="flex items-center justify-center gap-2">
@@ -259,7 +262,7 @@ export default function Dashboard() {
                                 </svg>
                               </a>
                             ) : (
-                              <span className="p-1.5 text-slate-600 cursor-not-allowed" title="Belum ada bukti">
+                              <span className="p-1.5 rounded-lg text-slate-600 bg-slate-800/20 border border-slate-700/30 cursor-not-allowed" title="Belum ada bukti">
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                                 </svg>
@@ -267,14 +270,20 @@ export default function Dashboard() {
                             )}
 
                             {/* Icon Checklist Status */}
-                            <div 
-                              title={hasProof ? "Lunas / Bukti Tersimpan" : "Menunggu Bukti"} 
-                              className={`p-1.5 flex items-center justify-center transition-colors ${hasProof ? 'text-emerald-500' : 'text-slate-600'}`}
-                            >
-                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                              </svg>
-                            </div>
+                            {hasProof ? (
+                              <div title="Lunas / Bukti Tersimpan" className="p-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-[0_0_8px_rgba(16,185,129,0.3)]">
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                </svg>
+                              </div>
+                            ) : (
+                              <div title="Menunggu Bukti" className="p-1 rounded-full bg-slate-800 text-slate-600 border border-slate-700/50">
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                              </div>
+                            )}
+
                           </div>
                         </td>
                       </tr>
