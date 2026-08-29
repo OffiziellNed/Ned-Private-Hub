@@ -2,43 +2,39 @@
 
 import { useState } from 'react';
 
-// Data Generator berdasarkan Jadwal Angsuran Murabahah NED DEAN BARUS[cite: 13]
+// Data Generator berdasarkan Jadwal Angsuran Rumah NED DEAN BARUS
 const generateAngsuranData = () => {
   const data = [];
-  let startDate = new Date('2022-10-25'); // Dimulai dari 25-Oct-22[cite: 13]
+  let startDate = new Date('2022-10-25');
 
   for (let i = 1; i <= 240; i++) {
     let amount = "0";
-    // Skema step-up angsuran sesuai dokumen[cite: 13]
     if (i >= 1 && i <= 12) amount = "2,721,798.00";
     else if (i >= 13 && i <= 24) amount = "2,857,887.90";
     else if (i >= 25 && i <= 36) amount = "3,000,782.30";
     else if (i >= 37 && i <= 48) amount = "3,150,821.41";
     else if (i >= 49 && i <= 60) amount = "3,308,362.48";
     else if (i >= 61 && i <= 239) amount = "4,064,640.85";
-    else if (i === 240) amount = "4,064,642.33"; // Angsuran penutup[cite: 13]
+    else if (i === 240) amount = "4,064,642.33";
 
     data.push({
       no: i,
       tanggal: startDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }).replace(/ /g, '-'),
       totalBayar: amount
     });
-    
-    // Tambah 1 bulan untuk iterasi berikutnya
     startDate.setMonth(startDate.getMonth() + 1);
   }
   return data;
 };
 
 export default function Dashboard() {
-  // State untuk mengatur layar yang aktif: 'home', 'finansial', atau 'angsuran'
   const [view, setView] = useState('home');
   const angsuranData = generateAngsuranData();
 
   // 1. TAMPILAN HOME
   if (view === 'home') {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30">
+      <div className="flex flex-col items-center justify-start pt-32 sm:pt-40 min-h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30">
         <div className="w-16 h-16 mb-6 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-xl shadow-indigo-500/20">
           <span className="text-white font-bold text-3xl leading-none">N</span>
         </div>
@@ -60,7 +56,7 @@ export default function Dashboard() {
   // 2. TAMPILAN MENU FINANSIAL
   if (view === 'finansial') {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 relative">
+      <div className="flex flex-col items-center justify-start pt-32 sm:pt-40 min-h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 relative">
         <button 
           onClick={() => setView('home')} 
           className="absolute top-8 left-8 sm:top-12 sm:left-12 flex items-center text-slate-400 hover:text-slate-200 transition-colors px-4 py-2 rounded-lg hover:bg-slate-800/50"
@@ -71,10 +67,13 @@ export default function Dashboard() {
           Kembali
         </button>
 
-        <div className="w-16 h-16 mb-6 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-xl shadow-indigo-500/20">
-          <span className="text-white font-bold text-3xl leading-none">N</span>
+        {/* Icon Transaksi & Judul Finansial */}
+        <div className="w-16 h-16 mb-6 rounded-2xl bg-[#111827] border border-slate-700/60 flex items-center justify-center shadow-xl shadow-indigo-500/10 text-indigo-400">
+          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-bold text-slate-100 mb-12 tracking-tight">Ned Private Hub</h1>
+        <h1 className="text-4xl sm:text-5xl font-bold text-slate-100 mb-12 tracking-tight">Finansial</h1>
         
         <button 
           onClick={() => setView('angsuran')}
@@ -106,7 +105,7 @@ export default function Dashboard() {
               </svg>
             </button>
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-100">Jadwal Angsuran Murabahah</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-100">Jadwal Angsuran Rumah</h2>
               <p className="text-xs sm:text-sm text-slate-500 mt-1">Monitoring progres cicilan jangka panjang</p>
             </div>
           </div>
@@ -121,7 +120,7 @@ export default function Dashboard() {
         <div className="flex-1 overflow-auto p-6 sm:p-12">
           <div className="max-w-6xl mx-auto bg-[#111827] rounded-2xl border border-slate-800/80 shadow-2xl overflow-hidden">
             
-            <div className="overflow-x-auto h-[calc(100vh-14rem)] relative">
+            <div className="overflow-x-auto h-[calc(100vh-14rem)] relative custom-scrollbar">
               <table className="min-w-full divide-y divide-slate-800/60 text-left border-collapse">
                 <thead className="bg-[#111827]/95 backdrop-blur-sm sticky top-0 z-20 shadow-sm">
                   <tr>
