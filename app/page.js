@@ -1,6 +1,12 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
+
+// Memanggil kunci rahasia yang sudah disuntikkan Vercel secara otomatis
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
 
 // Data Generator berdasarkan Jadwal Angsuran Rumah NED DEAN BARUS
 const generateAngsuranData = () => {
@@ -37,7 +43,7 @@ export default function Dashboard() {
   const [currentDate, setCurrentDate] = useState('');
   const [currentMonthId, setCurrentMonthId] = useState('');
   const [proofs, setProofs] = useState({});
-  const fileInputRef = useRef(null);
+  const [isSyncing, setIsSyncing] = useState(true);
 
   const angsuranData = generateAngsuranData();
 
@@ -53,24 +59,50 @@ export default function Dashboard() {
     const targetId = now.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' }).replace(/ /g, '-');
     setCurrentMonthId(targetId);
 
-    const savedProofs = localStorage.getItem('ned_angsuran_proofs');
-    if (savedProofs) {
-      try {
-        setProofs(JSON.parse(savedProofs));
-      } catch (e) {
-        console.error("Gagal memuat data lokal");
+    // Menarik data dari Supabase saat web dibuka
+    const fetchProofs = async () => {
+      if (!supabase) {
+        setIsSyncing(false);
+        return;
       }
-    }
+      const { data, error } = await supabase.from('angsuran_rumah').select('*');
+      if (error) {
+        console.error("Gagal menarik data cloud:", error);
+      } else if (data) {
+        const loadedProofs = {};
+        data.forEach(item => {
+          loadedProofs[item.no_angsuran] = item.link_bukti;
+        });
+        setProofs(loadedProofs);
+      }
+      setIsSyncing(false);
+    };
+
+    fetchProofs();
   }, []);
 
-  const handleSaveProof = (no) => {
+  const handleSaveProof = async (no) => {
     const currentLink = proofs[no] || '';
     const input = prompt("Masukkan URL Lightshot / Bukti Transaksi:", currentLink);
     
     if (input !== null) {
-      const updatedProofs = { ...proofs, [no]: input.trim() };
-      setProofs(updatedProofs);
-      localStorage.setItem('ned_angsuran_proofs', JSON.stringify(updatedProofs));
+      const newLink = input.trim();
+      
+      // Update UI seketika biar responsif
+      setProofs({ ...proofs, [no]: newLink });
+
+      // Simpan permanen ke Supabase Cloud
+      if (supabase) {
+        const { error } = await supabase
+          .from('angsuran_rumah')
+          .upsert({ no_angsuran: no, link_bukti: newLink });
+          
+        if (error) {
+          alert("Gagal sinkronisasi ke awan: " + error.message);
+        }
+      } else {
+        alert("Koneksi Supabase belum terdeteksi oleh Vercel.");
+      }
     }
   };
 
@@ -83,36 +115,6 @@ export default function Dashboard() {
         alert('Data untuk bulan ini tidak ditemukan dalam jadwal angsuran.');
       }
     }
-  };
-
-  // Fungsi Ekspor Data (Backup)
-  const handleExportData = () => {
-    const dataStr = JSON.stringify(proofs);
-    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-    const exportFileDefaultName = 'Backup_Angsuran_Ned.json';
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
-  };
-
-  // Fungsi Impor Data (Restore)
-  const handleImportData = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const importedProofs = JSON.parse(event.target.result);
-        setProofs(importedProofs);
-        localStorage.setItem('ned_angsuran_proofs', JSON.stringify(importedProofs));
-        alert("Data berhasil dipulihkan!");
-      } catch (err) {
-        alert("Gagal membaca file backup.");
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = null;
   };
 
   if (view === 'home') {
@@ -172,9 +174,7 @@ export default function Dashboard() {
   if (view === 'angsuran') {
     return (
       <div className="flex flex-col h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30">
-        
         <header className="py-8 bg-[#0B0F19]/90 backdrop-blur-md border-b-2 border-[#05070B] flex flex-col items-center justify-center sticky top-0 z-10 shrink-0 relative">
-          
           <button 
             onClick={() => setView('finansial')} 
             className="absolute left-6 sm:left-12 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700/50"
@@ -205,22 +205,6 @@ export default function Dashboard() {
                  <span className="text-sm font-semibold text-indigo-300">{currentDate}</span>
               </button>
             )}
-
-            {/* Tombol Backup & Restore Data */}
-            <div className="flex gap-2 ml-2">
-              <button onClick={handleExportData} title="Backup Data (Download)" className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg border border-slate-700 transition-colors">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                </svg>
-              </button>
-              <button onClick={() => fileInputRef.current.click()} title="Restore Data (Upload)" className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg border border-slate-700 transition-colors">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-              </button>
-              <input type="file" accept=".json" ref={fileInputRef} onChange={handleImportData} className="hidden" />
-            </div>
           </div>
         </header>
 
@@ -264,8 +248,6 @@ export default function Dashboard() {
                         
                         <td className="whitespace-nowrap py-4 pl-4 pr-6 text-center">
                           <div className="flex items-center justify-center gap-2">
-                            
-                            {/* Tombol Upload */}
                             <button
                               onClick={() => handleSaveProof(row.no)}
                               title="Input/Edit Link Bukti"
@@ -276,7 +258,6 @@ export default function Dashboard() {
                               </svg>
                             </button>
 
-                            {/* Tombol Mata (Link) - Menggunakan Inline Style Anti-Gagal */}
                             {hasProof ? (
                               <a
                                 href={proofs[row.no]}
@@ -299,7 +280,6 @@ export default function Dashboard() {
                               </span>
                             )}
 
-                            {/* Tombol Checklist (Indikator Hijau Statis) - Menggunakan Inline Style Anti-Gagal */}
                             {hasProof ? (
                               <div 
                                 title="Lunas / Bukti Tersimpan" 
@@ -329,9 +309,9 @@ export default function Dashboard() {
             
             <div className="bg-slate-900/50 border-t border-slate-800/60 px-8 py-4 flex justify-between items-center">
                 <span className="text-xs text-slate-500">Menampilkan 240 bulan angsuran</span>
-                <span className="text-xs font-medium text-emerald-500 flex items-center">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
-                  Gunakan Backup Secara Berkala
+                <span className="text-xs font-medium text-blue-400 flex items-center">
+                  <span className="w-2 h-2 rounded-full bg-blue-500 mr-2 animate-pulse"></span>
+                  {isSyncing ? "Menghubungkan ke Cloud..." : "Tersinkronisasi dengan Supabase Cloud"}
                 </span>
             </div>
           </div>
