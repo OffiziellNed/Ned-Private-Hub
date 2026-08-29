@@ -182,24 +182,24 @@ export default function Dashboard() {
     e.target.value = null;
   };
 
-  // 0. TAMPILAN LOCK SCREEN (Gerbang Depan dengan Desain UI Mobile Proper)
+  // 0. TAMPILAN LOCK SCREEN (Benar-benar Center / Di Tengah Layar)
   if (view === 'locked') {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 px-4">
-        <div className="flex flex-col items-center w-full max-w-sm">
+      <div className="flex flex-col items-center justify-center min-h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 px-4 overflow-hidden">
+        <div className="flex flex-col items-center w-full max-w-sm my-auto">
 
           {/* Ikon Gembok Kecil di Atas */}
-          <div className="mb-4 text-slate-400">
+          <div className="mb-3 text-slate-400">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z" />
             </svg>
           </div>
 
           <h3 className="text-xl sm:text-2xl font-bold text-slate-100 mb-1 tracking-tight">Ned Private Hub</h3>
-          <p className="text-xs sm:text-sm text-slate-500 mb-10 text-center font-medium">Your PIN contains 6 digits.</p>
+          <p className="text-xs sm:text-sm text-slate-500 mb-8 text-center font-medium">Your PIN contains 6 digits.</p>
           
           {/* PIN Display Area (Bulatan Titik / Dots) */}
-          <div className="flex gap-4 mb-10 h-6 items-center justify-center">
+          <div className="flex gap-4 mb-8 h-5 items-center justify-center">
             {[...Array(6)].map((_, i) => (
               <div 
                 key={i} 
@@ -215,7 +215,7 @@ export default function Dashboard() {
           </div>
 
           {/* Custom Numpad (Bulat sempurna, tanpa border, ada alphabet text) */}
-          <div className="grid grid-cols-3 gap-x-6 gap-y-4 sm:gap-x-8 sm:gap-y-6 w-full max-w-[260px] sm:max-w-[300px] justify-items-center">
+          <div className="grid grid-cols-3 gap-x-5 gap-y-3 sm:gap-x-7 sm:gap-y-4 w-full max-w-[260px] sm:max-w-[290px] justify-items-center">
              {[
                { num: '1', alpha: '' }, { num: '2', alpha: 'ABC' }, { num: '3', alpha: 'DEF' },
                { num: '4', alpha: 'GHI' }, { num: '5', alpha: 'JKL' }, { num: '6', alpha: 'MNO' },
@@ -224,7 +224,7 @@ export default function Dashboard() {
                 <button 
                   key={item.num} 
                   onClick={() => handleNumClick(item.num)} 
-                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-800/40 hover:bg-slate-700/60 active:bg-slate-700 active:scale-95 flex flex-col items-center justify-center transition-all border-none"
+                  className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-slate-800/40 hover:bg-slate-700/60 active:bg-slate-700 active:scale-95 flex flex-col items-center justify-center transition-all border-none"
                 >
                   <span className="text-2xl sm:text-3xl font-medium text-slate-200 leading-none">{item.num}</span>
                   {item.alpha && <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 mt-1 leading-none">{item.alpha}</span>}
@@ -234,7 +234,7 @@ export default function Dashboard() {
              {/* Tombol Hapus (Backspace) di Kiri */}
              <button 
                onClick={handleDelete} 
-               className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center bg-transparent active:bg-slate-800/30 text-slate-400 hover:text-slate-200 transition-all active:scale-95 border-none"
+               className="w-16 h-16 sm:w-18 sm:h-18 rounded-full flex items-center justify-center bg-transparent active:bg-slate-800/30 text-slate-400 hover:text-slate-200 transition-all active:scale-95 border-none"
              >
                <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
@@ -244,7 +244,7 @@ export default function Dashboard() {
              {/* Angka 0 di Tengah */}
              <button 
                onClick={() => handleNumClick('0')} 
-               className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-800/40 hover:bg-slate-700/60 active:bg-slate-700 active:scale-95 flex flex-col items-center justify-center transition-all border-none"
+               className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-slate-800/40 hover:bg-slate-700/60 active:bg-slate-700 active:scale-95 flex flex-col items-center justify-center transition-all border-none"
              >
                <span className="text-2xl sm:text-3xl font-medium text-slate-200 leading-none">0</span>
              </button>
@@ -252,7 +252,7 @@ export default function Dashboard() {
              {/* Tombol Clear di Kanan */}
              <button 
                onClick={() => { setPinCode(''); setPinError(false); }}
-               className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center bg-transparent active:bg-slate-800/30 text-xs sm:text-sm font-bold text-slate-400 hover:text-slate-200 transition-all active:scale-95 uppercase tracking-widest border-none"
+               className="w-16 h-16 sm:w-18 sm:h-18 rounded-full flex items-center justify-center bg-transparent active:bg-slate-800/30 text-xs sm:text-sm font-bold text-slate-400 hover:text-slate-200 transition-all active:scale-95 uppercase tracking-widest border-none"
              >
                Clear
              </button>
@@ -388,128 +388,4 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/40 bg-[#111827]">
-                  {angsuranData.map((row) => {
-                    const isCurrentMonth = row.monthYear === currentMonthId;
-                    const hasProof = Boolean(proofs[row.no] && proofs[row.no].trim() !== "");
-                    
-                    const isPast = row.no <= 45;
-                    const isCompleted = hasProof || isPast; 
-                    const pastTextStyle = isPast && !isCurrentMonth ? { color: '#475569' } : {};
-                    
-                    return (
-                      <tr 
-                        key={row.no} 
-                        id={`row-${row.monthYear}`} 
-                        className={`transition-colors duration-300 group ${
-                          isCurrentMonth 
-                            ? 'bg-slate-800/80 shadow-inner border-l-2 sm:border-l-4 border-indigo-500' 
-                            : (isPast ? 'bg-transparent' : 'hover:bg-slate-800/30')
-                        }`}
-                      >
-                        <td 
-                          className={`whitespace-nowrap py-3 sm:py-4 pl-2 sm:pl-6 pr-1 sm:pr-3 text-[11px] sm:text-sm font-medium ${isCurrentMonth ? 'text-indigo-400' : (!isPast ? 'text-slate-500 group-hover:text-slate-300' : '')}`}
-                          style={pastTextStyle}
-                        >
-                          {String(row.no).padStart(3, '0')}
-                        </td>
-                        <td 
-                          className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm ${isCurrentMonth ? 'text-slate-100 font-semibold' : (!isPast ? 'text-slate-300 group-hover:text-slate-200' : '')}`}
-                          style={pastTextStyle}
-                        >
-                          {row.tanggal}
-                          {isCurrentMonth && <span className="ml-1 sm:ml-2 inline-flex items-center px-1 sm:px-2 py-0.5 rounded text-[8px] sm:text-[10px] font-medium bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">CUR</span>}
-                        </td>
-                        <td 
-                          className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm tracking-tighter sm:tracking-normal font-mono text-right ${isCurrentMonth ? 'text-indigo-300 font-semibold' : (!isPast ? 'text-slate-200 group-hover:text-white' : '')}`}
-                          style={pastTextStyle}
-                        >
-                          {row.totalBayar}
-                        </td>
-                        
-                        <td className="whitespace-nowrap py-3 sm:py-4 px-1 sm:px-4 text-center">
-                          <div className="flex items-center justify-center gap-1 sm:gap-2">
-                            <button
-                              onClick={() => handleSaveProof(row.no)}
-                              title="Input/Edit Link Bukti"
-                              className={`p-1 sm:p-2 rounded-md sm:rounded-lg transition-colors border ${
-                                isPast && !hasProof 
-                                  ? 'bg-slate-800/20 border-slate-700/30 hover:bg-slate-800/40' 
-                                  : 'bg-slate-800/50 hover:bg-slate-700 border-slate-700/50 text-slate-300'
-                              }`}
-                              style={isPast && !hasProof ? { color: '#475569' } : {}}
-                            >
-                              <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                              </svg>
-                            </button>
-
-                            {hasProof ? (
-                              <a
-                                href={proofs[row.no]}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                title="Lihat Bukti"
-                                className="p-1 sm:p-2 rounded-md sm:rounded-lg transition-colors hover:opacity-80"
-                                style={{ backgroundColor: 'rgba(99, 102, 241, 0.15)', borderColor: 'rgba(99, 102, 241, 0.4)', borderWidth: '1px', color: '#818cf8' }}
-                              >
-                                <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                              </a>
-                            ) : (
-                              <span 
-                                className="p-1 sm:p-2 rounded-md sm:rounded-lg bg-slate-800/20 border border-slate-700/30 cursor-not-allowed" 
-                                title="Belum ada bukti"
-                                style={{ color: '#475569' }}
-                              >
-                                <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                                </svg>
-                              </span>
-                            )}
-
-                            {isCompleted ? (
-                              <div 
-                                title={isPast && !hasProof ? "Lunas (Data Historis)" : "Lunas / Bukti Tersimpan"} 
-                                className="p-1 sm:p-2 rounded-md sm:rounded-lg"
-                                style={{ backgroundColor: 'rgba(16, 185, 129, 0.15)', borderColor: 'rgba(16, 185, 129, 0.4)', borderWidth: '1px', color: '#10b981', boxShadow: '0 0 10px rgba(16, 185, 129, 0.2)' }}
-                              >
-                                <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                                </svg>
-                              </div>
-                            ) : (
-                              <div 
-                                title="Menunggu" 
-                                className="p-1 sm:p-2 rounded-md sm:rounded-lg bg-slate-800/20 border border-slate-700/30"
-                                style={{ color: '#475569' }}
-                              >
-                                <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                </svg>
-                              </div>
-                            )}
-
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-            
-            <div className="shrink-0 bg-slate-900/50 border-t border-slate-800/60 px-4 sm:px-8 py-3 sm:py-4 flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
-                <span className="text-[10px] sm:text-xs text-slate-500">240 bulan angsuran</span>
-                <span className="text-[10px] sm:text-xs font-medium text-blue-400 flex items-center">
-                  <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-blue-500 mr-1.5 sm:mr-2 animate-pulse"></span>
-                  {isSyncing ? "Menghubungkan Cloud..." : "Tersinkronisasi ke Cloud"}
-                </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
+                  {ang
