@@ -114,7 +114,6 @@ export default function Dashboard() {
     }
   };
 
-  // Fungsi Ekspor Data (Backup)
   const handleExportData = () => {
     const dataStr = JSON.stringify(proofs);
     const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
@@ -125,7 +124,6 @@ export default function Dashboard() {
     linkElement.click();
   };
 
-  // Fungsi Impor Data (Restore)
   const handleImportData = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -279,45 +277,60 @@ export default function Dashboard() {
                     
                     // Logika khusus: No 1 s/d 45 dianggap sudah lewat (History)
                     const isPast = row.no <= 45;
-                    
-                    // Checklist dianggap komplit jika sudah di-upload ATAU masuk histori
                     const isCompleted = hasProof || isPast; 
+                    
+                    // Styling text khusus untuk baris 001 - 045 (Sama persis dengan warna disabled icon #475569)
+                    const pastTextStyle = isPast && !isCurrentMonth ? { color: '#475569' } : {};
                     
                     return (
                       <tr 
                         key={row.no} 
                         id={`row-${row.monthYear}`} 
-                        className={`transition-colors duration-300 ${
+                        className={`transition-colors duration-300 group ${
                           isCurrentMonth 
                             ? 'bg-slate-800/80 shadow-inner border-l-2 sm:border-l-4 border-indigo-500' 
-                            : (isPast ? 'bg-transparent' : 'hover:bg-slate-800/30 group')
+                            : (isPast ? 'bg-transparent' : 'hover:bg-slate-800/30')
                         }`}
                       >
                         {/* Kolom Nomor */}
-                        <td className={`whitespace-nowrap py-3 sm:py-4 pl-2 sm:pl-6 pr-1 sm:pr-3 text-[11px] sm:text-sm font-medium ${isCurrentMonth ? 'text-indigo-400' : (isPast ? 'text-slate-700' : 'text-slate-400 group-hover:text-slate-300')}`}>
+                        <td 
+                          className={`whitespace-nowrap py-3 sm:py-4 pl-2 sm:pl-6 pr-1 sm:pr-3 text-[11px] sm:text-sm font-medium ${isCurrentMonth ? 'text-indigo-400' : (!isPast ? 'text-slate-500 group-hover:text-slate-300' : '')}`}
+                          style={pastTextStyle}
+                        >
                           {String(row.no).padStart(3, '0')}
                         </td>
 
                         {/* Kolom Tanggal */}
-                        <td className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm ${isCurrentMonth ? 'text-slate-100 font-semibold' : (isPast ? 'text-slate-700' : 'text-slate-300 group-hover:text-slate-200')}`}>
+                        <td 
+                          className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm ${isCurrentMonth ? 'text-slate-100 font-semibold' : (!isPast ? 'text-slate-300 group-hover:text-slate-200' : '')}`}
+                          style={pastTextStyle}
+                        >
                           {row.tanggal}
                           {isCurrentMonth && <span className="ml-1 sm:ml-2 inline-flex items-center px-1 sm:px-2 py-0.5 rounded text-[8px] sm:text-[10px] font-medium bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">CUR</span>}
                         </td>
 
                         {/* Kolom Total Bayar */}
-                        <td className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm tracking-tighter sm:tracking-normal font-mono text-right ${isCurrentMonth ? 'text-indigo-300 font-semibold' : (isPast ? 'text-slate-700' : 'text-slate-200 group-hover:text-white')}`}>
+                        <td 
+                          className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm tracking-tighter sm:tracking-normal font-mono text-right ${isCurrentMonth ? 'text-indigo-300 font-semibold' : (!isPast ? 'text-slate-200 group-hover:text-white' : '')}`}
+                          style={pastTextStyle}
+                        >
                           {row.totalBayar}
                         </td>
                         
                         {/* Kolom Aksi */}
                         <td className="whitespace-nowrap py-3 sm:py-4 px-1 sm:px-4 text-center">
-                          <div className={`flex items-center justify-center gap-1 sm:gap-2 ${isPast && !hasProof ? 'opacity-50' : ''}`}>
+                          <div className="flex items-center justify-center gap-1 sm:gap-2">
                             
                             {/* Tombol Upload */}
                             <button
                               onClick={() => handleSaveProof(row.no)}
                               title="Input/Edit Link Bukti"
-                              className="p-1 sm:p-2 rounded-md sm:rounded-lg bg-slate-800/50 text-slate-300 border border-slate-700/50 hover:bg-slate-700 transition-colors"
+                              className={`p-1 sm:p-2 rounded-md sm:rounded-lg transition-colors border ${
+                                isPast && !hasProof 
+                                  ? 'bg-slate-800/20 border-slate-700/30 hover:bg-slate-800/40' 
+                                  : 'bg-slate-800/50 hover:bg-slate-700 border-slate-700/50 text-slate-300'
+                              }`}
+                              style={isPast && !hasProof ? { color: '#475569' } : {}}
                             >
                               <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -340,7 +353,11 @@ export default function Dashboard() {
                                 </svg>
                               </a>
                             ) : (
-                              <span className="p-1 sm:p-2 rounded-md sm:rounded-lg bg-slate-800/20 text-slate-600 border border-slate-700/30 cursor-not-allowed" title="Belum ada bukti">
+                              <span 
+                                className="p-1 sm:p-2 rounded-md sm:rounded-lg bg-slate-800/20 border border-slate-700/30 cursor-not-allowed" 
+                                title="Belum ada bukti"
+                                style={{ color: '#475569' }}
+                              >
                                 <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                                 </svg>
@@ -359,7 +376,11 @@ export default function Dashboard() {
                                 </svg>
                               </div>
                             ) : (
-                              <div title="Menunggu" className="p-1 sm:p-2 rounded-md sm:rounded-lg bg-slate-800/20 text-slate-600 border border-slate-700/30">
+                              <div 
+                                title="Menunggu" 
+                                className="p-1 sm:p-2 rounded-md sm:rounded-lg bg-slate-800/20 border border-slate-700/30"
+                                style={{ color: '#475569' }}
+                              >
                                 <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                 </svg>
