@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // Data Generator berdasarkan Jadwal Angsuran Rumah NED DEAN BARUS
 const generateAngsuranData = () => {
@@ -36,15 +36,13 @@ export default function Dashboard() {
   const [view, setView] = useState('home');
   const [currentDate, setCurrentDate] = useState('');
   const [currentMonthId, setCurrentMonthId] = useState('');
-  
-  // State untuk menyimpan daftar link bukti transfer (tersimpan di localStorage)
   const [proofs, setProofs] = useState({});
+  const fileInputRef = useRef(null);
 
   const angsuranData = generateAngsuranData();
 
   useEffect(() => {
     const now = new Date();
-    
     const today = now.toLocaleDateString('id-ID', {
       day: 'numeric',
       month: 'long',
@@ -55,7 +53,6 @@ export default function Dashboard() {
     const targetId = now.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' }).replace(/ /g, '-');
     setCurrentMonthId(targetId);
 
-    // Load data bukti transaksi yang tersimpan di browser
     const savedProofs = localStorage.getItem('ned_angsuran_proofs');
     if (savedProofs) {
       try {
@@ -66,12 +63,10 @@ export default function Dashboard() {
     }
   }, []);
 
-  // Fungsi untuk menyimpan link bukti transaksi
   const handleSaveProof = (no) => {
     const currentLink = proofs[no] || '';
     const input = prompt("Masukkan URL Lightshot / Bukti Transaksi:", currentLink);
     
-    // Kalau user klik OK dan input tidak kosong
     if (input !== null) {
       const updatedProofs = { ...proofs, [no]: input.trim() };
       setProofs(updatedProofs);
@@ -90,7 +85,36 @@ export default function Dashboard() {
     }
   };
 
-  // 1. TAMPILAN HOME
+  // Fungsi Ekspor Data (Backup)
+  const handleExportData = () => {
+    const dataStr = JSON.stringify(proofs);
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+    const exportFileDefaultName = 'Backup_Angsuran_Ned.json';
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
+  // Fungsi Impor Data (Restore)
+  const handleImportData = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const importedProofs = JSON.parse(event.target.result);
+        setProofs(importedProofs);
+        localStorage.setItem('ned_angsuran_proofs', JSON.stringify(importedProofs));
+        alert("Data berhasil dipulihkan!");
+      } catch (err) {
+        alert("Gagal membaca file backup.");
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = null; // Reset input setelah upload
+  };
+
   if (view === 'home') {
     return (
       <div className="flex flex-col items-center justify-start pt-32 sm:pt-40 min-h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30">
@@ -112,7 +136,6 @@ export default function Dashboard() {
     );
   }
 
-  // 2. TAMPILAN MENU FINANSIAL
   if (view === 'finansial') {
     return (
       <div className="flex flex-col items-center justify-start pt-32 sm:pt-40 min-h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 relative">
@@ -146,12 +169,10 @@ export default function Dashboard() {
     );
   }
 
-  // 3. TAMPILAN DATA ANGSURAN RUMAH
   if (view === 'angsuran') {
     return (
       <div className="flex flex-col h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30">
         
-        {/* Header */}
         <header className="py-8 bg-[#0B0F19]/90 backdrop-blur-md border-b-2 border-[#05070B] flex flex-col items-center justify-center sticky top-0 z-10 shrink-0 relative">
           
           <button 
@@ -184,13 +205,27 @@ export default function Dashboard() {
                  <span className="text-sm font-semibold text-indigo-300">{currentDate}</span>
               </button>
             )}
+
+            {/* Tombol Backup & Restore Data */}
+            <div className="flex gap-2 ml-2">
+              <button onClick={handleExportData} title="Backup Data" className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg border border-slate-700 transition-colors">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                </svg>
+              </button>
+              <button onClick={() => fileInputRef.current.click()} title="Restore Data" className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg border border-slate-700 transition-colors">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+              </button>
+              <input type="file" accept=".json" ref={fileInputRef} onChange={handleImportData} className="hidden" />
+            </div>
           </div>
         </header>
 
-        {/* Area Tabel */}
         <div className="flex-1 overflow-auto p-6 sm:p-12">
           <div className="max-w-3xl mx-auto bg-[#111827] rounded-2xl border border-slate-800/80 shadow-2xl overflow-hidden">
-            
             <div className="overflow-x-auto h-[calc(100vh-16rem)] relative custom-scrollbar">
               <table className="min-w-full divide-y divide-slate-800/60 text-left border-collapse">
                 <thead className="bg-[#111827]/95 backdrop-blur-sm sticky top-0 z-20 shadow-sm">
@@ -201,11 +236,9 @@ export default function Dashboard() {
                     <th scope="col" className="py-5 pl-4 pr-6 text-xs font-semibold text-slate-400 uppercase tracking-wider text-center w-36">Bukti</th>
                   </tr>
                 </thead>
-                
                 <tbody className="divide-y divide-slate-800/40 bg-[#111827]">
                   {angsuranData.map((row) => {
                     const isCurrentMonth = row.monthYear === currentMonthId;
-                    // Cek apakah ada proof dan tidak kosong string-nya
                     const hasProof = Boolean(proofs[row.no] && proofs[row.no].trim() !== "");
                     
                     return (
@@ -229,32 +262,27 @@ export default function Dashboard() {
                           {row.totalBayar}
                         </td>
                         
-                        {/* Kolom Aksi: Upload, Mata, dan Checklist */}
                         <td className="whitespace-nowrap py-4 pl-4 pr-6 text-center">
                           <div className="flex items-center justify-center gap-2">
                             {/* Tombol Upload */}
                             <button
                               onClick={() => handleSaveProof(row.no)}
-                              title={hasProof ? "Ubah Link Bukti" : "Input Link Bukti Transaksi"}
-                              className={`p-1.5 rounded-lg transition-colors border ${
-                                hasProof 
-                                  ? 'bg-emerald-950/40 text-emerald-400 border-emerald-800/50 hover:bg-emerald-900/50' 
-                                  : 'bg-slate-800/50 text-slate-400 border-slate-700/50 hover:bg-slate-700 hover:text-slate-200'
-                              }`}
+                              title="Input/Edit Link Bukti"
+                              className="p-1.5 rounded-lg bg-slate-800/50 text-slate-300 border border-slate-700/50 hover:bg-slate-700 transition-colors"
                             >
                               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                               </svg>
                             </button>
 
-                            {/* Tombol Mata */}
+                            {/* Tombol Mata (Link) */}
                             {hasProof ? (
                               <a
                                 href={proofs[row.no]}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                title="Lihat Bukti Transaksi"
-                                className="p-1.5 rounded-lg bg-indigo-950/40 text-indigo-400 border border-indigo-800/50 hover:bg-indigo-900/50 transition-colors"
+                                title="Lihat Bukti"
+                                className="p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400 border border-indigo-500/50 hover:bg-indigo-500/30 transition-colors"
                               >
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -262,27 +290,25 @@ export default function Dashboard() {
                                 </svg>
                               </a>
                             ) : (
-                              <span className="p-1.5 rounded-lg text-slate-600 bg-slate-800/20 border border-slate-700/30 cursor-not-allowed" title="Belum ada bukti">
+                              <span className="p-1.5 rounded-lg bg-slate-800/20 text-slate-600 border border-slate-700/30 cursor-not-allowed" title="Belum ada bukti">
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                                 </svg>
                               </span>
                             )}
 
-                            {/* Icon Checklist Status */}
-                            {hasProof ? (
-                              <div title="Lunas / Bukti Tersimpan" className="p-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-[0_0_8px_rgba(16,185,129,0.3)]">
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                                </svg>
-                              </div>
-                            ) : (
-                              <div title="Menunggu Bukti" className="p-1 rounded-full bg-slate-800 text-slate-600 border border-slate-700/50">
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                </svg>
-                              </div>
-                            )}
+                            {/* Tombol Checklist (Indikator Hijau Statis Jika Ada Bukti) */}
+                            <div className={
+                                hasProof 
+                                ? "p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.2)]" 
+                                : "p-1.5 rounded-lg bg-slate-800/20 text-slate-600 border border-slate-700/30"
+                              }
+                              title={hasProof ? "Lunas" : "Menunggu"}
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={hasProof ? 3 : 2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
 
                           </div>
                         </td>
@@ -297,7 +323,7 @@ export default function Dashboard() {
                 <span className="text-xs text-slate-500">Menampilkan 240 bulan angsuran</span>
                 <span className="text-xs font-medium text-emerald-500 flex items-center">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
-                  Data Tersimpan Lokal (Aman)
+                  Gunakan Backup Secara Berkala
                 </span>
             </div>
           </div>
