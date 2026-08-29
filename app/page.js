@@ -114,6 +114,7 @@ export default function Dashboard() {
     }
   };
 
+  // Fungsi Ekspor Data (Backup)
   const handleExportData = () => {
     const dataStr = JSON.stringify(proofs);
     const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
@@ -124,6 +125,7 @@ export default function Dashboard() {
     linkElement.click();
   };
 
+  // Fungsi Impor Data (Restore)
   const handleImportData = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -285,31 +287,31 @@ export default function Dashboard() {
                       <tr 
                         key={row.no} 
                         id={`row-${row.monthYear}`} 
-                        className={`transition-colors duration-300 group ${
+                        className={`transition-colors duration-300 ${
                           isCurrentMonth 
                             ? 'bg-slate-800/80 shadow-inner border-l-2 sm:border-l-4 border-indigo-500' 
-                            : 'hover:bg-slate-800/30'
+                            : (isPast ? 'bg-transparent' : 'hover:bg-slate-800/30 group')
                         }`}
                       >
                         {/* Kolom Nomor */}
-                        <td className={`whitespace-nowrap py-3 sm:py-4 pl-2 sm:pl-6 pr-1 sm:pr-3 text-[11px] sm:text-sm font-medium ${isCurrentMonth ? 'text-indigo-400' : (isPast ? 'text-slate-600' : 'text-slate-500 group-hover:text-slate-300')}`}>
+                        <td className={`whitespace-nowrap py-3 sm:py-4 pl-2 sm:pl-6 pr-1 sm:pr-3 text-[11px] sm:text-sm font-medium ${isCurrentMonth ? 'text-indigo-400' : (isPast ? 'text-slate-700' : 'text-slate-400 group-hover:text-slate-300')}`}>
                           {String(row.no).padStart(3, '0')}
                         </td>
 
                         {/* Kolom Tanggal */}
-                        <td className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm ${isCurrentMonth ? 'text-slate-100 font-semibold' : (isPast ? 'text-slate-600' : 'text-slate-300')}`}>
+                        <td className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm ${isCurrentMonth ? 'text-slate-100 font-semibold' : (isPast ? 'text-slate-700' : 'text-slate-300 group-hover:text-slate-200')}`}>
                           {row.tanggal}
                           {isCurrentMonth && <span className="ml-1 sm:ml-2 inline-flex items-center px-1 sm:px-2 py-0.5 rounded text-[8px] sm:text-[10px] font-medium bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">CUR</span>}
                         </td>
 
                         {/* Kolom Total Bayar */}
-                        <td className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm tracking-tighter sm:tracking-normal font-mono text-right ${isCurrentMonth ? 'text-indigo-300 font-semibold' : (isPast ? 'text-slate-600' : 'text-slate-200')}`}>
+                        <td className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm tracking-tighter sm:tracking-normal font-mono text-right ${isCurrentMonth ? 'text-indigo-300 font-semibold' : (isPast ? 'text-slate-700' : 'text-slate-200 group-hover:text-white')}`}>
                           {row.totalBayar}
                         </td>
                         
                         {/* Kolom Aksi */}
                         <td className="whitespace-nowrap py-3 sm:py-4 px-1 sm:px-4 text-center">
-                          <div className="flex items-center justify-center gap-1 sm:gap-2">
+                          <div className={`flex items-center justify-center gap-1 sm:gap-2 ${isPast && !hasProof ? 'opacity-50' : ''}`}>
                             
                             {/* Tombol Upload */}
                             <button
