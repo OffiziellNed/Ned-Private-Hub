@@ -135,7 +135,6 @@ export default function Dashboard() {
         const importedProofs = JSON.parse(event.target.result);
         setProofs(importedProofs);
         
-        // Sync ke cloud jika di-restore
         if (supabase) {
           const upsertData = Object.keys(importedProofs).map(key => ({
             no_angsuran: parseInt(key),
@@ -154,7 +153,7 @@ export default function Dashboard() {
 
   if (view === 'home') {
     return (
-      <div className="flex flex-col items-center justify-start pt-32 sm:pt-40 min-h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30">
+      <div className="flex flex-col items-center justify-start pt-32 sm:pt-40 min-h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30">
         <div className="w-16 h-16 mb-6 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-xl shadow-indigo-500/20">
           <span className="text-white font-bold text-3xl leading-none">N</span>
         </div>
@@ -174,7 +173,7 @@ export default function Dashboard() {
 
   if (view === 'finansial') {
     return (
-      <div className="flex flex-col items-center justify-start pt-32 sm:pt-40 min-h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 relative">
+      <div className="flex flex-col items-center justify-start pt-32 sm:pt-40 min-h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 relative">
         <button 
           onClick={() => setView('home')} 
           className="absolute top-6 left-4 sm:top-12 sm:left-12 flex items-center text-slate-400 hover:text-slate-200 transition-colors px-4 py-2 rounded-lg hover:bg-slate-800/50"
@@ -207,11 +206,10 @@ export default function Dashboard() {
 
   if (view === 'angsuran') {
     return (
-      <div className="flex flex-col h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30">
+      <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 overflow-hidden">
         
-        {/* Header dirombak khusus Mobile agar rapi */}
-        <header className="py-6 sm:py-8 px-4 sm:px-0 bg-[#0B0F19]/90 backdrop-blur-md border-b-2 border-[#05070B] flex flex-col items-center justify-center sticky top-0 z-10 shrink-0 relative">
-          
+        {/* Header Dikunci Solid (z-30, bg solid) */}
+        <header className="shrink-0 py-6 sm:py-8 px-4 sm:px-0 bg-[#0B0F19] border-b-2 border-[#05070B] flex flex-col items-center justify-center relative z-30 shadow-md">
           <button 
             onClick={() => setView('finansial')} 
             className="absolute left-4 top-6 sm:left-12 sm:top-1/2 sm:-translate-y-1/2 p-2 sm:p-3 rounded-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700/50"
@@ -224,26 +222,28 @@ export default function Dashboard() {
           <h2 className="text-lg sm:text-2xl font-bold text-slate-100 text-center mt-1 sm:mt-0">Jadwal Angsuran Rumah</h2>
           <p className="text-[10px] sm:text-sm text-slate-500 mt-1 text-center">Monitoring progres cicilan jangka panjang</p>
           
-          <div className="mt-4 sm:mt-5 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-            <div className="flex items-center space-x-1.5 sm:space-x-2 bg-emerald-900/20 px-2 sm:px-4 py-1 sm:py-1.5 rounded-full border border-emerald-800/50">
-               <span className="text-[10px] sm:text-xs text-emerald-500/70 uppercase tracking-wider">Klien</span>
-               <div className="h-3 w-px bg-emerald-800/50"></div>
-               <span className="text-xs sm:text-sm font-semibold text-emerald-400">NED DEAN BARUS</span>
+          <div className="mt-4 sm:mt-5 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <div className="flex items-center space-x-1.5 sm:space-x-2 bg-emerald-900/20 px-2 sm:px-4 py-1 sm:py-1.5 rounded-full border border-emerald-800/50">
+                 <span className="text-[10px] sm:text-xs text-emerald-500/70 uppercase tracking-wider">Klien</span>
+                 <div className="h-3 w-px bg-emerald-800/50"></div>
+                 <span className="text-xs sm:text-sm font-semibold text-emerald-400">NED DEAN BARUS</span>
+              </div>
+              
+              {currentDate && (
+                <button 
+                  onClick={scrollToCurrentMonth}
+                  className="flex items-center space-x-1.5 sm:space-x-2 bg-indigo-900/20 hover:bg-indigo-900/40 px-2 sm:px-4 py-1 sm:py-1.5 rounded-full border border-indigo-800/50 transition-colors cursor-pointer"
+                  title="Klik untuk melompat ke cicilan bulan ini"
+                >
+                   <span className="text-[10px] sm:text-xs text-indigo-400/70 uppercase tracking-wider">Hari Ini</span>
+                   <div className="h-3 w-px bg-indigo-800/50"></div>
+                   <span className="text-xs sm:text-sm font-semibold text-indigo-300">{currentDate}</span>
+                </button>
+              )}
             </div>
-            
-            {currentDate && (
-              <button 
-                onClick={scrollToCurrentMonth}
-                className="flex items-center space-x-1.5 sm:space-x-2 bg-indigo-900/20 hover:bg-indigo-900/40 px-2 sm:px-4 py-1 sm:py-1.5 rounded-full border border-indigo-800/50 transition-colors cursor-pointer"
-                title="Klik untuk melompat ke cicilan bulan ini"
-              >
-                 <span className="text-[10px] sm:text-xs text-indigo-400/70 uppercase tracking-wider">Hari Ini</span>
-                 <div className="h-3 w-px bg-indigo-800/50"></div>
-                 <span className="text-xs sm:text-sm font-semibold text-indigo-300">{currentDate}</span>
-              </button>
-            )}
 
-            <div className="flex gap-1.5 sm:gap-2 ml-0 sm:ml-2 mt-2 sm:mt-0">
+            <div className="flex gap-1.5 sm:gap-2">
               <button onClick={handleExportData} title="Backup Data (Download)" className="p-1 sm:p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-md sm:rounded-lg border border-slate-700 transition-colors">
                 <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -260,17 +260,20 @@ export default function Dashboard() {
           </div>
         </header>
 
-        {/* Layout Tabel dirapatkan untuk Mobile (px-2 / p-2) */}
-        <div className="flex-1 overflow-auto p-2 sm:p-12">
-          <div className="max-w-3xl mx-auto bg-[#111827] rounded-xl sm:rounded-2xl border border-slate-800/80 shadow-2xl overflow-hidden">
-            <div className="overflow-x-auto h-[calc(100vh-14rem)] sm:h-[calc(100vh-16rem)] relative custom-scrollbar">
-              <table className="w-full divide-y divide-slate-800/60 text-left border-collapse">
-                <thead className="bg-[#111827]/95 backdrop-blur-sm sticky top-0 z-20 shadow-sm">
+        {/* Kontainer Utama yang mengambil sisa ruang dan TIDAK scroll */}
+        <div className="flex-1 p-3 sm:p-12 overflow-hidden flex flex-col w-full">
+          <div className="w-full max-w-4xl mx-auto flex-1 bg-[#111827] rounded-xl sm:rounded-2xl border border-slate-800/80 shadow-2xl flex flex-col overflow-hidden">
+            
+            {/* Area Tabel (Ini satu-satunya yang boleh di-scroll) */}
+            <div className="flex-1 overflow-y-auto overflow-x-auto custom-scrollbar relative">
+              <table className="w-full text-left border-collapse min-w-[300px]">
+                {/* Header Tabel Nempel di atas kontainer ini */}
+                <thead className="bg-[#111827] sticky top-0 z-20 shadow-[0_1px_0_0_rgba(30,41,59,0.6)]">
                   <tr>
-                    <th scope="col" className="py-3 sm:py-5 pl-2 sm:pl-6 pr-1 sm:pr-3 text-[9px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider w-8 sm:w-20">No.</th>
-                    <th scope="col" className="px-1 sm:px-4 py-3 sm:py-5 text-[9px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Tanggal</th>
-                    <th scope="col" className="px-1 sm:px-4 py-3 sm:py-5 text-[9px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider text-right">Total (Rp)</th>
-                    <th scope="col" className="py-3 sm:py-5 px-1 sm:px-4 text-[9px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider text-center w-20 sm:w-40">Bukti</th>
+                    <th scope="col" className="py-3 sm:py-5 pl-2 sm:pl-6 pr-1 sm:pr-3 text-[9px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider w-8 sm:w-20 bg-[#111827]">No.</th>
+                    <th scope="col" className="px-1 sm:px-4 py-3 sm:py-5 text-[9px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider bg-[#111827]">Tanggal</th>
+                    <th scope="col" className="px-1 sm:px-4 py-3 sm:py-5 text-[9px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider text-right bg-[#111827]">Total (Rp)</th>
+                    <th scope="col" className="py-3 sm:py-5 px-1 sm:px-4 text-[9px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider text-center w-20 sm:w-40 bg-[#111827]">Bukti</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/40 bg-[#111827]">
@@ -363,7 +366,7 @@ export default function Dashboard() {
               </table>
             </div>
             
-            <div className="bg-slate-900/50 border-t border-slate-800/60 px-4 sm:px-8 py-3 sm:py-4 flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
+            <div className="shrink-0 bg-slate-900/50 border-t border-slate-800/60 px-4 sm:px-8 py-3 sm:py-4 flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
                 <span className="text-[10px] sm:text-xs text-slate-500">240 bulan angsuran</span>
                 <span className="text-[10px] sm:text-xs font-medium text-blue-400 flex items-center">
                   <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-blue-500 mr-1.5 sm:mr-2 animate-pulse"></span>
