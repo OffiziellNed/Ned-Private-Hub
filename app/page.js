@@ -98,17 +98,14 @@ export default function Dashboard() {
     setPinError(false);
   };
 
-  // Efek Auto-Submit saat 6 digit PIN terisi
   useEffect(() => {
     if (pinCode.length === 6) {
       if (pinCode === '010525') {
-        // PIN Benar -> Buka Gerbang
         setTimeout(() => {
           setView('home');
           setPinCode('');
         }, 150);
       } else {
-        // PIN Salah -> Munculkan Error & Reset
         setPinError(true);
         setTimeout(() => {
           setPinCode('');
@@ -185,77 +182,79 @@ export default function Dashboard() {
     e.target.value = null;
   };
 
-  // 0. TAMPILAN LOCK SCREEN (Gerbang Depan dengan Custom Numpad)
+  // 0. TAMPILAN LOCK SCREEN (Gerbang Depan dengan Desain UI Mobile Proper)
   if (view === 'locked') {
     return (
       <div className="flex flex-col items-center justify-center min-h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 px-4">
-        <div className="flex flex-col items-center max-w-sm w-full relative -top-8">
-          
-          <div className="w-16 h-16 mb-4 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-xl shadow-indigo-500/20">
-            <span className="text-white font-bold text-3xl leading-none">N</span>
+        <div className="flex flex-col items-center w-full max-w-sm">
+
+          {/* Ikon Gembok Kecil di Atas */}
+          <div className="mb-4 text-slate-400">
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z" />
+            </svg>
           </div>
-          <h3 className="text-2xl font-bold text-slate-100 mb-1 tracking-tight">Ned Private Hub</h3>
-          <p className="text-xs text-slate-500 mb-10 text-center uppercase tracking-widest font-semibold">Security Gateway</p>
+
+          <h3 className="text-xl sm:text-2xl font-bold text-slate-100 mb-1 tracking-tight">Ned Private Hub</h3>
+          <p className="text-xs sm:text-sm text-slate-500 mb-10 text-center font-medium">Your PIN contains 6 digits.</p>
           
-          {/* PIN Display Area */}
-          <div className="flex gap-2 sm:gap-3 mb-8">
+          {/* PIN Display Area (Bulatan Titik / Dots) */}
+          <div className="flex gap-4 mb-10 h-6 items-center justify-center">
             {[...Array(6)].map((_, i) => (
               <div 
                 key={i} 
-                className={`w-10 h-12 sm:w-12 sm:h-14 rounded-2xl flex items-center justify-center text-3xl font-black transition-all duration-300 ${
+                className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full transition-all duration-300 ${
                   pinError 
-                    ? 'bg-red-500/10 text-red-500 border border-red-500/50' 
+                    ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' 
                     : i < pinCode.length 
-                      ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/50 shadow-[0_0_12px_rgba(99,102,241,0.25)]' 
-                      : 'bg-[#111827] text-slate-500 border border-slate-800'
+                      ? 'bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.5)]' 
+                      : 'bg-slate-800'
                 }`}
-              >
-                {i < pinCode.length ? '•' : ''}
-              </div>
+              ></div>
             ))}
           </div>
-          
-          {/* Error Message Space */}
-          <div className="h-6 w-full text-center mb-4">
-             {pinError && <span className="text-xs text-red-400 font-medium">Kode otorisasi tidak valid.</span>}
-          </div>
 
-          {/* Custom Numpad */}
-          <div className="grid grid-cols-3 gap-3 sm:gap-4 w-full max-w-[280px]">
-             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+          {/* Custom Numpad (Bulat sempurna, tanpa border, ada alphabet text) */}
+          <div className="grid grid-cols-3 gap-x-6 gap-y-4 sm:gap-x-8 sm:gap-y-6 w-full max-w-[260px] sm:max-w-[300px] justify-items-center">
+             {[
+               { num: '1', alpha: '' }, { num: '2', alpha: 'ABC' }, { num: '3', alpha: 'DEF' },
+               { num: '4', alpha: 'GHI' }, { num: '5', alpha: 'JKL' }, { num: '6', alpha: 'MNO' },
+               { num: '7', alpha: 'PQRS' }, { num: '8', alpha: 'TUV' }, { num: '9', alpha: 'WXYZ' }
+             ].map(item => (
                 <button 
-                  key={num} 
-                  onClick={() => handleNumClick(num.toString())} 
-                  className="h-16 sm:h-20 rounded-full bg-[#111827] hover:bg-slate-800 active:bg-slate-700 active:scale-95 text-2xl sm:text-3xl text-slate-200 font-medium transition-all shadow-sm border border-slate-800/80"
+                  key={item.num} 
+                  onClick={() => handleNumClick(item.num)} 
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-800/40 hover:bg-slate-700/60 active:bg-slate-700 active:scale-95 flex flex-col items-center justify-center transition-all border-none"
                 >
-                  {num}
+                  <span className="text-2xl sm:text-3xl font-medium text-slate-200 leading-none">{item.num}</span>
+                  {item.alpha && <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 mt-1 leading-none">{item.alpha}</span>}
                 </button>
              ))}
              
-             {/* Tombol Clear */}
-             <button 
-               onClick={() => { setPinCode(''); setPinError(false); }}
-               className="h-16 sm:h-20 rounded-full flex items-center justify-center bg-transparent active:bg-slate-800/50 text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-300 transition-all active:scale-95 uppercase tracking-widest"
-             >
-               Clear
-             </button>
-             
-             {/* Angka 0 */}
-             <button 
-               onClick={() => handleNumClick('0')} 
-               className="h-16 sm:h-20 rounded-full bg-[#111827] hover:bg-slate-800 active:bg-slate-700 active:scale-95 text-2xl sm:text-3xl text-slate-200 font-medium transition-all shadow-sm border border-slate-800/80"
-             >
-               0
-             </button>
-             
-             {/* Tombol Hapus (Backspace) */}
+             {/* Tombol Hapus (Backspace) di Kiri */}
              <button 
                onClick={handleDelete} 
-               className="h-16 sm:h-20 rounded-full flex items-center justify-center bg-transparent active:bg-slate-800/50 text-slate-500 hover:text-slate-300 transition-all active:scale-95"
+               className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center bg-transparent active:bg-slate-800/30 text-slate-400 hover:text-slate-200 transition-all active:scale-95 border-none"
              >
-               <svg className="w-7 h-7 sm:w-8 sm:h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+               <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
                </svg>
+             </button>
+             
+             {/* Angka 0 di Tengah */}
+             <button 
+               onClick={() => handleNumClick('0')} 
+               className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-800/40 hover:bg-slate-700/60 active:bg-slate-700 active:scale-95 flex flex-col items-center justify-center transition-all border-none"
+             >
+               <span className="text-2xl sm:text-3xl font-medium text-slate-200 leading-none">0</span>
+             </button>
+             
+             {/* Tombol Clear di Kanan */}
+             <button 
+               onClick={() => { setPinCode(''); setPinError(false); }}
+               className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center bg-transparent active:bg-slate-800/30 text-xs sm:text-sm font-bold text-slate-400 hover:text-slate-200 transition-all active:scale-95 uppercase tracking-widest border-none"
+             >
+               Clear
              </button>
           </div>
           
@@ -393,11 +392,8 @@ export default function Dashboard() {
                     const isCurrentMonth = row.monthYear === currentMonthId;
                     const hasProof = Boolean(proofs[row.no] && proofs[row.no].trim() !== "");
                     
-                    // Logika khusus: No 1 s/d 45 dianggap sudah lewat (History)
                     const isPast = row.no <= 45;
                     const isCompleted = hasProof || isPast; 
-                    
-                    // Styling text khusus untuk baris 001 - 045 (Sama persis dengan warna disabled icon #475569)
                     const pastTextStyle = isPast && !isCurrentMonth ? { color: '#475569' } : {};
                     
                     return (
@@ -410,15 +406,12 @@ export default function Dashboard() {
                             : (isPast ? 'bg-transparent' : 'hover:bg-slate-800/30')
                         }`}
                       >
-                        {/* Kolom Nomor */}
                         <td 
                           className={`whitespace-nowrap py-3 sm:py-4 pl-2 sm:pl-6 pr-1 sm:pr-3 text-[11px] sm:text-sm font-medium ${isCurrentMonth ? 'text-indigo-400' : (!isPast ? 'text-slate-500 group-hover:text-slate-300' : '')}`}
                           style={pastTextStyle}
                         >
                           {String(row.no).padStart(3, '0')}
                         </td>
-
-                        {/* Kolom Tanggal */}
                         <td 
                           className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm ${isCurrentMonth ? 'text-slate-100 font-semibold' : (!isPast ? 'text-slate-300 group-hover:text-slate-200' : '')}`}
                           style={pastTextStyle}
@@ -426,8 +419,6 @@ export default function Dashboard() {
                           {row.tanggal}
                           {isCurrentMonth && <span className="ml-1 sm:ml-2 inline-flex items-center px-1 sm:px-2 py-0.5 rounded text-[8px] sm:text-[10px] font-medium bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">CUR</span>}
                         </td>
-
-                        {/* Kolom Total Bayar */}
                         <td 
                           className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm tracking-tighter sm:tracking-normal font-mono text-right ${isCurrentMonth ? 'text-indigo-300 font-semibold' : (!isPast ? 'text-slate-200 group-hover:text-white' : '')}`}
                           style={pastTextStyle}
@@ -435,11 +426,8 @@ export default function Dashboard() {
                           {row.totalBayar}
                         </td>
                         
-                        {/* Kolom Aksi */}
                         <td className="whitespace-nowrap py-3 sm:py-4 px-1 sm:px-4 text-center">
                           <div className="flex items-center justify-center gap-1 sm:gap-2">
-                            
-                            {/* Tombol Upload */}
                             <button
                               onClick={() => handleSaveProof(row.no)}
                               title="Input/Edit Link Bukti"
@@ -455,7 +443,6 @@ export default function Dashboard() {
                               </svg>
                             </button>
 
-                            {/* Tombol Mata */}
                             {hasProof ? (
                               <a
                                 href={proofs[row.no]}
@@ -482,7 +469,6 @@ export default function Dashboard() {
                               </span>
                             )}
 
-                            {/* Tombol Checklist Terkunci Hijau Jika isCompleted */}
                             {isCompleted ? (
                               <div 
                                 title={isPast && !hasProof ? "Lunas (Data Historis)" : "Lunas / Bukti Tersimpan"} 
