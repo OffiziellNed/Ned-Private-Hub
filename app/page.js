@@ -38,34 +38,34 @@ const generateAngsuranData = () => {
 export default function Dashboard() {
   const [view, setView] = useState('home');
   const [currentDate, setCurrentDate] = useState('');
+  const [currentMonthId, setCurrentMonthId] = useState('');
   const angsuranData = generateAngsuranData();
 
   useEffect(() => {
-    // Mengambil tanggal hari ini secara dinamis
-    const today = new Date().toLocaleDateString('id-ID', {
+    const now = new Date();
+    
+    // Set format tanggal "Hari Ini" untuk Header
+    const today = now.toLocaleDateString('id-ID', {
       day: 'numeric',
       month: 'long',
       year: 'numeric'
     });
     setCurrentDate(today);
+
+    // Set ID Target berdasarkan bulan dan tahun saat ini (misal: "Aug-26")
+    const targetId = now.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' }).replace(/ /g, '-');
+    setCurrentMonthId(targetId);
   }, []);
 
-  // Fungsi untuk Scrolling Otomatis
+  // Fungsi untuk Scrolling Otomatis ke baris abu-abu gelap
   const scrollToCurrentMonth = () => {
-    const now = new Date();
-    // Samakan format dengan ID yang kita buat (misal: "Aug-26")
-    const targetId = now.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' }).replace(/ /g, '-');
-    const element = document.getElementById(`row-${targetId}`);
-    
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      // Tambahkan efek sorotan (highlight) sementara
-      element.classList.add('bg-indigo-900/40');
-      setTimeout(() => {
-        element.classList.remove('bg-indigo-900/40');
-      }, 2000);
-    } else {
-      alert('Data untuk bulan ini tidak ditemukan dalam jadwal angsuran.');
+    if (currentMonthId) {
+      const element = document.getElementById(`row-${currentMonthId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        alert('Data untuk bulan ini tidak ditemukan dalam jadwal angsuran.');
+      }
     }
   };
 
@@ -186,23 +186,33 @@ export default function Dashboard() {
                 </thead>
                 
                 <tbody className="divide-y divide-slate-800/40 bg-[#111827]">
-                  {angsuranData.map((row) => (
-                    <tr 
-                      key={row.no} 
-                      id={`row-${row.monthYear}`} // ID dipasang di sini untuk penanda Scroll
-                      className="hover:bg-slate-800/30 transition-colors duration-500 group"
-                    >
-                      <td className="whitespace-nowrap py-4 pl-8 pr-3 text-sm font-medium text-slate-500 group-hover:text-slate-300">
-                        {String(row.no).padStart(3, '0')}
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-4 text-sm text-slate-300">
-                        {row.tanggal}
-                      </td>
-                      <td className="whitespace-nowrap px-8 py-4 text-sm font-mono text-slate-200 text-right">
-                        {row.totalBayar}
-                      </td>
-                    </tr>
-                  ))}
+                  {angsuranData.map((row) => {
+                    // Cek apakah baris ini adalah bulan berjalan
+                    const isCurrentMonth = row.monthYear === currentMonthId;
+                    
+                    return (
+                      <tr 
+                        key={row.no} 
+                        id={`row-${row.monthYear}`} 
+                        className={`transition-colors duration-300 group ${
+                          isCurrentMonth 
+                            ? 'bg-slate-800 shadow-inner border-l-4 border-indigo-500' // Abu-abu gelap permanen untuk bulan ini
+                            : 'hover:bg-slate-800/30'
+                        }`}
+                      >
+                        <td className={`whitespace-nowrap py-4 pl-8 pr-3 text-sm font-medium ${isCurrentMonth ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-300'}`}>
+                          {String(row.no).padStart(3, '0')}
+                        </td>
+                        <td className={`whitespace-nowrap px-4 py-4 text-sm ${isCurrentMonth ? 'text-slate-100 font-semibold' : 'text-slate-300'}`}>
+                          {row.tanggal}
+                          {isCurrentMonth && <span className="ml-3 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">CURRENT</span>}
+                        </td>
+                        <td className={`whitespace-nowrap px-8 py-4 text-sm font-mono text-right ${isCurrentMonth ? 'text-indigo-300 font-semibold' : 'text-slate-200'}`}>
+                          {row.totalBayar}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
