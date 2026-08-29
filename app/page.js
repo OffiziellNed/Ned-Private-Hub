@@ -39,16 +39,15 @@ const generateAngsuranData = () => {
 };
 
 export default function Dashboard() {
-  const [view, setView] = useState('home');
+  // Ubah initial view menjadi 'locked'
+  const [view, setView] = useState('locked');
   const [currentDate, setCurrentDate] = useState('');
   const [currentMonthId, setCurrentMonthId] = useState('');
   const [proofs, setProofs] = useState({});
   const [isSyncing, setIsSyncing] = useState(true);
   const fileInputRef = useRef(null);
 
-  // State untuk Fitur Keamanan PIN
-  const [isUnlocked, setIsUnlocked] = useState(false);
-  const [showPinPrompt, setShowPinPrompt] = useState(false);
+  // State untuk Fitur Keamanan PIN di gerbang depan
   const [pinCode, setPinCode] = useState('');
   const [pinError, setPinError] = useState(false);
 
@@ -155,22 +154,11 @@ export default function Dashboard() {
     e.target.value = null;
   };
 
-  // Logika Klik Menu Finansial
-  const handleAccessFinansial = () => {
-    if (isUnlocked) {
-      setView('finansial');
-    } else {
-      setShowPinPrompt(true);
-    }
-  };
-
-  // Logika Submit PIN
+  // Logika Submit PIN di gerbang depan
   const handlePinSubmit = (e) => {
     e.preventDefault();
     if (pinCode === '010525') {
-      setIsUnlocked(true);
-      setShowPinPrompt(false);
-      setView('finansial');
+      setView('home'); // Buka gerbang ke halaman utama
       setPinCode('');
       setPinError(false);
     } else {
@@ -179,6 +167,49 @@ export default function Dashboard() {
     }
   };
 
+  // 0. TAMPILAN LOCK SCREEN (Gerbang Depan)
+  if (view === 'locked') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 px-4">
+        <div className="w-16 h-16 mb-6 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-xl shadow-indigo-500/20">
+          <span className="text-white font-bold text-3xl leading-none">N</span>
+        </div>
+        <div className="bg-[#111827] border border-slate-700/60 rounded-2xl p-8 max-w-sm w-full shadow-2xl shadow-indigo-500/10 flex flex-col items-center">
+          <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mb-4 text-indigo-400">
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-bold text-slate-100 mb-2">Ned Private Hub</h3>
+          <p className="text-sm text-slate-400 mb-6 text-center">Masukkan kode otorisasi untuk mengakses portal pribadi.</p>
+          
+          <form onSubmit={handlePinSubmit} className="w-full flex flex-col gap-4">
+            <input 
+              type="password" 
+              autoFocus
+              value={pinCode}
+              onChange={(e) => {
+                setPinCode(e.target.value);
+                setPinError(false);
+              }}
+              className={`w-full bg-[#0B0F19] border ${pinError ? 'border-red-500/50 focus:border-red-500' : 'border-slate-700 focus:border-indigo-500'} rounded-xl px-4 py-3 text-center text-2xl tracking-widest text-slate-200 outline-none transition-colors`}
+              placeholder="••••••"
+              maxLength={6}
+            />
+            {pinError && <span className="text-xs text-red-400 text-center mt-[-8px]">Kode salah, akses ditolak.</span>}
+            <button 
+              type="submit"
+              className="w-full mt-2 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-500/20"
+            >
+              Unlock Portal
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // 1. TAMPILAN HOME
   if (view === 'home') {
     return (
       <div className="flex flex-col items-center justify-start pt-32 sm:pt-40 min-h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30">
@@ -187,76 +218,19 @@ export default function Dashboard() {
         </div>
         <h1 className="text-4xl sm:text-5xl font-bold text-slate-100 mb-12 tracking-tight">Ned Private Hub</h1>
         <button 
-          onClick={handleAccessFinansial}
-          className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 group w-72 justify-center relative"
+          onClick={() => setView('finansial')}
+          className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 group w-72 justify-center"
         >
-          {/* Ikon Gembok Kecil kalau belum Unlock */}
-          {!isUnlocked && (
-            <div className="absolute -top-2 -right-2 bg-indigo-500 text-white rounded-full p-1 shadow-lg">
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z" />
-              </svg>
-            </div>
-          )}
           <svg className="w-8 h-8 text-indigo-400 group-hover:text-indigo-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <span className="text-xl font-medium text-slate-200 group-hover:text-white transition-colors">Finansial</span>
         </button>
-
-        {/* Modal Prompt PIN */}
-        {showPinPrompt && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B0F19]/80 backdrop-blur-sm px-4">
-            <div className="bg-[#111827] border border-slate-700/60 rounded-2xl p-8 max-w-sm w-full shadow-2xl shadow-indigo-500/10 flex flex-col items-center">
-              <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mb-4 text-indigo-400">
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-slate-100 mb-2">Akses Terkunci</h3>
-              <p className="text-sm text-slate-400 mb-6 text-center">Masukkan kode keamanan untuk mengakses menu Finansial.</p>
-              
-              <form onSubmit={handlePinSubmit} className="w-full flex flex-col gap-4">
-                <input 
-                  type="password" 
-                  autoFocus
-                  value={pinCode}
-                  onChange={(e) => {
-                    setPinCode(e.target.value);
-                    setPinError(false);
-                  }}
-                  className={`w-full bg-[#0B0F19] border ${pinError ? 'border-red-500/50 focus:border-red-500' : 'border-slate-700 focus:border-indigo-500'} rounded-xl px-4 py-3 text-center text-2xl tracking-widest text-slate-200 outline-none transition-colors`}
-                  placeholder="••••••"
-                  maxLength={6}
-                />
-                {pinError && <span className="text-xs text-red-400 text-center mt-[-8px]">Kode salah, silakan coba lagi.</span>}
-                <div className="flex gap-3 mt-2">
-                  <button 
-                    type="button"
-                    onClick={() => {
-                      setShowPinPrompt(false);
-                      setPinCode('');
-                      setPinError(false);
-                    }}
-                    className="flex-1 py-3 rounded-xl bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 transition-colors"
-                  >
-                    Batal
-                  </button>
-                  <button 
-                    type="submit"
-                    className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-500/20"
-                  >
-                    Unlock
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
       </div>
     );
   }
 
+  // 2. TAMPILAN MENU FINANSIAL
   if (view === 'finansial') {
     return (
       <div className="flex flex-col items-center justify-start pt-32 sm:pt-40 min-h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 relative">
@@ -290,6 +264,7 @@ export default function Dashboard() {
     );
   }
 
+  // 3. TAMPILAN DATA ANGSURAN RUMAH
   if (view === 'angsuran') {
     return (
       <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 overflow-hidden">
@@ -362,12 +337,8 @@ export default function Dashboard() {
                   {angsuranData.map((row) => {
                     const isCurrentMonth = row.monthYear === currentMonthId;
                     const hasProof = Boolean(proofs[row.no] && proofs[row.no].trim() !== "");
-                    
-                    // Logika khusus: No 1 s/d 45 dianggap sudah lewat (History)
                     const isPast = row.no <= 45;
                     const isCompleted = hasProof || isPast; 
-                    
-                    // Styling text khusus untuk baris 001 - 045 (Sama persis dengan warna disabled icon #475569)
                     const pastTextStyle = isPast && !isCurrentMonth ? { color: '#475569' } : {};
                     
                     return (
@@ -380,15 +351,12 @@ export default function Dashboard() {
                             : (isPast ? 'bg-transparent' : 'hover:bg-slate-800/30')
                         }`}
                       >
-                        {/* Kolom Nomor */}
                         <td 
                           className={`whitespace-nowrap py-3 sm:py-4 pl-2 sm:pl-6 pr-1 sm:pr-3 text-[11px] sm:text-sm font-medium ${isCurrentMonth ? 'text-indigo-400' : (!isPast ? 'text-slate-500 group-hover:text-slate-300' : '')}`}
                           style={pastTextStyle}
                         >
                           {String(row.no).padStart(3, '0')}
                         </td>
-
-                        {/* Kolom Tanggal */}
                         <td 
                           className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm ${isCurrentMonth ? 'text-slate-100 font-semibold' : (!isPast ? 'text-slate-300 group-hover:text-slate-200' : '')}`}
                           style={pastTextStyle}
@@ -396,8 +364,6 @@ export default function Dashboard() {
                           {row.tanggal}
                           {isCurrentMonth && <span className="ml-1 sm:ml-2 inline-flex items-center px-1 sm:px-2 py-0.5 rounded text-[8px] sm:text-[10px] font-medium bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">CUR</span>}
                         </td>
-
-                        {/* Kolom Total Bayar */}
                         <td 
                           className={`whitespace-nowrap px-1 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm tracking-tighter sm:tracking-normal font-mono text-right ${isCurrentMonth ? 'text-indigo-300 font-semibold' : (!isPast ? 'text-slate-200 group-hover:text-white' : '')}`}
                           style={pastTextStyle}
@@ -405,11 +371,8 @@ export default function Dashboard() {
                           {row.totalBayar}
                         </td>
                         
-                        {/* Kolom Aksi */}
                         <td className="whitespace-nowrap py-3 sm:py-4 px-1 sm:px-4 text-center">
                           <div className="flex items-center justify-center gap-1 sm:gap-2">
-                            
-                            {/* Tombol Upload */}
                             <button
                               onClick={() => handleSaveProof(row.no)}
                               title="Input/Edit Link Bukti"
@@ -425,7 +388,6 @@ export default function Dashboard() {
                               </svg>
                             </button>
 
-                            {/* Tombol Mata */}
                             {hasProof ? (
                               <a
                                 href={proofs[row.no]}
@@ -452,7 +414,6 @@ export default function Dashboard() {
                               </span>
                             )}
 
-                            {/* Tombol Checklist Terkunci Hijau Jika isCompleted */}
                             {isCompleted ? (
                               <div 
                                 title={isPast && !hasProof ? "Lunas (Data Historis)" : "Lunas / Bukti Tersimpan"} 
