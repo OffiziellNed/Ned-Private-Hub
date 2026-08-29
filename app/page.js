@@ -17,11 +17,19 @@ const generateAngsuranData = () => {
     else if (i >= 61 && i <= 239) amount = "4,064,640.85";
     else if (i === 240) amount = "4,064,642.33";
 
+    // Format lengkap untuk tampilan: "25-Oct-22"
+    const fullDate = startDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }).replace(/ /g, '-');
+    // Format khusus pencarian ID bulan-tahun: "Oct-22"
+    const monthYear = startDate.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' }).replace(/ /g, '-');
+
     data.push({
       no: i,
-      tanggal: startDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }).replace(/ /g, '-'),
+      tanggal: fullDate,
+      monthYear: monthYear,
       totalBayar: amount
     });
+    
+    // Tambah 1 bulan untuk iterasi berikutnya
     startDate.setMonth(startDate.getMonth() + 1);
   }
   return data;
@@ -33,7 +41,7 @@ export default function Dashboard() {
   const angsuranData = generateAngsuranData();
 
   useEffect(() => {
-    // Mengambil tanggal hari ini secara dinamis untuk menghindari hydration error
+    // Mengambil tanggal hari ini secara dinamis
     const today = new Date().toLocaleDateString('id-ID', {
       day: 'numeric',
       month: 'long',
@@ -41,6 +49,25 @@ export default function Dashboard() {
     });
     setCurrentDate(today);
   }, []);
+
+  // Fungsi untuk Scrolling Otomatis
+  const scrollToCurrentMonth = () => {
+    const now = new Date();
+    // Samakan format dengan ID yang kita buat (misal: "Aug-26")
+    const targetId = now.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' }).replace(/ /g, '-');
+    const element = document.getElementById(`row-${targetId}`);
+    
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Tambahkan efek sorotan (highlight) sementara
+      element.classList.add('bg-indigo-900/40');
+      setTimeout(() => {
+        element.classList.remove('bg-indigo-900/40');
+      }, 2000);
+    } else {
+      alert('Data untuk bulan ini tidak ditemukan dalam jadwal angsuran.');
+    }
+  };
 
   // 1. TAMPILAN HOME
   if (view === 'home') {
@@ -103,8 +130,8 @@ export default function Dashboard() {
     return (
       <div className="flex flex-col h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30">
         
-        {/* Header Data Tabel */}
-        <header className="py-8 bg-[#0B0F19]/90 backdrop-blur-md border-b border-slate-800/60 flex flex-col items-center justify-center sticky top-0 z-10 shrink-0 relative">
+        {/* Header dengan Garis Bawah yang Lebih Gelap (#05070B) */}
+        <header className="py-8 bg-[#0B0F19]/90 backdrop-blur-md border-b-2 border-[#05070B] flex flex-col items-center justify-center sticky top-0 z-10 shrink-0 relative">
           
           {/* Tombol Kembali */}
           <button 
@@ -129,18 +156,22 @@ export default function Dashboard() {
                <span className="text-sm font-semibold text-emerald-400">NED DEAN BARUS</span>
             </div>
             
-            {/* Badge Tanggal Terkini */}
+            {/* Badge Tanggal Terkini (Clickable) */}
             {currentDate && (
-              <div className="flex items-center space-x-2 bg-indigo-900/20 px-4 py-1.5 rounded-full border border-indigo-800/50">
+              <button 
+                onClick={scrollToCurrentMonth}
+                className="flex items-center space-x-2 bg-indigo-900/20 hover:bg-indigo-900/40 px-4 py-1.5 rounded-full border border-indigo-800/50 transition-colors cursor-pointer"
+                title="Klik untuk melompat ke cicilan bulan ini"
+              >
                  <span className="text-xs text-indigo-400/70 uppercase tracking-wider">Hari Ini</span>
                  <div className="h-3 w-px bg-indigo-800/50"></div>
                  <span className="text-sm font-semibold text-indigo-300">{currentDate}</span>
-              </div>
+              </button>
             )}
           </div>
         </header>
 
-        {/* Area Tabel Dipersempit (Menggunakan max-w-3xl) */}
+        {/* Area Tabel */}
         <div className="flex-1 overflow-auto p-6 sm:p-12">
           <div className="max-w-3xl mx-auto bg-[#111827] rounded-2xl border border-slate-800/80 shadow-2xl overflow-hidden">
             
@@ -156,7 +187,11 @@ export default function Dashboard() {
                 
                 <tbody className="divide-y divide-slate-800/40 bg-[#111827]">
                   {angsuranData.map((row) => (
-                    <tr key={row.no} className="hover:bg-slate-800/30 transition-colors duration-150 group">
+                    <tr 
+                      key={row.no} 
+                      id={`row-${row.monthYear}`} // ID dipasang di sini untuk penanda Scroll
+                      className="hover:bg-slate-800/30 transition-colors duration-500 group"
+                    >
                       <td className="whitespace-nowrap py-4 pl-8 pr-3 text-sm font-medium text-slate-500 group-hover:text-slate-300">
                         {String(row.no).padStart(3, '0')}
                       </td>
