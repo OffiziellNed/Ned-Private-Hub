@@ -50,51 +50,69 @@ const parseImageUrl = (url) => {
   return url;
 };
 
-// --- KOMPONEN KHUSUS KARTU PROMPT (Desain Clean Tanpa Teks Prompt) ---
+// --- KOMPONEN KHUSUS KARTU PROMPT (Desain Hover Carousel Premium) ---
 function PromptCard({ p, index, onDelete, copyToClipboard, copySuccess }) {
   const [activeSlide, setActiveSlide] = useState(0);
   const images = [p.image1, p.image2, p.image3].filter(img => img && img.trim() !== '');
 
+  const nextSlide = () => {
+    setActiveSlide((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevSlide = () => {
+    setActiveSlide((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
   return (
     <div className="flex flex-col h-full animate-fadeIn">
-      {/* Header Judul */}
-      <div className="flex justify-between items-start mb-3 gap-2">
-        <h3 className="font-bold text-slate-100 text-[17px] leading-tight">
+      {/* Header Judul (Dibuat lebih besar) */}
+      <div className="flex justify-between items-start mb-4 gap-2">
+        <h3 className="font-extrabold text-slate-100 text-[20px] leading-tight tracking-wide">
           {index + 1}. {p.title}
         </h3>
         <button onClick={() => onDelete(p.id)} className="p-1 mt-0.5 text-slate-600 hover:text-red-400 transition-colors shrink-0" title="Hapus">
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
         </button>
       </div>
 
-      {/* Slide Tabs (Slide 1 | Slide 2) */}
-      {images.length > 0 && (
-        <div className="flex gap-4 border-b border-slate-800 pb-1.5 mb-3">
-          {images.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setActiveSlide(idx)}
-              className={`text-[11px] font-semibold tracking-wider pb-1.5 -mb-[7px] border-b-2 transition-all ${
-                activeSlide === idx 
-                  ? 'text-red-500 border-red-500' 
-                  : 'text-slate-500 border-transparent hover:text-slate-300'
-              }`}
-            >
-              Slide {idx + 1}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* Gambar Utama */}
-      <div className="w-full aspect-[4/5] rounded-xl overflow-hidden bg-slate-900 mb-4 shadow-lg shrink-0">
+      {/* Gambar Utama (Carousel / Slider) */}
+      <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-slate-900 mb-4 shadow-lg shrink-0 group">
         {images.length > 0 ? (
-           <img 
-             src={parseImageUrl(images[activeSlide])} 
-             alt={`Slide ${activeSlide + 1}`} 
-             className="w-full h-full object-cover transition-opacity duration-300" 
-             onError={(e) => { e.target.src = `https://via.placeholder.com/600x800/1e293b/475569?text=Image+Error`; }} 
-           />
+           <>
+             <img 
+               src={parseImageUrl(images[activeSlide])} 
+               alt={`Slide ${activeSlide + 1}`} 
+               className="w-full h-full object-cover transition-opacity duration-300" 
+               onError={(e) => { e.target.src = `https://via.placeholder.com/600x800/1e293b/475569?text=Image+Error`; }} 
+             />
+             
+             {/* Indikator Posisi Slide */}
+             {images.length > 1 && (
+               <div className="absolute top-3 right-3 bg-black/60 text-slate-300 text-[10px] px-2.5 py-1 rounded-md font-mono border border-white/10 backdrop-blur-md pointer-events-none">
+                 {activeSlide + 1} / {images.length}
+               </div>
+             )}
+
+             {/* Tombol Kiri */}
+             {images.length > 1 && (
+               <button 
+                 onClick={prevSlide}
+                 className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-black/30 hover:bg-black/70 text-white/50 hover:text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm"
+               >
+                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg>
+               </button>
+             )}
+
+             {/* Tombol Kanan */}
+             {images.length > 1 && (
+               <button 
+                 onClick={nextSlide}
+                 className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-black/30 hover:bg-black/70 text-white/50 hover:text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm"
+               >
+                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
+               </button>
+             )}
+           </>
         ) : (
            <div className="w-full h-full flex items-center justify-center text-slate-700 text-xs">No Image</div>
         )}
@@ -239,7 +257,7 @@ export default function Dashboard() {
   };
 
   const handleClearAllTransactions = async () => {
-    if (!confirm("Hapus SEMUA data transaksi? (Data tidak bisa dikembalikan)")) return;
+    if (!confirm("Hapus SEMUA data transaksi untuk bulan ini? (Data tidak bisa dikembalikan)")) return;
     setTransactions([]);
     if (supabase) await supabase.from('transaksi_keuangan').delete().gt('id', 0);
   };
@@ -427,7 +445,7 @@ export default function Dashboard() {
     );
   }
 
-  // 3. PROMPT GALLERY (Layout Grid 4 Kolom)
+  // 3. PROMPT GALLERY
   if (view === 'prompt_gallery') {
     return (
       <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-purple-500/30 overflow-hidden">
@@ -479,7 +497,7 @@ export default function Dashboard() {
     );
   }
 
-  // 4. TRANSAKSI
+  // 4. TRANSAKSI (Sama seperti sebelumnya)
   if (view === 'transaksi') {
     return (
       <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 overflow-hidden">
