@@ -50,6 +50,12 @@ export default function Dashboard() {
   const [pinCode, setPinCode] = useState('');
   const [pinError, setPinError] = useState(false);
 
+  // State untuk Transaksi (Pendapatan & Pengeluaran)
+  const [transactions, setTransactions] = useState([]);
+  const [descInput, setDescInput] = useState('');
+  const [amountInput, setAmountInput] = useState('');
+  const [typeInput, setTypeInput] = useState('pendapatan'); // 'pendapatan' atau 'pengeluaran'
+
   const angsuranData = generateAngsuranData();
 
   useEffect(() => {
@@ -64,25 +70,32 @@ export default function Dashboard() {
     const targetId = now.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' }).replace(/ /g, '-');
     setCurrentMonthId(targetId);
 
-    const fetchProofs = async () => {
+    const fetchData = async () => {
       if (!supabase) {
         setIsSyncing(false);
         return;
       }
-      const { data, error } = await supabase.from('angsuran_rumah').select('*');
-      if (error) {
-        console.error("Gagal menarik data cloud:", error);
-      } else if (data) {
+      
+      // Ambil data bukti angsuran
+      const { data: proofData, error: proofErr } = await supabase.from('angsuran_rumah').select('*');
+      if (!proofErr && proofData) {
         const loadedProofs = {};
-        data.forEach(item => {
+        proofData.forEach(item => {
           loadedProofs[item.no_angsuran] = item.link_bukti;
         });
         setProofs(loadedProofs);
       }
+
+      // Ambil data transaksi (pendapatan & pengeluaran)
+      const { data: trxData, error: trxErr } = await supabase.from('transaksi_keuangan').select('*');
+      if (!trxErr && trxData) {
+        setTransactions(trxData);
+      }
+
       setIsSyncing(false);
     };
 
-    fetchProofs();
+    fetchData();
   }, []);
 
   // --- LOGIKA CUSTOM NUMPAD PIN ---
@@ -136,6 +149,59 @@ export default function Dashboard() {
     }
   };
 
+  // --- LOGIKA TAMBAH / HAPUS TRANSAKSI ---
+  const handleAddTransaction = async (e) => {
+    e.preventDefault();
+    if (!descInput.trim() || !amountInput) return;
+
+    const newTrx = {
+      id: Date.now(),
+      deskripsi: descInput.trim(),
+      nominal: parseFloat(amountInput),
+      tipe: typeInput // 'pendapatan' atau 'pengeluaran'
+    };
+
+    const updatedTrxList = [newTrx, ...transactions];
+    setTransactions(updatedTrxList);
+    setDescInput('');
+    setAmountInput('');
+
+    if (supabase) {
+      const { error } = await supabase.from('transaksi_keuangan').insert([newTrx]);
+      if (error) {
+        alert("Gagal menyimpan transaksi ke cloud: " + error.message);
+      }
+    }
+  };
+
+  const handleDeleteTransaction = async (id) => {
+    const updatedTrxList = transactions.filter(t => t.id !== id);
+    setTransactions(updatedTrxList);
+
+    if (supabase) {
+      const { error } = await supabase.from('transaksi_keuangan').delete().eq('id', id);
+      if (error) {
+        alert("Gagal menghapus transaksi dari cloud.");
+      }
+    }
+  };
+
+  // Kalkulator Total
+  const totalPendapatan = transactions
+    .filter(t => t.tipe === 'pendapatan')
+    .reduce((acc, curr) => acc + Number(curr.nominal), 0);
+
+  const totalPengeluaran = transactions
+    .filter(t => t.tipe === 'pengeluaran')
+    .reduce((acc, curr) => acc + Number(curr.nominal), 0);
+
+  const sisaSaldo = totalPendapatan - totalPengeluaran;
+
+  const formatRupiah = (num) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+  };
+  // ---------------------------------------
+
   const scrollToCurrentMonth = () => {
     if (currentMonthId) {
       const element = document.getElementById(`row-${currentMonthId}`);
@@ -182,13 +248,11 @@ export default function Dashboard() {
     e.target.value = null;
   };
 
-  // 0. TAMPILAN LOCK SCREEN (Benar-benar Center Mutlak di Tengah Layar)
+  // 0. TAMPILAN LOCK SCREEN
   if (view === 'locked') {
     return (
       <div className="fixed inset-0 w-screen h-screen bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 flex items-center justify-center overflow-hidden">
         <div className="flex flex-col items-center justify-center w-full max-w-sm px-4">
-
-          {/* Ikon Gembok Kecil di Atas */}
           <div className="mb-2 text-slate-400">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z" />
@@ -198,7 +262,6 @@ export default function Dashboard() {
           <h3 className="text-xl sm:text-2xl font-bold text-slate-100 mb-0.5 tracking-tight">Ned Private Hub</h3>
           <p className="text-xs sm:text-sm text-slate-500 mb-6 text-center font-medium">Your PIN contains 6 digits.</p>
           
-          {/* PIN Display Area (Bulatan Titik / Dots) */}
           <div className="flex gap-4 mb-8 h-5 items-center justify-center">
             {[...Array(6)].map((_, i) => (
               <div 
@@ -214,7 +277,6 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* Custom Numpad (Bulat sempurna, polosan tanpa huruf) */}
           <div className="grid grid-cols-3 gap-x-5 gap-y-3 sm:gap-x-7 sm:gap-y-4 w-full max-w-[260px] sm:max-w-[290px] justify-items-center">
              {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map(num => (
                 <button 
@@ -226,7 +288,6 @@ export default function Dashboard() {
                 </button>
              ))}
              
-             {/* Tombol Hapus (Backspace) di Kiri */}
              <button 
                onClick={handleDelete} 
                className="w-16 h-16 sm:w-18 sm:h-18 rounded-full flex items-center justify-center bg-transparent active:bg-slate-800/30 text-slate-400 hover:text-slate-200 transition-all active:scale-95 border-none"
@@ -236,7 +297,6 @@ export default function Dashboard() {
                </svg>
              </button>
              
-             {/* Angka 0 di Tengah */}
              <button 
                onClick={() => handleNumClick('0')} 
                className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-slate-800/40 hover:bg-slate-700/60 active:bg-slate-700 active:scale-95 flex items-center justify-center transition-all border-none text-2xl sm:text-3xl font-medium text-slate-200 shadow-sm"
@@ -244,7 +304,6 @@ export default function Dashboard() {
                0
              </button>
              
-             {/* Tombol Clear di Kanan */}
              <button 
                onClick={() => { setPinCode(''); setPinError(false); }}
                className="w-16 h-16 sm:w-18 sm:h-18 rounded-full flex items-center justify-center bg-transparent active:bg-slate-800/30 text-xs sm:text-sm font-bold text-slate-400 hover:text-slate-200 transition-all active:scale-95 uppercase tracking-widest border-none"
@@ -252,7 +311,6 @@ export default function Dashboard() {
                Clear
              </button>
           </div>
-          
         </div>
       </div>
     );
@@ -279,10 +337,10 @@ export default function Dashboard() {
     );
   }
 
-  // 2. TAMPILAN MENU FINANSIAL
+  // 2. TAMPILAN MENU FINANSIAL (Dengan Sub-Menu Transaksi & Angsuran)
   if (view === 'finansial') {
     return (
-      <div className="flex flex-col items-center justify-start pt-32 sm:pt-40 min-h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 relative">
+      <div className="flex flex-col items-center justify-start pt-24 sm:pt-32 min-h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 relative px-4">
         <button 
           onClick={() => setView('home')} 
           className="absolute top-6 left-4 sm:top-12 sm:left-12 flex items-center text-slate-400 hover:text-slate-200 transition-colors px-4 py-2 rounded-lg hover:bg-slate-800/50"
@@ -298,22 +356,167 @@ export default function Dashboard() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-bold text-slate-100 mb-12 tracking-tight">Finansial</h1>
+        <h1 className="text-3xl sm:text-5xl font-bold text-slate-100 mb-8 sm:mb-12 tracking-tight">Finansial</h1>
         
-        <button 
-          onClick={() => setView('angsuran')}
-          className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 group w-80 justify-center"
-        >
-          <svg className="w-8 h-8 text-indigo-400 group-hover:text-indigo-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-          </svg>
-          <span className="text-xl font-medium text-slate-200 group-hover:text-white transition-colors">Angsuran Rumah</span>
-        </button>
+        <div className="flex flex-col gap-4 w-full max-w-xs sm:max-w-sm">
+          {/* Menu Angsuran Rumah */}
+          <button 
+            onClick={() => setView('angsuran')}
+            className="flex items-center gap-4 px-6 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 group justify-start"
+          >
+            <svg className="w-7 h-7 text-indigo-400 group-hover:text-indigo-300 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <span className="text-lg font-medium text-slate-200 group-hover:text-white transition-colors">Angsuran Rumah</span>
+          </button>
+
+          {/* Menu Baru: Pendapatan dan Pengeluaran dengan Icon Transaksi */}
+          <button 
+            onClick={() => setView('transaksi')}
+            className="flex items-center gap-4 px-6 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 group justify-start"
+          >
+            <svg className="w-7 h-7 text-emerald-400 group-hover:text-emerald-300 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z" />
+            </svg>
+            <span className="text-lg font-medium text-slate-200 group-hover:text-white transition-colors">Pendapatan & Pengeluaran</span>
+          </button>
+        </div>
       </div>
     );
   }
 
-  // 3. TAMPILAN DATA ANGSURAN RUMAH
+  // 3. TAMPILAN MENU PENDAPATAN DAN PENGELUARAN (Kalkulator Arus Kas)
+  if (view === 'transaksi') {
+    return (
+      <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 overflow-hidden">
+        
+        <header className="shrink-0 py-6 sm:py-8 px-4 bg-[#0B0F19] border-b-2 border-[#05070B] flex flex-col items-center justify-center relative z-30 shadow-md">
+          <button 
+            onClick={() => setView('finansial')} 
+            className="absolute left-4 top-6 sm:left-12 sm:top-1/2 sm:-translate-y-1/2 p-2 sm:p-3 rounded-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700/50"
+          >
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          </button>
+
+          <h2 className="text-lg sm:text-2xl font-bold text-slate-100 text-center">Pendapatan & Pengeluaran</h2>
+          <p className="text-[10px] sm:text-sm text-slate-500 mt-1 text-center">Kalkulator cashflow bulanan otomatis</p>
+        </header>
+
+        <div className="flex-1 p-3 sm:p-8 overflow-hidden flex flex-col w-full max-w-4xl mx-auto">
+          
+          {/* Kartu Ringkasan (Kalkulator Total) */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 shrink-0">
+            <div className="bg-[#111827] border border-emerald-800/40 rounded-xl p-4 flex flex-col justify-between shadow-lg">
+              <span className="text-xs font-medium text-emerald-400 uppercase tracking-wider">Total Pendapatan</span>
+              <span className="text-lg sm:text-xl font-bold font-mono text-emerald-300 mt-2">{formatRupiah(totalPendapatan)}</span>
+            </div>
+            <div className="bg-[#111827] border border-red-800/40 rounded-xl p-4 flex flex-col justify-between shadow-lg">
+              <span className="text-xs font-medium text-red-400 uppercase tracking-wider">Total Pengeluaran</span>
+              <span className="text-lg sm:text-xl font-bold font-mono text-red-300 mt-2">{formatRupiah(totalPengeluaran)}</span>
+            </div>
+            <div className="bg-[#111827] border border-indigo-800/40 rounded-xl p-4 flex flex-col justify-between shadow-lg">
+              <span className="text-xs font-medium text-indigo-400 uppercase tracking-wider">Sisa Saldo Bersih</span>
+              <span className={`text-lg sm:text-xl font-bold font-mono mt-2 ${sisaSaldo >= 0 ? 'text-indigo-300' : 'text-red-400'}`}>{formatRupiah(sisaSaldo)}</span>
+            </div>
+          </div>
+
+          {/* Form Input Data Baru */}
+          <form onSubmit={handleAddTransaction} className="bg-[#111827] border border-slate-800 rounded-xl p-4 mb-4 shrink-0 flex flex-col sm:flex-row gap-3">
+            <select 
+              value={typeInput} 
+              onChange={(e) => setTypeInput(e.target.value)}
+              className="bg-[#0B0F19] border border-slate-700 text-slate-200 text-sm rounded-lg px-3 py-2.5 outline-none focus:border-indigo-500"
+            >
+              <option value="pendapatan">Pendapatan (+)</option>
+              <option value="pengeluaran">Pengeluaran (-)</option>
+            </select>
+            
+            <input 
+              type="text" 
+              placeholder="Deskripsi (contoh: Gaji Bulanan / Belanja)" 
+              value={descInput}
+              onChange={(e) => setDescInput(e.target.value)}
+              className="flex-1 bg-[#0B0F19] border border-slate-700 text-slate-200 text-sm rounded-lg px-4 py-2.5 outline-none focus:border-indigo-500"
+              required
+            />
+
+            <input 
+              type="number" 
+              placeholder="Nominal (Rp)" 
+              value={amountInput}
+              onChange={(e) => setAmountInput(e.target.value)}
+              className="w-full sm:w-44 bg-[#0B0F19] border border-slate-700 text-slate-200 text-sm rounded-lg px-4 py-2.5 outline-none focus:border-indigo-500 font-mono"
+              required
+            />
+
+            <button 
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors shadow-md shadow-indigo-500/20"
+            >
+              Simpan
+            </button>
+          </form>
+
+          {/* Tabel Riwayat Transaksi */}
+          <div className="flex-1 bg-[#111827] rounded-xl border border-slate-800/80 shadow-2xl flex flex-col overflow-hidden">
+            <div className="flex-1 overflow-y-auto custom-scrollbar relative">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-[#111827] sticky top-0 z-20 shadow-[0_1px_0_0_rgba(30,41,59,0.6)]">
+                  <tr>
+                    <th scope="col" className="py-3 px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider bg-[#111827]">Tipe</th>
+                    <th scope="col" className="py-3 px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider bg-[#111827]">Deskripsi</th>
+                    <th scope="col" className="py-3 px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider text-right bg-[#111827]">Nominal (Rp)</th>
+                    <th scope="col" className="py-3 px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider text-center w-16 bg-[#111827]">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/40 bg-[#111827]">
+                  {transactions.length === 0 ? (
+                    <tr>
+                      <td colSpan="4" className="text-center py-12 text-slate-500 text-sm">Belum ada data transaksi yang dimasukkan.</td>
+                    </tr>
+                  ) : (
+                    transactions.map((t) => (
+                      <tr key={t.id} className="hover:bg-slate-800/30 transition-colors">
+                        <td className="py-3 px-4 text-xs">
+                          <span className={`inline-flex px-2 py-0.5 rounded font-medium text-[10px] uppercase ${t.tipe === 'pendapatan' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
+                            {t.tipe}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-sm text-slate-200 font-medium">{t.deskripsi}</td>
+                        <td className={`py-3 px-4 text-sm font-mono text-right font-semibold ${t.tipe === 'pendapatan' ? 'text-emerald-400' : 'text-red-400'}`}>
+                          {t.tipe === 'pendapatan' ? '+' : '-'} {formatRupiah(t.nominal)}
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          <button 
+                            onClick={() => handleDeleteTransaction(t.id)}
+                            title="Hapus Transaksi"
+                            className="p-1.5 rounded-lg bg-red-950/30 text-red-400 border border-red-900/50 hover:bg-red-900/50 transition-colors"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+            
+            <div className="shrink-0 bg-slate-900/50 border-t border-slate-800/60 px-4 py-3 text-center">
+              <span className="text-[11px] text-slate-500">Data otomatis tersimpan aman di Supabase Cloud</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    );
+  }
+
+  // 4. TAMPILAN DATA ANGSURAN RUMAH
   if (view === 'angsuran') {
     return (
       <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 overflow-hidden">
