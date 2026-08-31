@@ -60,7 +60,7 @@ export default function Dashboard() {
   const [pinCode, setPinCode] = useState('');
   const [pinError, setPinError] = useState(false);
 
-  // State untuk Transaksi
+  // State untuk Transaksi (Pendapatan & Pengeluaran)
   const [transactions, setTransactions] = useState([]);
   const [descInput, setDescInput] = useState('');
   const [amountInput, setAmountInput] = useState('');
@@ -512,41 +512,50 @@ export default function Dashboard() {
         <div className="flex-1 overflow-y-auto p-4 sm:p-8 custom-scrollbar">
           <div className="max-w-7xl mx-auto">
             
-            {/* Form Tambah Prompt Baru */}
+            {/* Form Tambah Prompt Baru (Layout Menurun Sesuai Revisi) */}
             {showPromptForm && (
-              <form onSubmit={handleAddPrompt} className="bg-[#111827] border border-slate-800 rounded-2xl p-5 mb-8 shadow-xl flex flex-col gap-4 animate-fadeIn">
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <div className="flex-1 flex flex-col gap-3">
-                    <input 
-                      type="text" placeholder="Nama / Judul Prompt" required
-                      value={promptForm.title} onChange={(e) => setPromptForm({...promptForm, title: e.target.value})}
-                      className="w-full bg-[#0B0F19] border border-slate-700 text-slate-200 text-sm rounded-lg px-4 py-3 outline-none focus:border-purple-500 font-semibold"
-                    />
-                    <input 
-                      type="text" placeholder="Link Gambar 1 (Google Drive / URL)" required
-                      value={promptForm.image1} onChange={(e) => setPromptForm({...promptForm, image1: e.target.value})}
-                      className="w-full bg-[#0B0F19] border border-slate-700 text-slate-400 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-purple-500"
-                    />
-                    <input 
-                      type="text" placeholder="Link Gambar 2 (Google Drive / URL)" required
-                      value={promptForm.image2} onChange={(e) => setPromptForm({...promptForm, image2: e.target.value})}
-                      className="w-full bg-[#0B0F19] border border-slate-700 text-slate-400 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-purple-500"
-                    />
-                    <input 
-                      type="text" placeholder="Link Gambar 3 (Google Drive / URL)" required
-                      value={promptForm.image3} onChange={(e) => setPromptForm({...promptForm, image3: e.target.value})}
-                      className="w-full bg-[#0B0F19] border border-slate-700 text-slate-400 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-purple-500"
-                    />
-                  </div>
-                  <div className="flex-1 flex flex-col gap-3">
-                    <textarea 
-                      placeholder="Masukkan text prompt AI di sini..." required
-                      value={promptForm.text} onChange={(e) => setPromptForm({...promptForm, text: e.target.value})}
-                      className="w-full h-full min-h-[140px] bg-[#0B0F19] border border-slate-700 text-slate-300 text-sm rounded-lg px-4 py-3 outline-none focus:border-purple-500 resize-none leading-relaxed"
-                    ></textarea>
-                  </div>
+              <form onSubmit={handleAddPrompt} className="bg-[#111827] border border-slate-800 rounded-2xl p-6 mb-8 shadow-xl flex flex-col animate-fadeIn">
+                
+                {/* Judul Prompt */}
+                <input 
+                  type="text" placeholder="Nama / Judul Prompt" required
+                  value={promptForm.title} onChange={(e) => setPromptForm({...promptForm, title: e.target.value})}
+                  className="w-full border border-slate-700 text-sm rounded-lg px-4 py-3 outline-none focus:border-purple-500 font-bold mb-5"
+                  style={{ backgroundColor: '#0B0F19', color: '#e2e8f0' }}
+                />
+                
+                {/* 3 Link Google Drive Menurun */}
+                <div className="flex flex-col gap-3 mb-5">
+                  <input 
+                    type="text" placeholder="Link Gambar 1 (Google Drive / URL)" required
+                    value={promptForm.image1} onChange={(e) => setPromptForm({...promptForm, image1: e.target.value})}
+                    className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-purple-500"
+                    style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }}
+                  />
+                  <input 
+                    type="text" placeholder="Link Gambar 2 (Google Drive / URL)" required
+                    value={promptForm.image2} onChange={(e) => setPromptForm({...promptForm, image2: e.target.value})}
+                    className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-purple-500"
+                    style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }}
+                  />
+                  <input 
+                    type="text" placeholder="Link Gambar 3 (Google Drive / URL)" required
+                    value={promptForm.image3} onChange={(e) => setPromptForm({...promptForm, image3: e.target.value})}
+                    className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-purple-500"
+                    style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }}
+                  />
                 </div>
-                <div className="flex justify-end gap-3 mt-2">
+
+                {/* Text Prompt Dibawah */}
+                <textarea 
+                  placeholder="Masukkan text prompt AI di sini..." required
+                  value={promptForm.text} onChange={(e) => setPromptForm({...promptForm, text: e.target.value})}
+                  className="w-full min-h-[140px] border border-slate-700 text-sm rounded-lg px-4 py-3 outline-none focus:border-purple-500 resize-none leading-relaxed mb-5"
+                  style={{ backgroundColor: '#0B0F19', color: '#cbd5e1' }}
+                ></textarea>
+                
+                {/* Tombol Simpan */}
+                <div className="flex justify-end gap-3">
                   <button type="button" onClick={() => setShowPromptForm(false)} className="px-6 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition-colors">Batal</button>
                   <button type="submit" className="px-6 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium transition-colors shadow-lg shadow-purple-500/20">Simpan Prompt</button>
                 </div>
