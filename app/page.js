@@ -38,12 +38,18 @@ const generateAngsuranData = () => {
   return data;
 };
 
-// Fungsi Pintar untuk mengubah link Google Drive menjadi Direct Image Link
+// Fungsi Pintar SUPER untuk mengubah link Google Drive menjadi Direct Image Link
 const parseImageUrl = (url) => {
   if (!url) return '';
-  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  
+  // Deteksi ID unik dari berbagai jenis URL Google Drive
+  let match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (!match) match = url.match(/id=([a-zA-Z0-9_-]+)/);
+  if (!match) match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+
   if (match && match[1]) {
-    return `https://drive.google.com/uc?id=${match[1]}`;
+    // Menggunakan server lh3 Google untuk bypass blokir hotlinking
+    return `https://lh3.googleusercontent.com/d/${match[1]}`;
   }
   return url;
 };
@@ -304,7 +310,7 @@ export default function Dashboard() {
       image1: promptForm.image1.trim(),
       image2: promptForm.image2.trim(),
       image3: promptForm.image3.trim(),
-      prompt_text: promptForm.text.trim()
+      prompt_text: promptForm.text.trim() // Teks utuh dengan paragraf
     };
 
     const updatedPrompts = [newPromptEntry, ...prompts];
@@ -419,7 +425,6 @@ export default function Dashboard() {
             <span className="text-xl font-medium text-slate-200 group-hover:text-white transition-colors">Finansial</span>
           </button>
 
-          {/* Menu Baru: Prompt Gallery */}
           <button 
             onClick={() => setView('prompt_gallery')}
             className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-purple-500/10 hover:-translate-y-1 group w-72 justify-start"
@@ -512,11 +517,10 @@ export default function Dashboard() {
         <div className="flex-1 overflow-y-auto p-4 sm:p-8 custom-scrollbar">
           <div className="max-w-7xl mx-auto">
             
-            {/* Form Tambah Prompt Baru (Dipersempit dan Centered) */}
+            {/* Form Tambah Prompt Baru */}
             {showPromptForm && (
               <form onSubmit={handleAddPrompt} className="max-w-3xl mx-auto w-full bg-[#111827] border border-slate-800 rounded-2xl p-6 mb-8 shadow-xl flex flex-col animate-fadeIn">
                 
-                {/* Judul Prompt */}
                 <input 
                   type="text" placeholder="Nama / Judul Prompt" required
                   value={promptForm.title} onChange={(e) => setPromptForm({...promptForm, title: e.target.value})}
@@ -524,37 +528,34 @@ export default function Dashboard() {
                   style={{ backgroundColor: '#0B0F19', color: '#e2e8f0' }}
                 />
                 
-                {/* 3 Link Google Drive Menurun */}
                 <div className="flex flex-col gap-3 mb-5">
                   <input 
-                    type="text" placeholder="Link Gambar 1 (Google Drive / URL)" required
+                    type="text" placeholder="Link Gambar 1 (Google Drive / URL)" 
                     value={promptForm.image1} onChange={(e) => setPromptForm({...promptForm, image1: e.target.value})}
                     className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-purple-500"
                     style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }}
                   />
                   <input 
-                    type="text" placeholder="Link Gambar 2 (Google Drive / URL)" required
+                    type="text" placeholder="Link Gambar 2 (Google Drive / URL)" 
                     value={promptForm.image2} onChange={(e) => setPromptForm({...promptForm, image2: e.target.value})}
                     className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-purple-500"
                     style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }}
                   />
                   <input 
-                    type="text" placeholder="Link Gambar 3 (Google Drive / URL)" required
+                    type="text" placeholder="Link Gambar 3 (Google Drive / URL)" 
                     value={promptForm.image3} onChange={(e) => setPromptForm({...promptForm, image3: e.target.value})}
                     className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-purple-500"
                     style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }}
                   />
                 </div>
 
-                {/* Text Prompt Dibawah */}
                 <textarea 
-                  placeholder="Masukkan text prompt AI di sini..." required
+                  placeholder="Masukkan text prompt AI di sini (bisa pakai enter / paragraf)..." required
                   value={promptForm.text} onChange={(e) => setPromptForm({...promptForm, text: e.target.value})}
                   className="w-full min-h-[140px] border border-slate-700 text-sm rounded-lg px-4 py-3 outline-none focus:border-purple-500 resize-none leading-relaxed mb-5"
                   style={{ backgroundColor: '#0B0F19', color: '#cbd5e1' }}
                 ></textarea>
                 
-                {/* Tombol Simpan */}
                 <div className="flex justify-end gap-3">
                   <button type="button" onClick={() => setShowPromptForm(false)} className="px-6 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition-colors">Batal</button>
                   <button type="submit" className="px-6 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium transition-colors shadow-lg shadow-purple-500/20">Simpan Prompt</button>
@@ -583,29 +584,38 @@ export default function Dashboard() {
                       </button>
                     </div>
 
-                    {/* 3 Images Grid */}
+                    {/* 3 Images Grid - Akan selalu merender kotak, meskipun link gagal */}
                     <div className="grid grid-cols-3 gap-1 bg-[#0B0F19] p-1">
-                      <div className="aspect-[4/5] w-full overflow-hidden bg-slate-900 rounded-sm">
-                        <img src={parseImageUrl(p.image1)} alt="Ref 1" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/400x500/1e293b/475569?text=Image+1'; }} />
+                      <div className="aspect-[4/5] w-full overflow-hidden bg-slate-900 rounded-sm flex items-center justify-center relative">
+                        {p.image1 ? (
+                          <img src={parseImageUrl(p.image1)} alt="Ref 1" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/400x500/1e293b/475569?text=Image+1'; }} />
+                        ) : <span className="text-slate-700 text-xs">No Image</span>}
                       </div>
-                      <div className="aspect-[4/5] w-full overflow-hidden bg-slate-900 rounded-sm">
-                        <img src={parseImageUrl(p.image2)} alt="Ref 2" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/400x500/1e293b/475569?text=Image+2'; }} />
+                      <div className="aspect-[4/5] w-full overflow-hidden bg-slate-900 rounded-sm flex items-center justify-center relative">
+                        {p.image2 ? (
+                          <img src={parseImageUrl(p.image2)} alt="Ref 2" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/400x500/1e293b/475569?text=Image+2'; }} />
+                        ) : <span className="text-slate-700 text-xs">No Image</span>}
                       </div>
-                      <div className="aspect-[4/5] w-full overflow-hidden bg-slate-900 rounded-sm">
-                        <img src={parseImageUrl(p.image3)} alt="Ref 3" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/400x500/1e293b/475569?text=Image+3'; }} />
+                      <div className="aspect-[4/5] w-full overflow-hidden bg-slate-900 rounded-sm flex items-center justify-center relative">
+                        {p.image3 ? (
+                          <img src={parseImageUrl(p.image3)} alt="Ref 3" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/400x500/1e293b/475569?text=Image+3'; }} />
+                        ) : <span className="text-slate-700 text-xs">No Image</span>}
                       </div>
                     </div>
 
                     {/* Prompt Text & Action */}
                     <div className="p-5 flex flex-col flex-1 bg-[#111827]">
-                      <div className="flex-1 bg-[#0B0F19] border border-slate-800 rounded-lg p-3.5 mb-4">
-                        <p className="text-sm text-slate-300 leading-relaxed font-mono line-clamp-4 hover:line-clamp-none transition-all cursor-default">
+                      
+                      {/* Kotak Prompt dengan Fitur Scroll & Paragraf Terjaga (whitespace-pre-wrap) */}
+                      <div className="bg-[#0B0F19] border border-slate-800 rounded-lg p-4 mb-4 max-h-[250px] overflow-y-auto custom-scrollbar">
+                        <p className="text-[13px] text-slate-300 font-mono whitespace-pre-wrap leading-relaxed">
                           {p.prompt_text}
                         </p>
                       </div>
+
                       <button 
                         onClick={() => copyToClipboard(p.prompt_text, p.id)}
-                        className={`w-full py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all ${
+                        className={`w-full py-3 mt-auto rounded-xl font-semibold flex items-center justify-center gap-2 transition-all ${
                           copySuccess === p.id 
                             ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' 
                             : 'bg-purple-600/10 hover:bg-purple-600/20 text-purple-400 border border-purple-500/30'
