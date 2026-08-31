@@ -85,7 +85,6 @@ export default function Dashboard() {
         setProofs(loadedProofs);
       }
 
-      // Pastikan Supabase narik kolom status_lunas juga
       const { data: trxData, error: trxErr } = await supabase.from('transaksi_keuangan').select('*').order('id', { ascending: false });
       if (!trxErr && trxData) {
         setTransactions(trxData);
@@ -149,10 +148,8 @@ export default function Dashboard() {
 
   // --- LOGIKA TRANSAKSI ---
   const handleAmountChange = (e) => {
-    // Hilangkan semua karakter kecuali angka
     const rawValue = e.target.value.replace(/[^0-9]/g, '');
     if (rawValue) {
-      // Format dengan titik pemisah ribuan
       const formatted = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
       setAmountInput(formatted);
     } else {
@@ -164,7 +161,6 @@ export default function Dashboard() {
     e.preventDefault();
     if (!descInput.trim() || !amountInput) return;
 
-    // Bersihkan titik untuk disimpan sebagai angka murni di DB
     const numericValue = parseFloat(amountInput.replace(/\./g, ''));
 
     const newTrx = {
@@ -207,11 +203,11 @@ export default function Dashboard() {
   };
 
   const handleResetCentang = async () => {
-    if (!confirm("Reset semua centang menjadi belum dibayar?")) return;
-    setTransactions(transactions.map(t => ({ ...t, status_lunas: false })));
+    if (!confirm("Reset semua centang pengeluaran menjadi belum dibayar?")) return;
+    setTransactions(transactions.map(t => t.tipe === 'pengeluaran' ? { ...t, status_lunas: false } : t));
     
     if (supabase) {
-      await supabase.from('transaksi_keuangan').update({ status_lunas: false }).gt('id', 0);
+      await supabase.from('transaksi_keuangan').update({ status_lunas: false }).eq('tipe', 'pengeluaran');
     }
   };
 
@@ -440,7 +436,6 @@ export default function Dashboard() {
 
         <div className="flex-1 p-3 sm:p-8 overflow-hidden flex flex-col w-full max-w-4xl mx-auto">
           
-          {/* Kartu Ringkasan */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 shrink-0">
             <div className="bg-[#111827] border border-emerald-800/40 rounded-xl p-4 flex flex-col justify-between shadow-lg">
               <span className="text-xs font-medium uppercase tracking-wider" style={{ color: '#34d399' }}>Total Pendapatan</span>
@@ -456,7 +451,6 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Form Input Data Baru - Pakai tipe Text supaya panah hilang dan support titik */}
           <form onSubmit={handleAddTransaction} className="bg-[#111827] border border-slate-800 rounded-xl p-4 mb-4 shrink-0 flex flex-col sm:flex-row gap-3">
             <select 
               value={typeInput} 
@@ -513,11 +507,16 @@ export default function Dashboard() {
                       <td colSpan="4" className="text-center py-12 text-slate-500 text-sm">Belum ada data transaksi yang dimasukkan.</td>
                     </tr>
                   ) : (
-                    transactions.map((t) => (
+                    // Logika Sorting: Pendapatan otomatis selalu di atas, pengeluaran di bawah.
+                    [...transactions].sort((a, b) => {
+                      if (a.tipe === 'pendapatan' && b.tipe === 'pengeluaran') return -1;
+                      if (a.tipe === 'pengeluaran' && b.tipe === 'pendapatan') return 1;
+                      return b.id - a.id; 
+                    }).map((t) => (
                       <tr key={t.id} className="hover:bg-slate-800/30 transition-colors">
                         <td className="py-3 px-4 text-xs">
                           <span 
-                            className={`inline-flex px-2 py-0.5 rounded font-medium text-[10px] uppercase border ${t.status_lunas ? 'opacity-50' : ''}`}
+                            className={`inline-flex px-2 py-0.5 rounded font-medium text-[10px] uppercase border ${t.tipe === 'pengeluaran' && t.status_lunas ? 'opacity-50' : ''}`}
                             style={
                               t.tipe === 'pendapatan' 
                               ? { backgroundColor: 'rgba(16, 185, 129, 0.2)', color: '#34d399', borderColor: 'rgba(16, 185, 129, 0.3)' } 
@@ -527,11 +526,11 @@ export default function Dashboard() {
                             {t.tipe}
                           </span>
                         </td>
-                        <td className={`py-3 px-4 text-sm font-medium ${t.status_lunas ? 'text-slate-500 line-through' : 'text-slate-200'}`}>
+                        <td className={`py-3 px-4 text-sm font-medium ${t.tipe === 'pengeluaran' && t.status_lunas ? 'text-slate-500 line-through' : 'text-slate-200'}`}>
                           {t.deskripsi}
                         </td>
                         <td 
-                          className={`py-3 px-4 text-sm font-mono text-right font-semibold ${t.status_lunas ? 'opacity-50' : ''}`}
+                          className={`py-3 px-4 text-sm font-mono text-right font-semibold ${t.tipe === 'pengeluaran' && t.status_lunas ? 'opacity-50' : ''}`}
                           style={{ color: t.tipe === 'pendapatan' ? '#34d399' : '#f87171' }}
                         >
                           {t.tipe === 'pendapatan' ? '+' : '-'} {formatRupiah(t.nominal)}
@@ -539,20 +538,22 @@ export default function Dashboard() {
                         <td className="py-3 px-4 text-center">
                           <div className="flex justify-center items-center gap-2">
                             
-                            {/* Tombol Checklist Centang Hijau */}
-                            <button 
-                              onClick={() => handleToggleLunas(t.id, t.status_lunas)}
-                              title="Tandai Selesai / Lunas"
-                              className={`p-1.5 rounded-lg transition-colors border ${
-                                t.status_lunas 
-                                  ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.3)]' 
-                                  : 'bg-slate-800/40 text-slate-500 border-slate-700/50 hover:bg-slate-700'
-                              }`}
-                            >
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={t.status_lunas ? 3 : 2} d="M5 13l4 4L19 7" />
-                              </svg>
-                            </button>
+                            {/* Tombol Checklist HANYA MUNCUL JIKA TIPE PENGELUARAN */}
+                            {t.tipe === 'pengeluaran' && (
+                              <button 
+                                onClick={() => handleToggleLunas(t.id, t.status_lunas)}
+                                title="Tandai Selesai / Lunas"
+                                className={`p-1.5 rounded-lg transition-colors border ${
+                                  t.status_lunas 
+                                    ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.3)]' 
+                                    : 'bg-slate-800/40 text-slate-500 border-slate-700/50 hover:bg-slate-700'
+                                }`}
+                              >
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={t.status_lunas ? 3 : 2} d="M5 13l4 4L19 7" />
+                                </svg>
+                              </button>
+                            )}
 
                             {/* Tombol Hapus */}
                             <button 
