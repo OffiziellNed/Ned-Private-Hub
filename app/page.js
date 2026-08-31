@@ -220,6 +220,83 @@ export default function Dashboard() {
     }
   };
 
+  // --- LOGIKA EXPORT PDF TRANSAKSI ---
+  const handleExportPDF = () => {
+    // Fungsi internal untuk mem-build dokumen PDF
+    const generatePDF = () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(16);
+      doc.text("Laporan Pendapatan & Pengeluaran", 14, 15);
+      
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text(`Tanggal Cetak: ${currentDate}`, 14, 22);
+
+      // Urutkan data: Pendapatan duluan, Pengeluaran belakangan
+      const sortedTrx = [...transactions].sort((a, b) => {
+        if (a.tipe === 'pendapatan' && b.tipe === 'pengeluaran') return -1;
+        if (a.tipe === 'pengeluaran' && b.tipe === 'pendapatan') return 1;
+        return b.id - a.id; 
+      });
+
+      // Format data untuk tabel PDF
+      const tableData = sortedTrx.map((t, index) => [
+        index + 1,
+        t.tipe.toUpperCase(),
+        t.deskripsi,
+        t.tipe === 'pendapatan' ? `+ ${formatRupiah(t.nominal)}` : `- ${formatRupiah(t.nominal)}`,
+        t.tipe === 'pengeluaran' ? (t.status_lunas ? 'Lunas' : 'Belum') : '-'
+      ]);
+
+      doc.autoTable({
+        startY: 28,
+        head: [['No', 'Tipe', 'Deskripsi', 'Nominal', 'Status']],
+        body: tableData,
+        theme: 'striped',
+        headStyles: { fillColor: [79, 70, 229] }, // bg-indigo-600
+        styles: { fontSize: 9 },
+        alternateRowStyles: { fillColor: [245, 247, 250] }
+      });
+
+      const finalY = doc.lastAutoTable.finalY || 28;
+      
+      doc.setFontSize(11);
+      doc.setTextColor(16, 185, 129); // emerald-500
+      doc.text(`Total Pendapatan: ${formatRupiah(totalPendapatan)}`, 14, finalY + 10);
+      
+      doc.setTextColor(239, 68, 68); // red-500
+      doc.text(`Total Pengeluaran: ${formatRupiah(totalPengeluaran)}`, 14, finalY + 16);
+      
+      doc.setTextColor(99, 102, 241); // indigo-500
+      doc.text(`Sisa Saldo Bersih: ${formatRupiah(sisaSaldo)}`, 14, finalY + 22);
+
+      doc.save(`Cashflow_Ned_${currentMonthId}.pdf`);
+    };
+
+    // Lazy Load script jsPDF agar tidak error di Next.js Vercel
+    if (window.jspdf) {
+      generatePDF();
+    } else {
+      const script1 = document.createElement('script');
+      script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      
+      const script2 = document.createElement('script');
+      script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js';
+
+      script1.onload = () => {
+        document.body.appendChild(script2);
+      };
+      
+      script2.onload = () => {
+        generatePDF();
+      };
+
+      document.body.appendChild(script1);
+    }
+  };
+
   const totalPendapatan = transactions
     .filter(t => t.tipe === 'pendapatan')
     .reduce((acc, curr) => acc + Number(curr.nominal), 0);
@@ -436,6 +513,7 @@ export default function Dashboard() {
 
         <div className="flex-1 p-3 sm:p-8 overflow-hidden flex flex-col w-full max-w-4xl mx-auto">
           
+          {/* Kartu Ringkasan */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 shrink-0">
             <div className="bg-[#111827] border border-emerald-800/40 rounded-xl p-4 flex flex-col justify-between shadow-lg">
               <span className="text-xs font-medium uppercase tracking-wider" style={{ color: '#34d399' }}>Total Pendapatan</span>
@@ -538,7 +616,6 @@ export default function Dashboard() {
                         <td className="py-3 px-4 text-center">
                           <div className="flex justify-center items-center gap-2">
                             
-                            {/* Tombol Checklist HANYA MUNCUL JIKA TIPE PENGELUARAN */}
                             {t.tipe === 'pengeluaran' && (
                               <button 
                                 onClick={() => handleToggleLunas(t.id, t.status_lunas)}
@@ -555,7 +632,6 @@ export default function Dashboard() {
                               </button>
                             )}
 
-                            {/* Tombol Hapus */}
                             <button 
                               onClick={() => handleDeleteTransaction(t.id)}
                               title="Hapus Transaksi"
@@ -576,20 +652,29 @@ export default function Dashboard() {
               </table>
             </div>
             
-            {/* Area Bawah dengan Tombol Reset dan Hapus */}
+            {/* Area Bawah dengan Tombol Save PDF, Reset dan Hapus */}
             <div className="shrink-0 bg-slate-900/50 border-t border-slate-800/60 px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
-              <span className="text-[10px] sm:text-[11px] text-slate-500">Data otomatis tersimpan di Supabase</span>
               
-              <div className="flex gap-2">
+              <button 
+                onClick={handleExportPDF}
+                className="w-full sm:w-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Save as PDF
+              </button>
+              
+              <div className="flex gap-2 w-full sm:w-auto justify-center">
                 <button 
                   onClick={handleResetCentang}
-                  className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] sm:text-[11px] font-medium rounded-md border border-slate-700 transition-colors"
+                  className="flex-1 sm:flex-none px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] sm:text-[11px] font-medium rounded-lg border border-slate-700 transition-colors"
                 >
                   Reset Centang
                 </button>
                 <button 
                   onClick={handleClearAllTransactions}
-                  className="px-3 py-1.5 bg-red-950/30 hover:bg-red-900/50 text-red-400 text-[10px] sm:text-[11px] font-medium rounded-md border border-red-900/50 transition-colors"
+                  className="flex-1 sm:flex-none px-3 py-2 bg-red-950/30 hover:bg-red-900/50 text-red-400 text-[10px] sm:text-[11px] font-medium rounded-lg border border-red-900/50 transition-colors"
                 >
                   Hapus Semua Data
                 </button>
