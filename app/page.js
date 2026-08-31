@@ -38,6 +38,16 @@ const generateAngsuranData = () => {
   return data;
 };
 
+// Fungsi Pintar untuk mengubah link Google Drive menjadi Direct Image Link
+const parseImageUrl = (url) => {
+  if (!url) return '';
+  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    return `https://drive.google.com/uc?id=${match[1]}`;
+  }
+  return url;
+};
+
 export default function Dashboard() {
   const [view, setView] = useState('locked');
   const [currentDate, setCurrentDate] = useState('');
@@ -50,11 +60,17 @@ export default function Dashboard() {
   const [pinCode, setPinCode] = useState('');
   const [pinError, setPinError] = useState(false);
 
-  // State untuk Transaksi (Pendapatan & Pengeluaran)
+  // State untuk Transaksi
   const [transactions, setTransactions] = useState([]);
   const [descInput, setDescInput] = useState('');
   const [amountInput, setAmountInput] = useState('');
   const [typeInput, setTypeInput] = useState('pendapatan');
+
+  // State untuk Prompt Gallery
+  const [prompts, setPrompts] = useState([]);
+  const [showPromptForm, setShowPromptForm] = useState(false);
+  const [promptForm, setPromptForm] = useState({ title: '', image1: '', image2: '', image3: '', text: '' });
+  const [copySuccess, setCopySuccess] = useState(null);
 
   const angsuranData = generateAngsuranData();
 
@@ -90,13 +106,18 @@ export default function Dashboard() {
         setTransactions(trxData);
       }
 
+      const { data: promptData, error: promptErrDB } = await supabase.from('prompts_gallery').select('*').order('id', { ascending: false });
+      if (!promptErrDB && promptData) {
+        setPrompts(promptData);
+      }
+
       setIsSyncing(false);
     };
 
     fetchData();
   }, []);
 
-  // --- LOGIKA CUSTOM NUMPAD PIN ---
+  // --- LOGIKA PIN ---
   const handleNumClick = (num) => {
     if (pinCode.length < 6) {
       setPinCode(prev => prev + num);
@@ -126,6 +147,7 @@ export default function Dashboard() {
     }
   }, [pinCode]);
 
+  // --- LOGIKA ANGSURAN ---
   const handleSaveProof = async (no) => {
     const currentLink = proofs[no] || '';
     const input = prompt("Masukkan URL Lightshot / Bukti Transaksi:", currentLink);
@@ -135,13 +157,8 @@ export default function Dashboard() {
       setProofs({ ...proofs, [no]: newLink });
 
       if (supabase) {
-        const { error } = await supabase
-          .from('angsuran_rumah')
-          .upsert({ no_angsuran: no, link_bukti: newLink });
-          
-        if (error) {
-          alert("Gagal sinkronisasi ke awan: " + error.message);
-        }
+        const { error } = await supabase.from('angsuran_rumah').upsert({ no_angsuran: no, link_bukti: newLink });
+        if (error) alert("Gagal sinkronisasi ke awan: " + error.message);
       }
     }
   };
@@ -162,7 +179,6 @@ export default function Dashboard() {
     if (!descInput.trim() || !amountInput) return;
 
     const numericValue = parseFloat(amountInput.replace(/\./g, ''));
-
     const newTrx = {
       id: Date.now(),
       deskripsi: descInput.trim(),
@@ -178,51 +194,41 @@ export default function Dashboard() {
 
     if (supabase) {
       const { error } = await supabase.from('transaksi_keuangan').insert([newTrx]);
-      if (error) {
-        alert("Gagal menyimpan transaksi ke cloud: " + error.message);
-      }
+      if (error) alert("Gagal menyimpan transaksi ke cloud: " + error.message);
     }
   };
 
   const handleDeleteTransaction = async (id) => {
     const updatedTrxList = transactions.filter(t => t.id !== id);
     setTransactions(updatedTrxList);
-
-    if (supabase) {
-      await supabase.from('transaksi_keuangan').delete().eq('id', id);
-    }
+    if (supabase) await supabase.from('transaksi_keuangan').delete().eq('id', id);
   };
 
   const handleToggleLunas = async (id, currentStatus) => {
     const newStatus = !currentStatus;
     setTransactions(transactions.map(t => t.id === id ? { ...t, status_lunas: newStatus } : t));
-
-    if (supabase) {
-      await supabase.from('transaksi_keuangan').update({ status_lunas: newStatus }).eq('id', id);
-    }
+    if (supabase) await supabase.from('transaksi_keuangan').update({ status_lunas: newStatus }).eq('id', id);
   };
 
   const handleResetCentang = async () => {
     if (!confirm("Reset semua centang pengeluaran menjadi belum dibayar?")) return;
     setTransactions(transactions.map(t => t.tipe === 'pengeluaran' ? { ...t, status_lunas: false } : t));
-    
-    if (supabase) {
-      await supabase.from('transaksi_keuangan').update({ status_lunas: false }).eq('tipe', 'pengeluaran');
-    }
+    if (supabase) await supabase.from('transaksi_keuangan').update({ status_lunas: false }).eq('tipe', 'pengeluaran');
   };
 
   const handleClearAllTransactions = async () => {
     if (!confirm("Hapus SEMUA data transaksi untuk bulan ini? (Data tidak bisa dikembalikan)")) return;
     setTransactions([]);
-    
-    if (supabase) {
-      await supabase.from('transaksi_keuangan').delete().gt('id', 0);
-    }
+    if (supabase) await supabase.from('transaksi_keuangan').delete().gt('id', 0);
   };
 
-  // --- LOGIKA EXPORT PDF TRANSAKSI ---
+  const totalPendapatan = transactions.filter(t => t.tipe === 'pendapatan').reduce((acc, curr) => acc + Number(curr.nominal), 0);
+  const totalPengeluaran = transactions.filter(t => t.tipe === 'pengeluaran').reduce((acc, curr) => acc + Number(curr.nominal), 0);
+  const sisaSaldo = totalPendapatan - totalPengeluaran;
+
+  const formatRupiah = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+
   const handleExportPDF = () => {
-    // Fungsi internal untuk mem-build dokumen PDF
     const generatePDF = () => {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
@@ -234,14 +240,12 @@ export default function Dashboard() {
       doc.setTextColor(100);
       doc.text(`Tanggal Cetak: ${currentDate}`, 14, 22);
 
-      // Urutkan data: Pendapatan duluan, Pengeluaran belakangan
       const sortedTrx = [...transactions].sort((a, b) => {
         if (a.tipe === 'pendapatan' && b.tipe === 'pengeluaran') return -1;
         if (a.tipe === 'pengeluaran' && b.tipe === 'pendapatan') return 1;
         return b.id - a.id; 
       });
 
-      // Format data untuk tabel PDF
       const tableData = sortedTrx.map((t, index) => [
         index + 1,
         t.tipe.toUpperCase(),
@@ -255,7 +259,7 @@ export default function Dashboard() {
         head: [['No', 'Tipe', 'Deskripsi', 'Nominal', 'Status']],
         body: tableData,
         theme: 'striped',
-        headStyles: { fillColor: [79, 70, 229] }, // bg-indigo-600
+        headStyles: { fillColor: [79, 70, 229] },
         styles: { fontSize: 9 },
         alternateRowStyles: { fillColor: [245, 247, 250] }
       });
@@ -263,98 +267,68 @@ export default function Dashboard() {
       const finalY = doc.lastAutoTable.finalY || 28;
       
       doc.setFontSize(11);
-      doc.setTextColor(16, 185, 129); // emerald-500
+      doc.setTextColor(16, 185, 129);
       doc.text(`Total Pendapatan: ${formatRupiah(totalPendapatan)}`, 14, finalY + 10);
       
-      doc.setTextColor(239, 68, 68); // red-500
+      doc.setTextColor(239, 68, 68);
       doc.text(`Total Pengeluaran: ${formatRupiah(totalPengeluaran)}`, 14, finalY + 16);
       
-      doc.setTextColor(99, 102, 241); // indigo-500
+      doc.setTextColor(99, 102, 241);
       doc.text(`Sisa Saldo Bersih: ${formatRupiah(sisaSaldo)}`, 14, finalY + 22);
 
       doc.save(`Cashflow_Ned_${currentMonthId}.pdf`);
     };
 
-    // Lazy Load script jsPDF agar tidak error di Next.js Vercel
     if (window.jspdf) {
       generatePDF();
     } else {
       const script1 = document.createElement('script');
       script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-      
       const script2 = document.createElement('script');
       script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js';
 
-      script1.onload = () => {
-        document.body.appendChild(script2);
-      };
-      
-      script2.onload = () => {
-        generatePDF();
-      };
-
+      script1.onload = () => document.body.appendChild(script2);
+      script2.onload = () => generatePDF();
       document.body.appendChild(script1);
     }
   };
 
-  const totalPendapatan = transactions
-    .filter(t => t.tipe === 'pendapatan')
-    .reduce((acc, curr) => acc + Number(curr.nominal), 0);
+  // --- LOGIKA PROMPT GALLERY ---
+  const handleAddPrompt = async (e) => {
+    e.preventDefault();
+    if (!promptForm.title.trim() || !promptForm.text.trim()) return;
 
-  const totalPengeluaran = transactions
-    .filter(t => t.tipe === 'pengeluaran')
-    .reduce((acc, curr) => acc + Number(curr.nominal), 0);
+    const newPromptEntry = {
+      id: Date.now(),
+      title: promptForm.title.trim(),
+      image1: promptForm.image1.trim(),
+      image2: promptForm.image2.trim(),
+      image3: promptForm.image3.trim(),
+      prompt_text: promptForm.text.trim()
+    };
 
-  const sisaSaldo = totalPendapatan - totalPengeluaran;
+    const updatedPrompts = [newPromptEntry, ...prompts];
+    setPrompts(updatedPrompts);
+    setPromptForm({ title: '', image1: '', image2: '', image3: '', text: '' });
+    setShowPromptForm(false);
 
-  const formatRupiah = (num) => {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
-  };
-
-  const scrollToCurrentMonth = () => {
-    if (currentMonthId) {
-      const element = document.getElementById(`row-${currentMonthId}`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      } else {
-        alert('Data untuk bulan ini tidak ditemukan dalam jadwal angsuran.');
-      }
+    if (supabase) {
+      const { error } = await supabase.from('prompts_gallery').insert([newPromptEntry]);
+      if (error) alert("Gagal menyimpan prompt ke cloud: " + error.message);
     }
   };
 
-  const handleExportData = () => {
-    const dataStr = JSON.stringify(proofs);
-    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-    const exportFileDefaultName = 'Backup_Angsuran_Ned.json';
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
+  const handleDeletePrompt = async (id) => {
+    if (!confirm("Hapus prompt ini dari gallery?")) return;
+    setPrompts(prompts.filter(p => p.id !== id));
+    if (supabase) await supabase.from('prompts_gallery').delete().eq('id', id);
   };
 
-  const handleImportData = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      try {
-        const importedProofs = JSON.parse(event.target.result);
-        setProofs(importedProofs);
-        
-        if (supabase) {
-          const upsertData = Object.keys(importedProofs).map(key => ({
-            no_angsuran: parseInt(key),
-            link_bukti: importedProofs[key]
-          }));
-          await supabase.from('angsuran_rumah').upsert(upsertData);
-        }
-        alert("Data berhasil dipulihkan!");
-      } catch (err) {
-        alert("Gagal membaca file backup.");
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = null;
+  const copyToClipboard = (text, id) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopySuccess(id);
+      setTimeout(() => setCopySuccess(null), 2000);
+    });
   };
 
   // 0. TAMPILAN LOCK SCREEN
@@ -433,15 +407,29 @@ export default function Dashboard() {
           <span className="text-white font-bold text-3xl leading-none">N</span>
         </div>
         <h1 className="text-4xl sm:text-5xl font-bold text-slate-100 mb-12 tracking-tight">Ned Private Hub</h1>
-        <button 
-          onClick={() => setView('finansial')}
-          className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 group w-72 justify-center"
-        >
-          <svg className="w-8 h-8 text-indigo-400 group-hover:text-indigo-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span className="text-xl font-medium text-slate-200 group-hover:text-white transition-colors">Finansial</span>
-        </button>
+        
+        <div className="flex flex-col gap-4">
+          <button 
+            onClick={() => setView('finansial')}
+            className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 group w-72 justify-start"
+          >
+            <svg className="w-8 h-8 text-indigo-400 group-hover:text-indigo-300 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-xl font-medium text-slate-200 group-hover:text-white transition-colors">Finansial</span>
+          </button>
+
+          {/* Menu Baru: Prompt Gallery */}
+          <button 
+            onClick={() => setView('prompt_gallery')}
+            className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-purple-500/10 hover:-translate-y-1 group w-72 justify-start"
+          >
+            <svg className="w-8 h-8 text-purple-400 group-hover:text-purple-300 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
+            <span className="text-xl font-medium text-slate-200 group-hover:text-white transition-colors">Prompt</span>
+          </button>
+        </div>
       </div>
     );
   }
@@ -492,7 +480,153 @@ export default function Dashboard() {
     );
   }
 
-  // 3. TAMPILAN MENU PENDAPATAN DAN PENGELUARAN
+  // 3. TAMPILAN MENU PROMPT GALLERY
+  if (view === 'prompt_gallery') {
+    return (
+      <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-purple-500/30 overflow-hidden">
+        
+        <header className="shrink-0 py-6 sm:py-8 px-4 bg-[#0B0F19] border-b-2 border-[#05070B] flex flex-col items-center justify-center relative z-30 shadow-md">
+          <button 
+            onClick={() => setView('home')} 
+            className="absolute left-4 top-6 sm:left-12 sm:top-1/2 sm:-translate-y-1/2 p-2 sm:p-3 rounded-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700/50"
+          >
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          </button>
+
+          <h2 className="text-lg sm:text-2xl font-bold text-slate-100 text-center">Prompt Gallery</h2>
+          <p className="text-[10px] sm:text-sm text-slate-500 mt-1 text-center">Library referensi visual & AI prompt</p>
+          
+          <button 
+            onClick={() => setShowPromptForm(!showPromptForm)}
+            className="absolute right-4 top-6 sm:right-12 sm:top-1/2 sm:-translate-y-1/2 p-2 sm:px-4 sm:py-2 rounded-full sm:rounded-lg bg-purple-600/20 hover:bg-purple-600/40 text-purple-400 transition-colors border border-purple-500/50 flex items-center gap-2"
+          >
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+            </svg>
+            <span className="hidden sm:inline text-sm font-medium">Tambah Prompt</span>
+          </button>
+        </header>
+
+        <div className="flex-1 overflow-y-auto p-4 sm:p-8 custom-scrollbar">
+          <div className="max-w-7xl mx-auto">
+            
+            {/* Form Tambah Prompt Baru */}
+            {showPromptForm && (
+              <form onSubmit={handleAddPrompt} className="bg-[#111827] border border-slate-800 rounded-2xl p-5 mb-8 shadow-xl flex flex-col gap-4 animate-fadeIn">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex-1 flex flex-col gap-3">
+                    <input 
+                      type="text" placeholder="Nama / Judul Prompt" required
+                      value={promptForm.title} onChange={(e) => setPromptForm({...promptForm, title: e.target.value})}
+                      className="w-full bg-[#0B0F19] border border-slate-700 text-slate-200 text-sm rounded-lg px-4 py-3 outline-none focus:border-purple-500 font-semibold"
+                    />
+                    <input 
+                      type="text" placeholder="Link Gambar 1 (Google Drive / URL)" required
+                      value={promptForm.image1} onChange={(e) => setPromptForm({...promptForm, image1: e.target.value})}
+                      className="w-full bg-[#0B0F19] border border-slate-700 text-slate-400 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-purple-500"
+                    />
+                    <input 
+                      type="text" placeholder="Link Gambar 2 (Google Drive / URL)" required
+                      value={promptForm.image2} onChange={(e) => setPromptForm({...promptForm, image2: e.target.value})}
+                      className="w-full bg-[#0B0F19] border border-slate-700 text-slate-400 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-purple-500"
+                    />
+                    <input 
+                      type="text" placeholder="Link Gambar 3 (Google Drive / URL)" required
+                      value={promptForm.image3} onChange={(e) => setPromptForm({...promptForm, image3: e.target.value})}
+                      className="w-full bg-[#0B0F19] border border-slate-700 text-slate-400 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-purple-500"
+                    />
+                  </div>
+                  <div className="flex-1 flex flex-col gap-3">
+                    <textarea 
+                      placeholder="Masukkan text prompt AI di sini..." required
+                      value={promptForm.text} onChange={(e) => setPromptForm({...promptForm, text: e.target.value})}
+                      className="w-full h-full min-h-[140px] bg-[#0B0F19] border border-slate-700 text-slate-300 text-sm rounded-lg px-4 py-3 outline-none focus:border-purple-500 resize-none leading-relaxed"
+                    ></textarea>
+                  </div>
+                </div>
+                <div className="flex justify-end gap-3 mt-2">
+                  <button type="button" onClick={() => setShowPromptForm(false)} className="px-6 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition-colors">Batal</button>
+                  <button type="submit" className="px-6 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium transition-colors shadow-lg shadow-purple-500/20">Simpan Prompt</button>
+                </div>
+              </form>
+            )}
+
+            {/* Grid Kartu Prompt */}
+            {prompts.length === 0 && !showPromptForm ? (
+              <div className="text-center py-20 text-slate-500 flex flex-col items-center">
+                <svg className="w-16 h-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <p>Belum ada prompt yang disimpan.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-20">
+                {prompts.map((p) => (
+                  <div key={p.id} className="bg-[#111827] border border-slate-800/80 rounded-2xl overflow-hidden shadow-xl flex flex-col hover:border-slate-700 transition-colors">
+                    
+                    {/* Header Card */}
+                    <div className="flex justify-between items-center px-5 py-4 border-b border-slate-800/60 bg-[#111827]">
+                      <h3 className="font-bold text-slate-100 text-lg truncate pr-4">{p.title}</h3>
+                      <button onClick={() => handleDeletePrompt(p.id)} className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors shrink-0" title="Hapus">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                      </button>
+                    </div>
+
+                    {/* 3 Images Grid */}
+                    <div className="grid grid-cols-3 gap-1 bg-[#0B0F19] p-1">
+                      <div className="aspect-[4/5] w-full overflow-hidden bg-slate-900 rounded-sm">
+                        <img src={parseImageUrl(p.image1)} alt="Ref 1" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/400x500/1e293b/475569?text=Image+1'; }} />
+                      </div>
+                      <div className="aspect-[4/5] w-full overflow-hidden bg-slate-900 rounded-sm">
+                        <img src={parseImageUrl(p.image2)} alt="Ref 2" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/400x500/1e293b/475569?text=Image+2'; }} />
+                      </div>
+                      <div className="aspect-[4/5] w-full overflow-hidden bg-slate-900 rounded-sm">
+                        <img src={parseImageUrl(p.image3)} alt="Ref 3" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/400x500/1e293b/475569?text=Image+3'; }} />
+                      </div>
+                    </div>
+
+                    {/* Prompt Text & Action */}
+                    <div className="p-5 flex flex-col flex-1 bg-[#111827]">
+                      <div className="flex-1 bg-[#0B0F19] border border-slate-800 rounded-lg p-3.5 mb-4">
+                        <p className="text-sm text-slate-300 leading-relaxed font-mono line-clamp-4 hover:line-clamp-none transition-all cursor-default">
+                          {p.prompt_text}
+                        </p>
+                      </div>
+                      <button 
+                        onClick={() => copyToClipboard(p.prompt_text, p.id)}
+                        className={`w-full py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all ${
+                          copySuccess === p.id 
+                            ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' 
+                            : 'bg-purple-600/10 hover:bg-purple-600/20 text-purple-400 border border-purple-500/30'
+                        }`}
+                      >
+                        {copySuccess === p.id ? (
+                          <>
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
+                            Copied!
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                            Copy Prompt
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 4. TAMPILAN MENU PENDAPATAN DAN PENGELUARAN (Transaksi Keuangan)
   if (view === 'transaksi') {
     return (
       <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 overflow-hidden">
@@ -513,7 +647,6 @@ export default function Dashboard() {
 
         <div className="flex-1 p-3 sm:p-8 overflow-hidden flex flex-col w-full max-w-4xl mx-auto">
           
-          {/* Kartu Ringkasan */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 shrink-0">
             <div className="bg-[#111827] border border-emerald-800/40 rounded-xl p-4 flex flex-col justify-between shadow-lg">
               <span className="text-xs font-medium uppercase tracking-wider" style={{ color: '#34d399' }}>Total Pendapatan</span>
@@ -585,7 +718,6 @@ export default function Dashboard() {
                       <td colSpan="4" className="text-center py-12 text-slate-500 text-sm">Belum ada data transaksi yang dimasukkan.</td>
                     </tr>
                   ) : (
-                    // Logika Sorting: Pendapatan otomatis selalu di atas, pengeluaran di bawah.
                     [...transactions].sort((a, b) => {
                       if (a.tipe === 'pendapatan' && b.tipe === 'pengeluaran') return -1;
                       if (a.tipe === 'pengeluaran' && b.tipe === 'pendapatan') return 1;
@@ -652,9 +784,7 @@ export default function Dashboard() {
               </table>
             </div>
             
-            {/* Area Bawah dengan Tombol Save PDF, Reset dan Hapus */}
             <div className="shrink-0 bg-slate-900/50 border-t border-slate-800/60 px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
-              
               <button 
                 onClick={handleExportPDF}
                 className="w-full sm:w-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2"
@@ -687,7 +817,7 @@ export default function Dashboard() {
     );
   }
 
-  // 4. TAMPILAN DATA ANGSURAN RUMAH
+  // 5. TAMPILAN DATA ANGSURAN RUMAH
   if (view === 'angsuran') {
     return (
       <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 overflow-hidden">
