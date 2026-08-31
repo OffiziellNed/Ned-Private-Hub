@@ -85,7 +85,8 @@ export default function Dashboard() {
         setProofs(loadedProofs);
       }
 
-      const { data: trxData, error: trxErr } = await supabase.from('transaksi_keuangan').select('*');
+      // Pastikan Supabase narik kolom status_lunas juga
+      const { data: trxData, error: trxErr } = await supabase.from('transaksi_keuangan').select('*').order('id', { ascending: false });
       if (!trxErr && trxData) {
         setTransactions(trxData);
       }
@@ -146,15 +147,32 @@ export default function Dashboard() {
     }
   };
 
+  // --- LOGIKA TRANSAKSI ---
+  const handleAmountChange = (e) => {
+    // Hilangkan semua karakter kecuali angka
+    const rawValue = e.target.value.replace(/[^0-9]/g, '');
+    if (rawValue) {
+      // Format dengan titik pemisah ribuan
+      const formatted = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      setAmountInput(formatted);
+    } else {
+      setAmountInput('');
+    }
+  };
+
   const handleAddTransaction = async (e) => {
     e.preventDefault();
     if (!descInput.trim() || !amountInput) return;
 
+    // Bersihkan titik untuk disimpan sebagai angka murni di DB
+    const numericValue = parseFloat(amountInput.replace(/\./g, ''));
+
     const newTrx = {
       id: Date.now(),
       deskripsi: descInput.trim(),
-      nominal: parseFloat(amountInput),
-      tipe: typeInput
+      nominal: numericValue,
+      tipe: typeInput,
+      status_lunas: false
     };
 
     const updatedTrxList = [newTrx, ...transactions];
@@ -175,10 +193,34 @@ export default function Dashboard() {
     setTransactions(updatedTrxList);
 
     if (supabase) {
-      const { error } = await supabase.from('transaksi_keuangan').delete().eq('id', id);
-      if (error) {
-        alert("Gagal menghapus transaksi dari cloud.");
-      }
+      await supabase.from('transaksi_keuangan').delete().eq('id', id);
+    }
+  };
+
+  const handleToggleLunas = async (id, currentStatus) => {
+    const newStatus = !currentStatus;
+    setTransactions(transactions.map(t => t.id === id ? { ...t, status_lunas: newStatus } : t));
+
+    if (supabase) {
+      await supabase.from('transaksi_keuangan').update({ status_lunas: newStatus }).eq('id', id);
+    }
+  };
+
+  const handleResetCentang = async () => {
+    if (!confirm("Reset semua centang menjadi belum dibayar?")) return;
+    setTransactions(transactions.map(t => ({ ...t, status_lunas: false })));
+    
+    if (supabase) {
+      await supabase.from('transaksi_keuangan').update({ status_lunas: false }).gt('id', 0);
+    }
+  };
+
+  const handleClearAllTransactions = async () => {
+    if (!confirm("Hapus SEMUA data transaksi untuk bulan ini? (Data tidak bisa dikembalikan)")) return;
+    setTransactions([]);
+    
+    if (supabase) {
+      await supabase.from('transaksi_keuangan').delete().gt('id', 0);
     }
   };
 
@@ -414,7 +456,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Form Input Data Baru - Background Select Terkunci Warna Dark */}
+          {/* Form Input Data Baru - Pakai tipe Text supaya panah hilang dan support titik */}
           <form onSubmit={handleAddTransaction} className="bg-[#111827] border border-slate-800 rounded-xl p-4 mb-4 shrink-0 flex flex-col sm:flex-row gap-3">
             <select 
               value={typeInput} 
@@ -428,7 +470,7 @@ export default function Dashboard() {
             
             <input 
               type="text" 
-              placeholder="Deskripsi (contoh: Gaji Bulanan / Belanja)" 
+              placeholder="Deskripsi (contoh: Gaji / Belanja)" 
               value={descInput}
               onChange={(e) => setDescInput(e.target.value)}
               className="flex-1 bg-[#0B0F19] border border-slate-700 text-slate-200 text-sm rounded-lg px-4 py-2.5 outline-none focus:border-indigo-500"
@@ -436,10 +478,11 @@ export default function Dashboard() {
             />
 
             <input 
-              type="number" 
+              type="text"
+              inputMode="numeric"
               placeholder="Nominal (Rp)" 
               value={amountInput}
-              onChange={(e) => setAmountInput(e.target.value)}
+              onChange={handleAmountChange}
               className="w-full sm:w-44 bg-[#0B0F19] border border-slate-700 text-slate-200 text-sm rounded-lg px-4 py-2.5 outline-none focus:border-indigo-500 font-mono"
               required
             />
@@ -461,7 +504,7 @@ export default function Dashboard() {
                     <th scope="col" className="py-3 px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider bg-[#111827]">Tipe</th>
                     <th scope="col" className="py-3 px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider bg-[#111827]">Deskripsi</th>
                     <th scope="col" className="py-3 px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider text-right bg-[#111827]">Nominal (Rp)</th>
-                    <th scope="col" className="py-3 px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider text-center w-16 bg-[#111827]">Aksi</th>
+                    <th scope="col" className="py-3 px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider text-center w-24 bg-[#111827]">Aksi</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/40 bg-[#111827]">
@@ -474,7 +517,7 @@ export default function Dashboard() {
                       <tr key={t.id} className="hover:bg-slate-800/30 transition-colors">
                         <td className="py-3 px-4 text-xs">
                           <span 
-                            className="inline-flex px-2 py-0.5 rounded font-medium text-[10px] uppercase border"
+                            className={`inline-flex px-2 py-0.5 rounded font-medium text-[10px] uppercase border ${t.status_lunas ? 'opacity-50' : ''}`}
                             style={
                               t.tipe === 'pendapatan' 
                               ? { backgroundColor: 'rgba(16, 185, 129, 0.2)', color: '#34d399', borderColor: 'rgba(16, 185, 129, 0.3)' } 
@@ -484,24 +527,46 @@ export default function Dashboard() {
                             {t.tipe}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-sm text-slate-200 font-medium">{t.deskripsi}</td>
+                        <td className={`py-3 px-4 text-sm font-medium ${t.status_lunas ? 'text-slate-500 line-through' : 'text-slate-200'}`}>
+                          {t.deskripsi}
+                        </td>
                         <td 
-                          className="py-3 px-4 text-sm font-mono text-right font-semibold"
+                          className={`py-3 px-4 text-sm font-mono text-right font-semibold ${t.status_lunas ? 'opacity-50' : ''}`}
                           style={{ color: t.tipe === 'pendapatan' ? '#34d399' : '#f87171' }}
                         >
                           {t.tipe === 'pendapatan' ? '+' : '-'} {formatRupiah(t.nominal)}
                         </td>
                         <td className="py-3 px-4 text-center">
-                          <button 
-                            onClick={() => handleDeleteTransaction(t.id)}
-                            title="Hapus Transaksi"
-                            className="p-1.5 rounded-lg transition-colors border"
-                            style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#f87171', borderColor: 'rgba(239, 68, 68, 0.3)' }}
-                          >
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
+                          <div className="flex justify-center items-center gap-2">
+                            
+                            {/* Tombol Checklist Centang Hijau */}
+                            <button 
+                              onClick={() => handleToggleLunas(t.id, t.status_lunas)}
+                              title="Tandai Selesai / Lunas"
+                              className={`p-1.5 rounded-lg transition-colors border ${
+                                t.status_lunas 
+                                  ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.3)]' 
+                                  : 'bg-slate-800/40 text-slate-500 border-slate-700/50 hover:bg-slate-700'
+                              }`}
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={t.status_lunas ? 3 : 2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </button>
+
+                            {/* Tombol Hapus */}
+                            <button 
+                              onClick={() => handleDeleteTransaction(t.id)}
+                              title="Hapus Transaksi"
+                              className="p-1.5 rounded-lg transition-colors border"
+                              style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#f87171', borderColor: 'rgba(239, 68, 68, 0.3)' }}
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                            
+                          </div>
                         </td>
                       </tr>
                     ))
@@ -510,8 +575,24 @@ export default function Dashboard() {
               </table>
             </div>
             
-            <div className="shrink-0 bg-slate-900/50 border-t border-slate-800/60 px-4 py-3 text-center">
-              <span className="text-[11px] text-slate-500">Data otomatis tersimpan aman di Supabase Cloud</span>
+            {/* Area Bawah dengan Tombol Reset dan Hapus */}
+            <div className="shrink-0 bg-slate-900/50 border-t border-slate-800/60 px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
+              <span className="text-[10px] sm:text-[11px] text-slate-500">Data otomatis tersimpan di Supabase</span>
+              
+              <div className="flex gap-2">
+                <button 
+                  onClick={handleResetCentang}
+                  className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] sm:text-[11px] font-medium rounded-md border border-slate-700 transition-colors"
+                >
+                  Reset Centang
+                </button>
+                <button 
+                  onClick={handleClearAllTransactions}
+                  className="px-3 py-1.5 bg-red-950/30 hover:bg-red-900/50 text-red-400 text-[10px] sm:text-[11px] font-medium rounded-md border border-red-900/50 transition-colors"
+                >
+                  Hapus Semua Data
+                </button>
+              </div>
             </div>
           </div>
 
