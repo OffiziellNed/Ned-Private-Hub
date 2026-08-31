@@ -50,95 +50,102 @@ const parseImageUrl = (url) => {
   return url;
 };
 
-// --- KOMPONEN KHUSUS KARTU PROMPT (Desain Hover Carousel Premium) ---
-function PromptCard({ p, index, onDelete, copyToClipboard, copySuccess }) {
+// --- KOMPONEN KHUSUS KARTU PROMPT (Desain Pinterest / Midjourney Clean UI) ---
+function PromptCard({ p, onDelete, copyToClipboard, copySuccess }) {
   const [activeSlide, setActiveSlide] = useState(0);
   const images = [p.image1, p.image2, p.image3].filter(img => img && img.trim() !== '');
 
-  const nextSlide = () => {
+  const nextSlide = (e) => {
+    e.stopPropagation();
     setActiveSlide((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
-  const prevSlide = () => {
+  const prevSlide = (e) => {
+    e.stopPropagation();
     setActiveSlide((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
   return (
-    <div className="flex flex-col h-full animate-fadeIn">
-      {/* Header Judul (Dibuat lebih besar) */}
-      <div className="flex justify-between items-start mb-4 gap-2">
-        <h3 className="font-extrabold text-slate-100 text-[20px] leading-tight tracking-wide">
-          {index + 1}. {p.title}
-        </h3>
-        <button onClick={() => onDelete(p.id)} className="p-1 mt-0.5 text-slate-600 hover:text-red-400 transition-colors shrink-0" title="Hapus">
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-        </button>
+    <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden group shadow-lg bg-slate-900 animate-fadeIn cursor-pointer">
+      
+      {/* Gambar Utama */}
+      {images.length > 0 ? (
+        <img 
+          src={parseImageUrl(images[activeSlide])} 
+          alt={p.title} 
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+          onError={(e) => { e.target.src = `https://via.placeholder.com/600x800/1e293b/475569?text=Image+Error`; }} 
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center text-slate-700 text-xs font-mono">No Image Provided</div>
+      )}
+
+      {/* Overlay Gelap (Hanya Muncul Saat di-Hover) */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3 sm:p-4">
+        
+        {/* Bagian Atas: Judul & Tombol Hapus */}
+        <div className="flex justify-between items-start gap-2">
+          <h3 className="font-bold text-white text-sm sm:text-base leading-snug drop-shadow-md line-clamp-2">
+            {p.title}
+          </h3>
+          <button 
+            onClick={(e) => { e.stopPropagation(); onDelete(p.id); }} 
+            className="p-1.5 bg-black/40 hover:bg-red-500/80 text-white/70 hover:text-white rounded-full backdrop-blur-sm transition-colors shrink-0" 
+            title="Hapus"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+
+        {/* Bagian Tengah: Panah Navigasi Gambar */}
+        <div className="flex-1 flex items-center justify-between -mx-1 sm:-mx-2">
+          {images.length > 1 ? (
+            <>
+              <button onClick={prevSlide} className="p-1.5 bg-black/30 hover:bg-black/80 text-white rounded-full backdrop-blur-sm transition-transform active:scale-90 shadow-lg">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg>
+              </button>
+              <button onClick={nextSlide} className="p-1.5 bg-black/30 hover:bg-black/80 text-white rounded-full backdrop-blur-sm transition-transform active:scale-90 shadow-lg">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
+              </button>
+            </>
+          ) : <div></div>}
+        </div>
+
+        {/* Bagian Bawah: Indikator Gambar & Tombol Copy Prompt Ramping */}
+        <div className="flex flex-col items-center gap-3">
+          
+          {/* Indikator Titik (Dots) Kalau ada > 1 gambar */}
+          {images.length > 1 && (
+            <div className="flex gap-1.5 drop-shadow-md">
+              {images.map((_, i) => (
+                <div key={i} className={`h-1 rounded-full transition-all duration-300 ${i === activeSlide ? 'w-4 bg-white' : 'w-1.5 bg-white/40'}`} />
+              ))}
+            </div>
+          )}
+          
+          <button 
+            onClick={(e) => { e.stopPropagation(); copyToClipboard(p.prompt_text, p.id); }}
+            className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-bold text-xs sm:text-sm transition-all transform active:scale-95 shadow-[0_4px_14px_rgba(0,0,0,0.3)] ${
+              copySuccess === p.id 
+                ? 'bg-emerald-500 text-white' 
+                : 'bg-white/95 hover:bg-white text-slate-900'
+            }`}
+          >
+            {copySuccess === p.id ? (
+              <>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                Copied!
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                Copy Prompt
+              </>
+            )}
+          </button>
+        </div>
+
       </div>
-
-      {/* Gambar Utama (Carousel / Slider) */}
-      <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-slate-900 mb-4 shadow-lg shrink-0 group">
-        {images.length > 0 ? (
-           <>
-             <img 
-               src={parseImageUrl(images[activeSlide])} 
-               alt={`Slide ${activeSlide + 1}`} 
-               className="w-full h-full object-cover transition-opacity duration-300" 
-               onError={(e) => { e.target.src = `https://via.placeholder.com/600x800/1e293b/475569?text=Image+Error`; }} 
-             />
-             
-             {/* Indikator Posisi Slide */}
-             {images.length > 1 && (
-               <div className="absolute top-3 right-3 bg-black/60 text-slate-300 text-[10px] px-2.5 py-1 rounded-md font-mono border border-white/10 backdrop-blur-md pointer-events-none">
-                 {activeSlide + 1} / {images.length}
-               </div>
-             )}
-
-             {/* Tombol Kiri */}
-             {images.length > 1 && (
-               <button 
-                 onClick={prevSlide}
-                 className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-black/30 hover:bg-black/70 text-white/50 hover:text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm"
-               >
-                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg>
-               </button>
-             )}
-
-             {/* Tombol Kanan */}
-             {images.length > 1 && (
-               <button 
-                 onClick={nextSlide}
-                 className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-black/30 hover:bg-black/70 text-white/50 hover:text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm"
-               >
-                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
-               </button>
-             )}
-           </>
-        ) : (
-           <div className="w-full h-full flex items-center justify-center text-slate-700 text-xs">No Image</div>
-        )}
-      </div>
-
-      {/* Tombol Copy (Prompt tersembunyi di belakang layar) */}
-      <button 
-        onClick={() => copyToClipboard(p.prompt_text, p.id)}
-        className={`w-full mt-auto py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all shrink-0 ${
-          copySuccess === p.id 
-            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' 
-            : 'bg-slate-800/50 hover:bg-slate-700 text-slate-300 border border-slate-700/50'
-        }`}
-      >
-        {copySuccess === p.id ? (
-          <>
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
-            Copied!
-          </>
-        ) : (
-          <>
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-            Copy Prompt
-          </>
-        )}
-      </button>
     </div>
   );
 }
@@ -445,7 +452,7 @@ export default function Dashboard() {
     );
   }
 
-  // 3. PROMPT GALLERY
+  // 3. PROMPT GALLERY (Masonry-style Grid)
   if (view === 'prompt_gallery') {
     return (
       <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-purple-500/30 overflow-hidden">
@@ -485,7 +492,8 @@ export default function Dashboard() {
                 <p>Belum ada prompt yang disimpan.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 pb-20">
+              // GRID OVERLAY (Card-less design)
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 pb-20">
                 {prompts.map((p, idx) => (
                    <PromptCard key={p.id} p={p} index={idx} onDelete={handleDeletePrompt} copyToClipboard={copyToClipboard} copySuccess={copySuccess} />
                 ))}
@@ -497,7 +505,7 @@ export default function Dashboard() {
     );
   }
 
-  // 4. TRANSAKSI (Sama seperti sebelumnya)
+  // 4. TRANSAKSI
   if (view === 'transaksi') {
     return (
       <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 overflow-hidden">
