@@ -54,7 +54,7 @@ export default function Dashboard() {
   const [transactions, setTransactions] = useState([]);
   const [descInput, setDescInput] = useState('');
   const [amountInput, setAmountInput] = useState('');
-  const [typeInput, setTypeInput] = useState('pendapatan'); // 'pendapatan' atau 'pengeluaran'
+  const [typeInput, setTypeInput] = useState('pendapatan');
 
   const angsuranData = generateAngsuranData();
 
@@ -76,7 +76,6 @@ export default function Dashboard() {
         return;
       }
       
-      // Ambil data bukti angsuran
       const { data: proofData, error: proofErr } = await supabase.from('angsuran_rumah').select('*');
       if (!proofErr && proofData) {
         const loadedProofs = {};
@@ -86,7 +85,6 @@ export default function Dashboard() {
         setProofs(loadedProofs);
       }
 
-      // Ambil data transaksi (pendapatan & pengeluaran)
       const { data: trxData, error: trxErr } = await supabase.from('transaksi_keuangan').select('*');
       if (!trxErr && trxData) {
         setTransactions(trxData);
@@ -127,7 +125,6 @@ export default function Dashboard() {
       }
     }
   }, [pinCode]);
-  // --------------------------------
 
   const handleSaveProof = async (no) => {
     const currentLink = proofs[no] || '';
@@ -149,7 +146,6 @@ export default function Dashboard() {
     }
   };
 
-  // --- LOGIKA TAMBAH / HAPUS TRANSAKSI ---
   const handleAddTransaction = async (e) => {
     e.preventDefault();
     if (!descInput.trim() || !amountInput) return;
@@ -158,7 +154,7 @@ export default function Dashboard() {
       id: Date.now(),
       deskripsi: descInput.trim(),
       nominal: parseFloat(amountInput),
-      tipe: typeInput // 'pendapatan' atau 'pengeluaran'
+      tipe: typeInput
     };
 
     const updatedTrxList = [newTrx, ...transactions];
@@ -186,7 +182,6 @@ export default function Dashboard() {
     }
   };
 
-  // Kalkulator Total
   const totalPendapatan = transactions
     .filter(t => t.tipe === 'pendapatan')
     .reduce((acc, curr) => acc + Number(curr.nominal), 0);
@@ -200,7 +195,6 @@ export default function Dashboard() {
   const formatRupiah = (num) => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
   };
-  // ---------------------------------------
 
   const scrollToCurrentMonth = () => {
     if (currentMonthId) {
@@ -337,7 +331,7 @@ export default function Dashboard() {
     );
   }
 
-  // 2. TAMPILAN MENU FINANSIAL (Dengan Sub-Menu Transaksi & Angsuran)
+  // 2. TAMPILAN MENU FINANSIAL
   if (view === 'finansial') {
     return (
       <div className="flex flex-col items-center justify-start pt-24 sm:pt-32 min-h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 relative px-4">
@@ -359,7 +353,6 @@ export default function Dashboard() {
         <h1 className="text-3xl sm:text-5xl font-bold text-slate-100 mb-8 sm:mb-12 tracking-tight">Finansial</h1>
         
         <div className="flex flex-col gap-4 w-full max-w-xs sm:max-w-sm">
-          {/* Menu Angsuran Rumah */}
           <button 
             onClick={() => setView('angsuran')}
             className="flex items-center gap-4 px-6 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 group justify-start"
@@ -370,7 +363,6 @@ export default function Dashboard() {
             <span className="text-lg font-medium text-slate-200 group-hover:text-white transition-colors">Angsuran Rumah</span>
           </button>
 
-          {/* Menu Baru: Pendapatan dan Pengeluaran dengan Icon Transaksi */}
           <button 
             onClick={() => setView('transaksi')}
             className="flex items-center gap-4 px-6 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 group justify-start"
@@ -385,7 +377,7 @@ export default function Dashboard() {
     );
   }
 
-  // 3. TAMPILAN MENU PENDAPATAN DAN PENGELUARAN (Kalkulator Arus Kas)
+  // 3. TAMPILAN MENU PENDAPATAN DAN PENGELUARAN
   if (view === 'transaksi') {
     return (
       <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 overflow-hidden">
@@ -406,31 +398,32 @@ export default function Dashboard() {
 
         <div className="flex-1 p-3 sm:p-8 overflow-hidden flex flex-col w-full max-w-4xl mx-auto">
           
-          {/* Kartu Ringkasan (Kalkulator Total) */}
+          {/* Kartu Ringkasan (Kalkulator Total) dengan Inline Styles Anti-Purge */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 shrink-0">
             <div className="bg-[#111827] border border-emerald-800/40 rounded-xl p-4 flex flex-col justify-between shadow-lg">
-              <span className="text-xs font-medium text-emerald-400 uppercase tracking-wider">Total Pendapatan</span>
-              <span className="text-lg sm:text-xl font-bold font-mono text-emerald-300 mt-2">{formatRupiah(totalPendapatan)}</span>
+              <span className="text-xs font-medium uppercase tracking-wider" style={{ color: '#34d399' }}>Total Pendapatan</span>
+              <span className="text-lg sm:text-xl font-bold font-mono mt-2" style={{ color: '#10b981' }}>{formatRupiah(totalPendapatan)}</span>
             </div>
             <div className="bg-[#111827] border border-red-800/40 rounded-xl p-4 flex flex-col justify-between shadow-lg">
-              <span className="text-xs font-medium text-red-400 uppercase tracking-wider">Total Pengeluaran</span>
-              <span className="text-lg sm:text-xl font-bold font-mono text-red-300 mt-2">{formatRupiah(totalPengeluaran)}</span>
+              <span className="text-xs font-medium uppercase tracking-wider" style={{ color: '#f87171' }}>Total Pengeluaran</span>
+              <span className="text-lg sm:text-xl font-bold font-mono mt-2" style={{ color: '#ef4444' }}>{formatRupiah(totalPengeluaran)}</span>
             </div>
             <div className="bg-[#111827] border border-indigo-800/40 rounded-xl p-4 flex flex-col justify-between shadow-lg">
-              <span className="text-xs font-medium text-indigo-400 uppercase tracking-wider">Sisa Saldo Bersih</span>
-              <span className={`text-lg sm:text-xl font-bold font-mono mt-2 ${sisaSaldo >= 0 ? 'text-indigo-300' : 'text-red-400'}`}>{formatRupiah(sisaSaldo)}</span>
+              <span className="text-xs font-medium uppercase tracking-wider" style={{ color: '#818cf8' }}>Sisa Saldo Bersih</span>
+              <span className="text-lg sm:text-xl font-bold font-mono mt-2" style={{ color: sisaSaldo >= 0 ? '#818cf8' : '#ef4444' }}>{formatRupiah(sisaSaldo)}</span>
             </div>
           </div>
 
-          {/* Form Input Data Baru */}
+          {/* Form Input Data Baru dengan Select Berwarna */}
           <form onSubmit={handleAddTransaction} className="bg-[#111827] border border-slate-800 rounded-xl p-4 mb-4 shrink-0 flex flex-col sm:flex-row gap-3">
             <select 
               value={typeInput} 
               onChange={(e) => setTypeInput(e.target.value)}
-              className="bg-[#0B0F19] border border-slate-700 text-slate-200 text-sm rounded-lg px-3 py-2.5 outline-none focus:border-indigo-500"
+              className="bg-[#0B0F19] border border-slate-700 text-sm font-semibold rounded-lg px-3 py-2.5 outline-none focus:border-indigo-500"
+              style={{ color: typeInput === 'pendapatan' ? '#10b981' : '#ef4444' }}
             >
-              <option value="pendapatan">Pendapatan (+)</option>
-              <option value="pengeluaran">Pengeluaran (-)</option>
+              <option value="pendapatan" style={{ color: '#10b981', backgroundColor: '#0B0F19', fontWeight: 'bold' }}>Pendapatan (+)</option>
+              <option value="pengeluaran" style={{ color: '#ef4444', backgroundColor: '#0B0F19', fontWeight: 'bold' }}>Pengeluaran (-)</option>
             </select>
             
             <input 
@@ -480,19 +473,30 @@ export default function Dashboard() {
                     transactions.map((t) => (
                       <tr key={t.id} className="hover:bg-slate-800/30 transition-colors">
                         <td className="py-3 px-4 text-xs">
-                          <span className={`inline-flex px-2 py-0.5 rounded font-medium text-[10px] uppercase ${t.tipe === 'pendapatan' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
+                          <span 
+                            className="inline-flex px-2 py-0.5 rounded font-medium text-[10px] uppercase border"
+                            style={
+                              t.tipe === 'pendapatan' 
+                              ? { backgroundColor: 'rgba(16, 185, 129, 0.2)', color: '#34d399', borderColor: 'rgba(16, 185, 129, 0.3)' } 
+                              : { backgroundColor: 'rgba(239, 68, 68, 0.2)', color: '#f87171', borderColor: 'rgba(239, 68, 68, 0.3)' }
+                            }
+                          >
                             {t.tipe}
                           </span>
                         </td>
                         <td className="py-3 px-4 text-sm text-slate-200 font-medium">{t.deskripsi}</td>
-                        <td className={`py-3 px-4 text-sm font-mono text-right font-semibold ${t.tipe === 'pendapatan' ? 'text-emerald-400' : 'text-red-400'}`}>
+                        <td 
+                          className="py-3 px-4 text-sm font-mono text-right font-semibold"
+                          style={{ color: t.tipe === 'pendapatan' ? '#34d399' : '#f87171' }}
+                        >
                           {t.tipe === 'pendapatan' ? '+' : '-'} {formatRupiah(t.nominal)}
                         </td>
                         <td className="py-3 px-4 text-center">
                           <button 
                             onClick={() => handleDeleteTransaction(t.id)}
                             title="Hapus Transaksi"
-                            className="p-1.5 rounded-lg bg-red-950/30 text-red-400 border border-red-900/50 hover:bg-red-900/50 transition-colors"
+                            className="p-1.5 rounded-lg transition-colors border"
+                            style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#f87171', borderColor: 'rgba(239, 68, 68, 0.3)' }}
                           >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
