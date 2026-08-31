@@ -50,7 +50,7 @@ const parseImageUrl = (url) => {
   return url;
 };
 
-// --- KOMPONEN KHUSUS KARTU PROMPT (Desain Slide 1 | Slide 2) ---
+// --- KOMPONEN KHUSUS KARTU PROMPT (Desain Clean Tanpa Teks Prompt) ---
 function PromptCard({ p, index, onDelete, copyToClipboard, copySuccess }) {
   const [activeSlide, setActiveSlide] = useState(0);
   const images = [p.image1, p.image2, p.image3].filter(img => img && img.trim() !== '');
@@ -100,26 +100,27 @@ function PromptCard({ p, index, onDelete, copyToClipboard, copySuccess }) {
         )}
       </div>
 
-      {/* Kotak Teks Prompt (Scrollable) */}
-      <div className="bg-[#111827] border border-slate-800/60 rounded-xl p-4 flex-1 flex flex-col h-[220px]">
-        <div className="overflow-y-auto custom-scrollbar flex-1 mb-4 pr-1">
-          <p className="text-[13px] text-slate-300 font-mono whitespace-pre-wrap leading-relaxed">
-            {p.prompt_text}
-          </p>
-        </div>
-        
-        {/* Tombol Copy */}
-        <button 
-          onClick={() => copyToClipboard(p.prompt_text, p.id)}
-          className={`w-full py-2.5 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-all shrink-0 ${
-            copySuccess === p.id 
-              ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' 
-              : 'bg-slate-800/50 hover:bg-slate-700 text-slate-300 border border-slate-700/50'
-          }`}
-        >
-          {copySuccess === p.id ? 'Copied!' : 'Copy Prompt'}
-        </button>
-      </div>
+      {/* Tombol Copy (Prompt tersembunyi di belakang layar) */}
+      <button 
+        onClick={() => copyToClipboard(p.prompt_text, p.id)}
+        className={`w-full mt-auto py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all shrink-0 ${
+          copySuccess === p.id 
+            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' 
+            : 'bg-slate-800/50 hover:bg-slate-700 text-slate-300 border border-slate-700/50'
+        }`}
+      >
+        {copySuccess === p.id ? (
+          <>
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
+            Copied!
+          </>
+        ) : (
+          <>
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+            Copy Prompt
+          </>
+        )}
+      </button>
     </div>
   );
 }
@@ -466,8 +467,7 @@ export default function Dashboard() {
                 <p>Belum ada prompt yang disimpan.</p>
               </div>
             ) : (
-              // GRID 4 KOLOM DI SINI
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-20">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 pb-20">
                 {prompts.map((p, idx) => (
                    <PromptCard key={p.id} p={p} index={idx} onDelete={handleDeletePrompt} copyToClipboard={copyToClipboard} copySuccess={copySuccess} />
                 ))}
@@ -479,7 +479,7 @@ export default function Dashboard() {
     );
   }
 
-  // 4. TRANSAKSI (Sama seperti sebelumnya)
+  // 4. TRANSAKSI
   if (view === 'transaksi') {
     return (
       <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-indigo-500/30 overflow-hidden">
