@@ -398,7 +398,7 @@ export default function Dashboard() {
 
         <div className="flex-1 p-3 sm:p-8 overflow-hidden flex flex-col w-full max-w-4xl mx-auto">
           
-          {/* Kartu Ringkasan (Kalkulator Total) dengan Inline Styles Anti-Purge */}
+          {/* Kartu Ringkasan */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 shrink-0">
             <div className="bg-[#111827] border border-emerald-800/40 rounded-xl p-4 flex flex-col justify-between shadow-lg">
               <span className="text-xs font-medium uppercase tracking-wider" style={{ color: '#34d399' }}>Total Pendapatan</span>
@@ -414,13 +414,13 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Form Input Data Baru dengan Select Berwarna */}
+          {/* Form Input Data Baru - Background Select Terkunci Warna Dark */}
           <form onSubmit={handleAddTransaction} className="bg-[#111827] border border-slate-800 rounded-xl p-4 mb-4 shrink-0 flex flex-col sm:flex-row gap-3">
             <select 
               value={typeInput} 
               onChange={(e) => setTypeInput(e.target.value)}
-              className="bg-[#0B0F19] border border-slate-700 text-sm font-semibold rounded-lg px-3 py-2.5 outline-none focus:border-indigo-500"
-              style={{ color: typeInput === 'pendapatan' ? '#10b981' : '#ef4444' }}
+              className="border border-slate-700 text-sm font-semibold rounded-lg px-3 py-2.5 outline-none focus:border-indigo-500"
+              style={{ backgroundColor: '#0B0F19', color: typeInput === 'pendapatan' ? '#10b981' : '#ef4444' }}
             >
               <option value="pendapatan" style={{ color: '#10b981', backgroundColor: '#0B0F19', fontWeight: 'bold' }}>Pendapatan (+)</option>
               <option value="pengeluaran" style={{ color: '#ef4444', backgroundColor: '#0B0F19', fontWeight: 'bold' }}>Pengeluaran (-)</option>
