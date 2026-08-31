@@ -42,13 +42,11 @@ const generateAngsuranData = () => {
 const parseImageUrl = (url) => {
   if (!url) return '';
   
-  // Deteksi ID unik dari berbagai jenis URL Google Drive
   let match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
   if (!match) match = url.match(/id=([a-zA-Z0-9_-]+)/);
   if (!match) match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
 
   if (match && match[1]) {
-    // Menggunakan server lh3 Google untuk bypass blokir hotlinking
     return `https://lh3.googleusercontent.com/d/${match[1]}`;
   }
   return url;
@@ -310,7 +308,7 @@ export default function Dashboard() {
       image1: promptForm.image1.trim(),
       image2: promptForm.image2.trim(),
       image3: promptForm.image3.trim(),
-      prompt_text: promptForm.text.trim() // Teks utuh dengan paragraf
+      prompt_text: promptForm.text.trim()
     };
 
     const updatedPrompts = [newPromptEntry, ...prompts];
@@ -490,6 +488,12 @@ export default function Dashboard() {
     return (
       <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-purple-500/30 overflow-hidden">
         
+        {/* Supaya scrollbar pada slider/carousel tidak muncul di browser */}
+        <style dangerouslySetCreateElement={{ __html: `
+          .hide-scrollbar::-webkit-scrollbar { display: none; }
+          .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        `}} />
+
         <header className="shrink-0 py-6 sm:py-8 px-4 bg-[#0B0F19] border-b-2 border-[#05070B] flex flex-col items-center justify-center relative z-30 shadow-md">
           <button 
             onClick={() => setView('home')} 
@@ -517,7 +521,6 @@ export default function Dashboard() {
         <div className="flex-1 overflow-y-auto p-4 sm:p-8 custom-scrollbar">
           <div className="max-w-7xl mx-auto">
             
-            {/* Form Tambah Prompt Baru */}
             {showPromptForm && (
               <form onSubmit={handleAddPrompt} className="max-w-3xl mx-auto w-full bg-[#111827] border border-slate-800 rounded-2xl p-6 mb-8 shadow-xl flex flex-col animate-fadeIn">
                 
@@ -563,7 +566,6 @@ export default function Dashboard() {
               </form>
             )}
 
-            {/* Grid Kartu Prompt */}
             {prompts.length === 0 && !showPromptForm ? (
               <div className="text-center py-20 text-slate-500 flex flex-col items-center">
                 <svg className="w-16 h-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -573,70 +575,81 @@ export default function Dashboard() {
               </div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-20">
-                {prompts.map((p) => (
-                  <div key={p.id} className="bg-[#111827] border border-slate-800/80 rounded-2xl overflow-hidden shadow-xl flex flex-col hover:border-slate-700 transition-colors">
-                    
-                    {/* Header Card */}
-                    <div className="flex justify-between items-center px-5 py-4 border-b border-slate-800/60 bg-[#111827]">
-                      <h3 className="font-bold text-slate-100 text-lg truncate pr-4">{p.title}</h3>
-                      <button onClick={() => handleDeletePrompt(p.id)} className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors shrink-0" title="Hapus">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                      </button>
-                    </div>
+                {prompts.map((p) => {
+                  // Filter gambar yang ada isinya
+                  const images = [p.image1, p.image2, p.image3].filter(img => img && img.trim() !== '');
 
-                    {/* 3 Images Grid - Akan selalu merender kotak, meskipun link gagal */}
-                    <div className="grid grid-cols-3 gap-1 bg-[#0B0F19] p-1">
-                      <div className="aspect-[4/5] w-full overflow-hidden bg-slate-900 rounded-sm flex items-center justify-center relative">
-                        {p.image1 ? (
-                          <img src={parseImageUrl(p.image1)} alt="Ref 1" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/400x500/1e293b/475569?text=Image+1'; }} />
-                        ) : <span className="text-slate-700 text-xs">No Image</span>}
-                      </div>
-                      <div className="aspect-[4/5] w-full overflow-hidden bg-slate-900 rounded-sm flex items-center justify-center relative">
-                        {p.image2 ? (
-                          <img src={parseImageUrl(p.image2)} alt="Ref 2" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/400x500/1e293b/475569?text=Image+2'; }} />
-                        ) : <span className="text-slate-700 text-xs">No Image</span>}
-                      </div>
-                      <div className="aspect-[4/5] w-full overflow-hidden bg-slate-900 rounded-sm flex items-center justify-center relative">
-                        {p.image3 ? (
-                          <img src={parseImageUrl(p.image3)} alt="Ref 3" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/400x500/1e293b/475569?text=Image+3'; }} />
-                        ) : <span className="text-slate-700 text-xs">No Image</span>}
-                      </div>
-                    </div>
-
-                    {/* Prompt Text & Action */}
-                    <div className="p-5 flex flex-col flex-1 bg-[#111827]">
+                  return (
+                    <div key={p.id} className="bg-[#111827] border border-slate-800/80 rounded-2xl overflow-hidden shadow-xl flex flex-col hover:border-slate-700 transition-colors">
                       
-                      {/* Kotak Prompt dengan Fitur Scroll & Paragraf Terjaga (whitespace-pre-wrap) */}
-                      <div className="bg-[#0B0F19] border border-slate-800 rounded-lg p-4 mb-4 max-h-[250px] overflow-y-auto custom-scrollbar">
-                        <p className="text-[13px] text-slate-300 font-mono whitespace-pre-wrap leading-relaxed">
-                          {p.prompt_text}
-                        </p>
+                      {/* Header Card */}
+                      <div className="flex justify-between items-center px-5 py-4 border-b border-slate-800/60 bg-[#111827] shrink-0">
+                        <h3 className="font-bold text-slate-100 text-lg truncate pr-4">{p.title}</h3>
+                        <button onClick={() => handleDeletePrompt(p.id)} className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors shrink-0" title="Hapus">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </button>
                       </div>
 
-                      <button 
-                        onClick={() => copyToClipboard(p.prompt_text, p.id)}
-                        className={`w-full py-3 mt-auto rounded-xl font-semibold flex items-center justify-center gap-2 transition-all ${
-                          copySuccess === p.id 
-                            ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' 
-                            : 'bg-purple-600/10 hover:bg-purple-600/20 text-purple-400 border border-purple-500/30'
-                        }`}
-                      >
-                        {copySuccess === p.id ? (
-                          <>
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
-                            Copied!
-                          </>
+                      {/* Slider / Carousel Gambar (Swipeable) */}
+                      <div className="flex overflow-x-auto snap-x snap-mandatory bg-[#0B0F19] hide-scrollbar border-b border-slate-800/60 shrink-0 relative">
+                        {images.length > 0 ? (
+                          images.map((img, idx) => (
+                            <div key={idx} className="w-full shrink-0 snap-center aspect-video flex items-center justify-center relative bg-black">
+                              <img 
+                                src={parseImageUrl(img)} 
+                                alt={`Ref ${idx+1}`} 
+                                className="w-full h-full object-cover" 
+                                onError={(e) => { e.target.src = `https://via.placeholder.com/800x450/1e293b/475569?text=Image+${idx+1}`; }} 
+                              />
+                              {/* Indikator Posisi Slide */}
+                              {images.length > 1 && (
+                                <div className="absolute top-3 right-3 bg-black/70 text-slate-300 text-[10px] px-2.5 py-1 rounded-md font-mono border border-white/10 backdrop-blur-sm pointer-events-none">
+                                  {idx + 1} / {images.length}
+                                </div>
+                              )}
+                            </div>
+                          ))
                         ) : (
-                          <>
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                            Copy Prompt
-                          </>
+                          <div className="w-full shrink-0 snap-center aspect-video flex items-center justify-center bg-slate-900/50">
+                             <span className="text-slate-600 text-sm font-medium">No Image Uploaded</span>
+                          </div>
                         )}
-                      </button>
-                    </div>
+                      </div>
 
-                  </div>
-                ))}
+                      {/* Prompt Text (Maksimal tinggi 150px biar nggak tembus bawah layar) */}
+                      <div className="p-5 flex flex-col flex-1 bg-[#111827]">
+                        <div className="bg-[#0B0F19] border border-slate-800 rounded-lg p-4 mb-4 max-h-[150px] overflow-y-auto custom-scrollbar">
+                          <p className="text-[13px] text-slate-300 font-mono whitespace-pre-wrap leading-relaxed">
+                            {p.prompt_text}
+                          </p>
+                        </div>
+
+                        {/* Tombol Copy (Nempel di bawah) */}
+                        <button 
+                          onClick={() => copyToClipboard(p.prompt_text, p.id)}
+                          className={`w-full py-3 mt-auto rounded-xl font-semibold flex items-center justify-center gap-2 transition-all shrink-0 ${
+                            copySuccess === p.id 
+                              ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' 
+                              : 'bg-purple-600/10 hover:bg-purple-600/20 text-purple-400 border border-purple-500/30'
+                          }`}
+                        >
+                          {copySuccess === p.id ? (
+                            <>
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
+                              Copied!
+                            </>
+                          ) : (
+                            <>
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                              Copy Prompt
+                            </>
+                          )}
+                        </button>
+                      </div>
+
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
