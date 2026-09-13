@@ -1719,7 +1719,7 @@ Size: ${g.ukuran}
             )}
           </div>
 
-          <form onSubmit={handleAddTransaction}<form onSubmit={handleAddTransaction} className="bg-[#111827] border border-slate-800 rounded-xl p-4 mb-4 shrink-0 flex flex-col sm:flex-row gap-3">
+          <form onSubmit={handleAddTransaction} className="bg-[#111827] border border-slate-800 rounded-xl p-4 mb-4 shrink-0 flex flex-col sm:flex-row gap-3">
             <select value={typeInput} onChange={(e) => setTypeInput(e.target.value)} className="border border-slate-700 text-sm font-semibold rounded-lg px-3 py-2.5 outline-none focus:border-indigo-500" style={{ backgroundColor: '#0B0F19', color: typeInput === 'pendapatan' ? '#10b981' : '#ef4444' }}>
               <option value="pendapatan" style={{ color: '#10b981', backgroundColor: '#0B0F19', fontWeight: 'bold' }}>Pendapatan (+)</option>
               <option value="pengeluaran" style={{ color: '#ef4444', backgroundColor: '#0B0F19', fontWeight: 'bold' }}>Pengeluaran (-)</option>
