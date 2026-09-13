@@ -1667,15 +1667,15 @@ Size: ${g.ukuran}
               {/* Nominal Hari Ini */}
               <div className="bg-[#0B0F19]/80 border border-slate-800/50 rounded-md p-2 flex flex-col">
                 <label className="text-[8px] font-medium text-slate-500 uppercase tracking-wider mb-1">Nominal Hari ini</label>
-                <div className="relative">
-                  <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[9px] text-slate-600">Rp</span>
+                <div className="relative flex items-center">
+                  <span className="absolute left-2.5 text-[10px] font-medium text-slate-400 pointer-events-none">Rp</span>
                   <input
                     type="text"
                     inputMode="numeric"
-                    placeholder=""
+                    placeholder="0"
                     value={nominalHarianInput}
                     onChange={handleHarianAmountChange}
-                    className="w-full bg-transparent border border-slate-700/30 text-slate-100 text-[11px] font-mono rounded-md pl-5 pr-2 py-1.5 outline-none focus:border-indigo-500/50 focus:bg-[#111827] transition-all placeholder:text-slate-700"
+                    className="w-full bg-[#111827] border border-slate-700/40 text-slate-100 text-[11px] font-mono rounded-md pl-7 pr-2 py-1.5 outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/10 transition-all placeholder:text-slate-700"
                   />
                 </div>
                 <span className="text-[7px] text-slate-600 mt-1">sisa di bank</span>
