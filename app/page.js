@@ -38,6 +38,629 @@ const generateAngsuranData = () => {
   return data;
 };
 
+const GAME_PS1_DATA = [
+  {
+    "no": 1,
+    "nama": "Disney Pixar Toys Story",
+    "link": "https://www.mediafire.com/file/irdy26d742ipsck/Disney-Pixar_Toy_Story_2_-_Buzz_Lightyear_to_the_Rescue%2521_%2528USA%2529.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 2,
+    "nama": "Harvest Moon - Back to Nature",
+    "link": "https://www.mediafire.com/file/v3qfdwcnttvcyhh/Harvest_Moon_-_Back_to_Nature_%2528_Indonesia_%2529_.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 3,
+    "nama": "Nascar Rumble",
+    "link": "https://www.mediafire.com/file/q172fhpvc8xqj8w/NASCAR_Rumble_%2528USA%2529.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 4,
+    "nama": "Pepsi Man",
+    "link": "https://drive.google.com/drive/folders/186fcpz7Jn4hAmVX_CcozCuCMvMAEHVuT?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "Folder",
+    "jumlah": "8",
+    "status": "OK",
+    "keterangan": "8 Files"
+  },
+  {
+    "no": 5,
+    "nama": "Metal Slug X",
+    "link": "https://www.mediafire.com/file/lqv4xoci5rotuzp/Metal_Slug_X.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 6,
+    "nama": "Gallop",
+    "link": "https://drive.google.com/drive/folders/1ZaqbYqRo_ruw8YDKOgHA1VqvE-SLVuVv?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "Folder",
+    "jumlah": "2",
+    "status": "OK",
+    "keterangan": "2 Files"
+  },
+  {
+    "no": 7,
+    "nama": "Tony Hawk",
+    "link": "https://www.mediafire.com/file/ss16373lufhxstk/Tony_Hawk%2527s_Pro_Skater.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 8,
+    "nama": "Vigilante 2nd Offense",
+    "link": "https://drive.google.com/drive/folders/1XGFg4pRvEbgUWvFbw6T0JpFeSLUMpKzb?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "Folder",
+    "jumlah": "17",
+    "status": "OK",
+    "keterangan": "17 Files"
+  },
+  {
+    "no": 9,
+    "nama": "Gran Turismo",
+    "link": "https://www.mediafire.com/file/k4h1kjc2kgjvw8b/Gran_Turismo_%2528v1.1%2529.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 10,
+    "nama": "Gran Turismo 2",
+    "link": "https://www.mediafire.com/file/prv9pjy7ayslxge/Gran_Turismo_2_.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 11,
+    "nama": "Jackie Chan Stuntmaster",
+    "link": "https://www.mediafire.com/file/knmb2vu9bx56pcp/Jackie_Chan_Stuntmaster.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 12,
+    "nama": "Super Shot Soccer",
+    "link": "https://www.mediafire.com/folder/gw2nhqf157rwr/SUPER_SHOT_SOCCER",
+    "platform": "Mediafire",
+    "tipe": "Folder",
+    "jumlah": "7",
+    "status": "OK",
+    "keterangan": "7 Files"
+  },
+  {
+    "no": 13,
+    "nama": "Tenchu",
+    "link": "https://www.mediafire.com/file/9rzoovjtlzztdsr/Tenchu_-_Stealth_Assassins.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 14,
+    "nama": "CTR",
+    "link": "https://www.mediafire.com/file/5lq44sn40n2rpjr/CTR_-_Crash_Team_Racing.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 15,
+    "nama": "GTA",
+    "link": "https://drive.google.com/drive/folders/1CT-mRU02_tm11_BrWs8BxbIZcp2tbM5Z?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "Folder",
+    "jumlah": "",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 16,
+    "nama": "GTA 2",
+    "link": "https://www.mediafire.com/file/y5v9fuhqipx6lzc/Grand_Theft_Auto_2.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 17,
+    "nama": "Naruto - Shinobi no Sato no Jintori Gassen",
+    "link": "https://www.mediafire.com/file/b81cvq9x1aw0jxf/Naruto_-_Shinobi_no_Sato_no_Jintori_Gassen_.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 18,
+    "nama": "WWF SmackDown! 2",
+    "link": "https://www.mediafire.com/file/exwiz57hn7mazws/WWF_SmackDown%2521_2_.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 19,
+    "nama": "Celebrity Death Match MTV",
+    "link": "https://www.mediafire.com/file/71tx1phikn2btca/MTV_Celebrity_Deathmatch.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 20,
+    "nama": "DINO CRISIS",
+    "link": "https://www.mediafire.com/folder/96lz9mr54gdgc/DINO_CRISIS",
+    "platform": "Mediafire",
+    "tipe": "Folder",
+    "jumlah": "",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 21,
+    "nama": "DIGIMON WORLD",
+    "link": "https://www.mediafire.com/file/wl5y7ece4xmdyz5/Digimon_World.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 22,
+    "nama": "FINAL FANTASY VII",
+    "link": "https://www.mediafire.com/file/gpuzfygkznfel9t/Final_Fantasy_VII_.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 23,
+    "nama": "My Disney Kitchen",
+    "link": "https://www.mediafire.com/file/5h33xayp0cjyg6v/My_Disney_Kitchen.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "Duplikat",
+    "keterangan": ""
+  },
+  {
+    "no": 24,
+    "nama": "Crash Bandicoot",
+    "link": "https://www.mediafire.com/file/0qs8sxt0uots935/Crash_Bandicoot.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "Duplikat",
+    "keterangan": ""
+  },
+  {
+    "no": 25,
+    "nama": "TARZAN",
+    "link": "https://drive.google.com/drive/folders/1JOKLXBkePolMTbMcOMTPOVJ3JkVghowt?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "Folder",
+    "jumlah": "2",
+    "status": "OK",
+    "keterangan": "2 Files"
+  },
+  {
+    "no": 26,
+    "nama": "WINNING ELEVEN 2002",
+    "link": "https://www.mediafire.com/file/s5z41ct7nq57awl/World_Soccer_Winning_Eleven_2002_%2528Japan%2529_%2528Track_1%2529_%255BEnglish%255D.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 27,
+    "nama": "SARGES HEROE'S 2",
+    "link": "https://www.mediafire.com/file/iqotdjswd3s5zk1/Army_Men_-_Sarge%2527s_Heroes.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 28,
+    "nama": "SPYRO THE DRAGON",
+    "link": "https://www.mediafire.com/file/vo0b95gyobdavkt/Spyro_the_Dragon.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 29,
+    "nama": "SYPHON FILTER",
+    "link": "https://www.mediafire.com/file/dux3r5ud0gj1a3i/Syphon_Filter.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 30,
+    "nama": "FINAL FANTASY TACTICS",
+    "link": "https://www.mediafire.com/file/1vn3401rrw3c05f/Final_Fantasy_Tactics.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 31,
+    "nama": "SUIKODEN II",
+    "link": "https://www.mediafire.com/file/4oi4heo8yud7sd5/Suikoden_II.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 32,
+    "nama": "PACMAN",
+    "link": "https://drive.google.com/drive/folders/1Z6J-UKfx6JYlN6tlL-Rmscbdy_8LyxtP?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "Folder",
+    "jumlah": "23",
+    "status": "OK",
+    "keterangan": "23 Files"
+  },
+  {
+    "no": 33,
+    "nama": "Yugioh Forbidden Memories",
+    "link": "https://www.mediafire.com/file/xhmkn054ibowyey/Yu-Gi-Oh_Forbidden_Memories.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 34,
+    "nama": "Crash Bandicoot",
+    "link": "https://www.mediafire.com/file/0qs8sxt0uots935/Crash_Bandicoot.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "Duplikat",
+    "keterangan": ""
+  },
+  {
+    "no": 35,
+    "nama": "Road Rash Jailbreak",
+    "link": "https://www.mediafire.com/file/bozabg9b2qykav0/Road_Rash_-_Jailbreak.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 36,
+    "nama": "Worms Armageddon",
+    "link": "https://www.mediafire.com/file/ga2ume05yg1rm17/Worms_Armageddon.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 37,
+    "nama": "Pink Panther Pinkadelic Pursuit",
+    "link": "https://drive.google.com/drive/folders/1HQY722hlRDrp6e5tLuwqX40zekJv5Sps?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "Folder",
+    "jumlah": "23",
+    "status": "OK",
+    "keterangan": "23 Files"
+  },
+  {
+    "no": 38,
+    "nama": "Bomberman World",
+    "link": "https://www.mediafire.com/file/xg5k0f4ihvjkexp/Bomberman_World.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 39,
+    "nama": "Resident Evil 3 Nemesis",
+    "link": "https://www.mediafire.com/file/mtik3vqaallx8nx/Resident_Evil_3_-_Nemesis_.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 40,
+    "nama": "Inspector Gadget",
+    "link": "https://drive.google.com/drive/folders/1fZ5YJjplAPH4zfsreIgKvnZ0EhCvNbpM?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "Folder",
+    "jumlah": "12",
+    "status": "OK",
+    "keterangan": "12 Files"
+  },
+  {
+    "no": 41,
+    "nama": "My Disney Kitchen",
+    "link": "https://www.mediafire.com/file/kc0sz888x28cizv/My_Disney_Kitchen.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "Duplikat",
+    "keterangan": ""
+  },
+  {
+    "no": 42,
+    "nama": "Monkey Magic",
+    "link": "https://www.mediafire.com/file/2qphwziijdpvkww/Monkey_Magic.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 43,
+    "nama": "Resident Evil",
+    "link": "https://www.mediafire.com/file/rsy92xota4uehj5/Resident_Evil_%2528USA%2529.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 44,
+    "nama": "Tintin",
+    "link": "https://www.mediafire.com/file/m36ot3befthv88g/Tintin_-_Destination_Adventure.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 45,
+    "nama": "Dark Omen",
+    "link": "https://drive.google.com/file/d/1wP6XWCeC8AaylzpqsdSRkZ7PCFOaacig/view?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 46,
+    "nama": "Lilo & Stitch",
+    "link": "https://www.mediafire.com/file/spz6z3lnfpwcy4q/Disney%2527s_Lilo_%2526_Stitch.bin/file",
+    "platform": "Mediafire",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 47,
+    "nama": "Disney Pooh's Party Game",
+    "link": "https://drive.google.com/drive/folders/1_JEPBhd_Wz-V1qrhDgGbxxIqn1y4UDHK?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "Folder",
+    "jumlah": "2",
+    "status": "OK",
+    "keterangan": "2 Files"
+  },
+  {
+    "no": 48,
+    "nama": "Dynasty Warriors",
+    "link": "https://drive.google.com/file/d/1CnKKcDdd6Qmr8IgtolqUzF6TvsQRvLLP/view?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 49,
+    "nama": "3Xtreme",
+    "link": "https://drive.google.com/drive/folders/1zZiHQj-Zm2vfM_X0A9SlFvGY2Sc3L_bR?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "Folder",
+    "jumlah": "2",
+    "status": "OK",
+    "keterangan": "2 Files"
+  },
+  {
+    "no": 50,
+    "nama": "Chocoboco Racing",
+    "link": "https://drive.google.com/file/d/16u_f2L_oORHKpUl_iigdYjAWAfa4XZ4-/view?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 51,
+    "nama": "Tomba!",
+    "link": "https://drive.google.com/file/d/16YIPK7XGidUPVH-ZGtrUrRmeRx46_8gY/view?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 52,
+    "nama": "Tomba!2",
+    "link": "https://drive.google.com/drive/folders/1KU_1ZEs0aRepFGc4avelkYrOqCDefAxu?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "Folder",
+    "jumlah": "",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 53,
+    "nama": "Hercs Adventures",
+    "link": "https://drive.google.com/file/d/1ZiZNkiLWY_qwB-RS1SRYYgiDLDUA0EtS/view?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 54,
+    "nama": "Digimon Rumble",
+    "link": "https://drive.google.com/file/d/1pggNuR5yg74zYScibj3RDPtjmTOtmtIj/view?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 55,
+    "nama": "Command & Conquer red alert",
+    "link": "https://drive.google.com/drive/folders/13pT74wSJNSmIHXVTm8uoSmhMNSdTQAsO?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "Folder",
+    "jumlah": "2",
+    "status": "OK",
+    "keterangan": "2 Files"
+  },
+  {
+    "no": 56,
+    "nama": "Tenchu 2",
+    "link": "https://drive.google.com/file/d/1Oy9RiltCupJtQY5FpPLb9KX5OOWifIev/view?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 57,
+    "nama": "Hot Wheels",
+    "link": "https://drive.google.com/drive/folders/18fVlHMWbQ2QlGAWGSJWvo6hb8FM25DNJ?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "Folder",
+    "jumlah": "",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 58,
+    "nama": "Crash Bandicoot 2",
+    "link": "https://drive.google.com/file/d/1wVGF7F06rfTsTr9OYH0bl2MFOn2i7zbh/view?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 59,
+    "nama": "Ms Pacman",
+    "link": "https://drive.google.com/drive/folders/1GvBlPYW9EVLNAt-puqmKsilHDgoo8bta?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "Folder",
+    "jumlah": "8",
+    "status": "OK",
+    "keterangan": "8 Files"
+  },
+  {
+    "no": 60,
+    "nama": "Twisted Metal 4",
+    "link": "https://drive.google.com/drive/folders/1OxhLNg0jVoelK8ezzOqv0WnyLyQWiopH?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "Folder",
+    "jumlah": "24",
+    "status": "OK",
+    "keterangan": "24 Files"
+  },
+  {
+    "no": 61,
+    "nama": "Big Ol Bass 2",
+    "link": "https://drive.google.com/file/d/1h6y9yrQ5kKSzWI2xBccWVw989fvo7PNw/view?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  },
+  {
+    "no": 62,
+    "nama": "Spiderman",
+    "link": "https://drive.google.com/file/d/1cTg7yS3BBt76xZdA2xQ-k5rpF7AfVSz3/view?usp=sharing",
+    "platform": "Google Drive",
+    "tipe": "File BIN",
+    "jumlah": "-",
+    "status": "OK",
+    "keterangan": ""
+  }
+];
+
 // Fungsi Pintar untuk mengubah link Google Drive menjadi Direct Image Link
 const parseImageUrl = (url) => {
   if (!url) return '';
@@ -170,6 +793,11 @@ export default function Dashboard() {
   const [showPromptForm, setShowPromptForm] = useState(false);
   const [promptForm, setPromptForm] = useState({ title: '', image1: '', image2: '', image3: '', text: '' });
   const [copySuccess, setCopySuccess] = useState(null);
+
+  // === STATE BARU UNTUK GAME PS1 - TIDAK MENGGANGGU STATE LAMA ===
+  const [selectedGameIds, setSelectedGameIds] = useState({});
+  const [gameCopySuccess, setGameCopySuccess] = useState(false);
+  const [gameSearch, setGameSearch] = useState('');
 
   const angsuranData = generateAngsuranData();
 
@@ -370,6 +998,69 @@ export default function Dashboard() {
     });
   };
 
+  // === LOGIC BARU GAME PS1 - TIDAK MENGGANGGU SUPABASE LAMA ===
+  const filteredGames = GAME_PS1_DATA.filter(g => 
+    g.nama.toLowerCase().includes(gameSearch.toLowerCase()) ||
+    g.platform.toLowerCase().includes(gameSearch.toLowerCase())
+  );
+  const selectedGamesList = GAME_PS1_DATA.filter(g => selectedGameIds[g.no]);
+
+  const toggleGameSelection = (no) => {
+    setSelectedGameIds(prev => ({
+      ...prev,
+      [no]: !prev[no]
+    }));
+  };
+
+  const generateBoardFullText = () => {
+    let text = `Instruksi: Copy link yang kami kirim ke web browser yang bukan bawaan HP [ dihimbau untuk tidak tap langsung ya ]
+
+Download & Install ePSXe
+Informasi: ini adalah emulator, sebuah aplikasi di Android yang berfungsi menjalankan game-game PS 1
+Link: https://www.mediafire.com/file/y2ze58to38d6va8/ePSXe.apk/file 
+
+Download Game PS 1
+Informasi: ini adalah game PS1, setelah selesai proses download, langsung buka aplikasi ePSXe yang sudah di instal sebelumnya dan buka game nya dari aplikasi tersebut
+
+`;
+    if (selectedGamesList.length === 0) {
+      text += `Judul: (Belum ada game dipilih - centang game di tabel bawah)
+Link: -
+
+`;
+    } else {
+      selectedGamesList.forEach(g => {
+        text += `Judul: ${g.nama}
+Link: ${g.link}
+
+`;
+      });
+    }
+
+    text += `Cara Menjalankan Game
+1. Buka aplikasi ePSXe [ yang sudah di instal ]
+2. Tap jalankan permainan
+3. Scan game-nya atau cari file yang sudah didownload di aplikasi tersebut
+4. Game auto muncul dan langsung bisa dimainkan
+
+Tambahan informasi untuk Full screen:
+1. Buka aplikasi ePSXe
+2. Buka menu Preferences
+3. Buka Touchscreen Gamepad
+4. Buka Gamepad Skin Editor Landscape
+5. Silahkan edit sesuai keinginan`;
+
+    return text;
+  };
+
+  const handleCopyBoard = () => {
+    const fullText = generateBoardFullText();
+    navigator.clipboard.writeText(fullText).then(() => {
+      setGameCopySuccess(true);
+      setTimeout(() => setGameCopySuccess(false), 2500);
+    });
+  };
+
   // 0. LOCK SCREEN
   if (view === 'locked') {
     return (
@@ -418,6 +1109,12 @@ export default function Dashboard() {
           <button onClick={() => setView('prompt_gallery')} className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-purple-500/10 hover:-translate-y-1 group w-72 justify-start">
             <svg className="w-8 h-8 text-purple-400 group-hover:text-purple-300 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
             <span className="text-xl font-medium text-slate-200 group-hover:text-white transition-colors">Prompt</span>
+          </button>
+
+          {/* MENU BARU SHOPEE - TIDAK GANGGU YANG LAMA */}
+          <button onClick={() => setView('shopee')} className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-orange-500/10 hover:-translate-y-1 group w-72 justify-start">
+            <svg className="w-8 h-8 text-orange-400 group-hover:text-orange-300 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+            <span className="text-xl font-medium text-slate-200 group-hover:text-white transition-colors">Shopee</span>
           </button>
         </div>
       </div>
@@ -695,6 +1392,209 @@ export default function Dashboard() {
                 </span>
             </div>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 1.5 SHOPEE MENU - BARU TIDAK GANGGU SUPABASE
+  if (view === 'shopee') {
+    return (
+      <div className="flex flex-col items-center justify-start pt-24 sm:pt-32 min-h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-orange-500/30 relative px-4">
+        <button onClick={() => setView('home')} className="absolute top-6 left-4 sm:top-12 sm:left-12 flex items-center text-slate-400 hover:text-slate-200 transition-colors px-4 py-2 rounded-lg hover:bg-slate-800/50">
+          <svg className="w-5 h-5 mr-1 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+          <span className="text-sm sm:text-base">Kembali</span>
+        </button>
+
+        <div className="w-16 h-16 mb-6 rounded-2xl bg-[#111827] border border-slate-700/60 flex items-center justify-center shadow-xl shadow-orange-500/10 text-orange-400">
+          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+        </div>
+        <h1 className="text-3xl sm:text-5xl font-bold text-slate-100 mb-8 sm:mb-12 tracking-tight">Shopee</h1>
+        
+        <div className="flex flex-col gap-4 w-full max-w-xs sm:max-w-sm">
+          <button onClick={() => setView('game_ps1')} className="flex items-center gap-4 px-6 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-orange-500/10 hover:-translate-y-1 group justify-start">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center text-white font-bold text-sm shrink-0">PS1</div>
+            <div className="flex flex-col items-start">
+              <span className="text-base font-medium text-slate-200 group-hover:text-white transition-colors">Game PS1 for Android</span>
+              <span className="text-[11px] text-slate-500">{GAME_PS1_DATA.length} game • Auto board</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // 6. GAME PS1 FOR ANDROID - BARU - TABEL MIRIP ANGSURAN + BOARD OTOMATIS
+  if (view === 'game_ps1') {
+    return (
+      <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-orange-500/30 overflow-hidden">
+        <header className="shrink-0 py-5 sm:py-7 px-4 bg-[#0B0F19] border-b-2 border-[#05070B] flex flex-col items-center justify-center relative z-30 shadow-md">
+          <button onClick={() => setView('shopee')} className="absolute left-4 top-6 sm:left-12 sm:top-1/2 sm:-translate-y-1/2 p-2 sm:p-3 rounded-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700/50">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+          </button>
+          <h2 className="text-lg sm:text-2xl font-bold text-slate-100 text-center mt-1 sm:mt-0">Game PS1 for Android</h2>
+          <p className="text-[10px] sm:text-sm text-slate-500 mt-1 text-center">{GAME_PS1_DATA.length} game ready • Centang untuk masuk board</p>
+        </header>
+
+        <div className="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-8 flex flex-col gap-4 w-full max-w-5xl mx-auto">
+          
+          {/* BOARD INSTRUKSHI - SESUAI REQUEST */}
+          <div className="bg-[#111827] rounded-xl sm:rounded-2xl border border-slate-800/80 shadow-2xl flex flex-col overflow-hidden">
+            <div className="px-4 sm:px-6 py-3 bg-slate-900/50 border-b border-slate-800/60 flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Board Informasi Pembeli</span>
+                <span className="ml-2 px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-500/20 text-orange-300 border border-orange-500/30">{selectedGamesList.length} dipilih</span>
+              </div>
+              <button 
+                onClick={handleCopyBoard}
+                className={`flex items-center gap-2 px-4 py-1.5 rounded-lg font-bold text-xs transition-all transform active:scale-95 shadow-md ${gameCopySuccess ? 'bg-emerald-500 text-white' : 'bg-white text-slate-900 hover:bg-slate-100'}`}
+              >
+                {gameCopySuccess ? (
+                  <>
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                    Tercopy!
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                    Copy Board
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="p-4 sm:p-6 text-[12px] sm:text-[13px] leading-relaxed text-slate-300 bg-[#0B0F19] whitespace-pre-wrap break-words font-mono">
+              <div className="space-y-4">
+                <div>
+                  <p className="font-bold text-slate-100">Instruksi: Copy link yang kami kirim ke web browser yang bukan bawaan HP [ dihimbau untuk tidak tap langsung ya ]</p>
+                </div>
+
+                <div className="border border-slate-800 rounded-lg p-3 bg-[#111827]">
+                  <p className="font-bold text-orange-300 mb-1">Download & Install ePSXe</p>
+                  <p className="text-slate-400 text-[11px] mb-2">Informasi: ini adalah emulator, sebuah aplikasi di Android yang berfungsi menjalankan game-game PS 1</p>
+                  <p className="text-slate-200">Link: <a href="https://www.mediafire.com/file/y2ze58to38d6va8/ePSXe.apk/file" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-300 underline break-all">https://www.mediafire.com/file/y2ze58to38d6va8/ePSXe.apk/file</a></p>
+                </div>
+
+                <div className="border border-slate-800 rounded-lg p-3 bg-[#111827]">
+                  <p className="font-bold text-emerald-300 mb-1">Download Game PS 1</p>
+                  <p className="text-slate-400 text-[11px] mb-3">Informasi: ini adalah game PS1, setelah selesai proses download, langsung buka aplikasi ePSXe yang sudah di instal sebelumnya dan buka game nya dari aplikasi tersebut</p>
+                  
+                  {selectedGamesList.length === 0 ? (
+                    <div className="py-4 text-center border border-dashed border-slate-700 rounded-lg">
+                      <p className="text-slate-500 text-xs italic">Belum ada game dipilih</p>
+                      <p className="text-slate-600 text-[10px] mt-1">Centang game di tabel bawah, Judul & Link akan otomatis masuk kesini</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {selectedGamesList.map((g, idx) => (
+                        <div key={g.no} className="bg-[#0B0F19] border border-slate-800/60 rounded-lg p-3">
+                          <p className="text-slate-100 font-bold text-[12px]">Judul: <span className="text-white">{g.nama}</span></p>
+                          <p className="text-slate-300 mt-1 break-all text-[11px]">Link: <a href={g.link} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-300 underline">{g.link}</a></p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <p className="font-bold text-slate-100">Cara Menjalankan Game</p>
+                  <ol className="list-decimal ml-5 mt-1 space-y-0.5 text-slate-400">
+                    <li>Buka aplikasi ePSXe [ yang sudah di instal ]</li>
+                    <li>Tap jalankan permainan</li>
+                    <li>Scan game-nya atau cari file yang sudah didownload di aplikasi tersebut</li>
+                    <li>Game auto muncul dan langsung bisa dimainkan</li>
+                  </ol>
+                </div>
+
+                <div>
+                  <p className="font-bold text-slate-100">Tambahan informasi untuk Full screen:</p>
+                  <ol className="list-decimal ml-5 mt-1 space-y-0.5 text-slate-400">
+                    <li>Buka aplikasi ePSXe</li>
+                    <li>Buka menu Preferences</li>
+                    <li>Buka Touchscreen Gamepad</li>
+                    <li>Buka Gamepad Skin Editor Landscape</li>
+                    <li>Silahkan edit sesuai keinginan</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* TABEL GAME - STYLE MIRIP ANGSURAN */}
+          <div className="bg-[#111827] rounded-xl sm:rounded-2xl border border-slate-800/80 shadow-2xl flex flex-col overflow-hidden">
+            <div className="px-4 sm:px-6 py-3 bg-slate-900/50 border-b border-slate-800/60 flex flex-col sm:flex-row justify-between items-center gap-2">
+              <div className="flex items-center gap-3 w-full sm:w-auto">
+                <span className="text-[11px] text-slate-500 whitespace-nowrap">{filteredGames.length} game</span>
+                <div className="relative flex-1 sm:w-64">
+                  <input 
+                    type="text" 
+                    placeholder="Cari game..." 
+                    value={gameSearch} 
+                    onChange={(e) => setGameSearch(e.target.value)}
+                    className="w-full bg-[#0B0F19] border border-slate-700 text-slate-200 text-xs rounded-lg pl-8 pr-3 py-1.5 outline-none focus:border-orange-500"
+                  />
+                  <svg className="w-3.5 h-3.5 absolute left-2.5 top-2 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {selectedGamesList.length > 0 && (
+                  <button onClick={() => setSelectedGameIds({})} className="text-[10px] px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700">Clear ({selectedGamesList.length})</button>
+                )}
+                <span className="text-[10px] text-slate-500 hidden sm:inline">Centang untuk kirim ke pembeli</span>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto custom-scrollbar">
+              <table className="w-full text-left border-collapse min-w-[600px]">
+                <thead className="bg-[#111827] sticky top-0 z-10">
+                  <tr>
+                    <th className="py-3 pl-4 pr-2 text-[10px] font-semibold text-slate-400 uppercase bg-[#111827]">No.</th>
+                    <th className="py-3 px-2 text-[10px] font-semibold text-slate-400 uppercase bg-[#111827] text-center w-12">Pilih</th>
+                    <th className="py-3 px-3 text-[10px] font-semibold text-slate-400 uppercase bg-[#111827]">Nama Game</th>
+                    <th className="py-3 px-3 text-[10px] font-semibold text-slate-400 uppercase bg-[#111827] text-center">Link</th>
+                    <th className="py-3 px-3 text-[10px] font-semibold text-slate-400 uppercase bg-[#111827] text-center">Platform</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/40 bg-[#111827]">
+                  {filteredGames.map((g) => {
+                    const isSelected = !!selectedGameIds[g.no];
+                    return (
+                      <tr key={g.no} className={`transition-colors ${isSelected ? 'bg-orange-500/10 border-l-2 border-orange-500' : 'hover:bg-slate-800/30'}`}>
+                        <td className={`whitespace-nowrap py-3 pl-4 pr-2 text-[11px] font-medium ${isSelected ? 'text-orange-300' : 'text-slate-500'}`}>{String(g.no).padStart(2, '0')}</td>
+                        <td className="whitespace-nowrap py-3 px-2 text-center">
+                          <button 
+                            onClick={() => toggleGameSelection(g.no)}
+                            className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${isSelected ? 'bg-orange-500 border-orange-500 text-white shadow-[0_0_10px_rgba(249,115,22,0.4)]' : 'bg-slate-800/50 border-slate-700 hover:border-slate-600 text-transparent'}`}
+                          >
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                          </button>
+                        </td>
+                        <td className={`px-3 py-3 text-[12px] sm:text-[13px] font-medium max-w-[200px] truncate ${isSelected ? 'text-white' : 'text-slate-200'}`} title={g.nama}>{g.nama}</td>
+                        <td className="px-3 py-3 text-center">
+                          <a href={g.link} target="_blank" rel="noopener noreferrer" className="inline-flex p-1.5 rounded-lg bg-slate-800/50 hover:bg-indigo-500/20 border border-slate-700/50 hover:border-indigo-500/30 text-slate-400 hover:text-indigo-400 transition-colors" title="Buka Link">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                          </a>
+                        </td>
+                        <td className="px-3 py-3 text-center">
+                          <span className={`inline-flex px-2 py-0.5 rounded text-[9px] font-bold uppercase border ${g.platform === 'Mediafire' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'}`}>{g.platform}</span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="shrink-0 bg-slate-900/50 border-t border-slate-800/60 px-4 py-3 flex justify-between items-center">
+              <span className="text-[10px] text-slate-500">Total {GAME_PS1_DATA.length} game PS1 • Mirip jadwal angsuran</span>
+              <span className="text-[10px] text-orange-400 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
+                {selectedGamesList.length} terpilih siap copy
+              </span>
+            </div>
+          </div>
+
         </div>
       </div>
     );
