@@ -1000,6 +1000,8 @@ export default function Dashboard() {
   const [descInput, setDescInput] = useState('');
   const [amountInput, setAmountInput] = useState('');
   const [typeInput, setTypeInput] = useState('pendapatan');
+  const [nominalHarianInput, setNominalHarianInput] = useState('');
+  const [nominalHarianValue, setNominalHarianValue] = useState(0);
 
   const [prompts, setPrompts] = useState([]);
   const [showPromptForm, setShowPromptForm] = useState(false);
@@ -1088,6 +1090,42 @@ export default function Dashboard() {
       setAmountInput(rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, "."));
     } else setAmountInput('');
   };
+
+  // === KALKULATOR HARIAN KE TANGGAL 25 ===
+  const handleHarianAmountChange = (e) => {
+    const rawValue = e.target.value.replace(/[^0-9]/g, '');
+    if (rawValue) {
+      const formatted = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      setNominalHarianInput(formatted);
+      setNominalHarianValue(parseFloat(rawValue));
+    } else {
+      setNominalHarianInput('');
+      setNominalHarianValue(0);
+    }
+  };
+
+  const calculateSisaHariKe25 = () => {
+    const now = new Date();
+    const day = now.getDate();
+    const month = now.getMonth();
+    const year = now.getFullYear();
+    
+    let sisaHari;
+    let targetDate;
+    
+    if (day <= 25) {
+      sisaHari = 25 - day;
+      targetDate = new Date(year, month, 25);
+    } else {
+      const daysInCurrentMonth = new Date(year, month + 1, 0).getDate();
+      sisaHari = (daysInCurrentMonth - day) + 25;
+      targetDate = new Date(year, month + 1, 25);
+    }
+    return { sisaHari, targetDate, today: now };
+  };
+
+  const { sisaHari: sisaHariKe25, targetDate: targetTanggal25 } = calculateSisaHariKe25();
+  const batasPerHari = sisaHariKe25 > 0 ? nominalHarianValue / sisaHariKe25 : nominalHarianValue;
 
   const handleAddTransaction = async (e) => {
     e.preventDefault();
@@ -1612,6 +1650,81 @@ Size: ${g.ukuran}
               <span className="text-lg sm:text-xl font-bold font-mono mt-2" style={{ color: sisaSaldo >= 0 ? '#818cf8' : '#ef4444' }}>{formatRupiah(sisaSaldo)}</span>
             </div>
           </div>
+
+          {/* BOARD KALKULATOR HARIAN KE TANGGAL 25 - BARU */}
+          <div className="bg-[#111827] border border-indigo-800/30 rounded-xl p-4 mb-4 shrink-0 shadow-lg">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-6 h-6 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center">
+                <svg className="w-3.5 h-3.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17a2 2 0 110-4 2 2 0 010 4zm6-8a2 2 0 110-4 2 2 0 010 4z" /></svg>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[11px] font-bold text-slate-200 uppercase tracking-wider">Kalkulator Harian ke Tanggal 25</span>
+                <span className="text-[9px] text-slate-500">Hitung batas pengeluaran harian otomatis</span>
+              </div>
+              <div className="ml-auto flex items-center gap-1.5 px-2 py-1 rounded-full bg-slate-900 border border-slate-800">
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+                <span className="text-[9px] text-slate-400">Hari ini: {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</span>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* Nominal Hari Ini */}
+              <div className="bg-[#0B0F19] border border-slate-800 rounded-lg p-3 flex flex-col">
+                <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Nominal Hari ini</label>
+                <div className="relative">
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[11px] text-slate-500">Rp</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="2.500.000"
+                    value={nominalHarianInput}
+                    onChange={handleHarianAmountChange}
+                    className="w-full bg-[#111827] border border-slate-700/60 text-slate-100 text-sm font-mono rounded-lg pl-7 pr-3 py-2 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all"
+                  />
+                </div>
+                <span className="text-[9px] text-slate-600 mt-1.5">Sisa duit di bank / e-wallet</span>
+              </div>
+
+              {/* Sisa Hari Menuju Tanggal 25 */}
+              <div className="bg-[#0B0F19] border border-slate-800 rounded-lg p-3 flex flex-col">
+                <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Sisa Hari Menuju Tgl 25</label>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-2xl font-bold font-mono text-indigo-300">{sisaHariKe25}</span>
+                  <span className="text-[11px] text-slate-500">hari</span>
+                </div>
+                <span className="text-[9px] text-slate-600 mt-1.5">
+                  Target: 25 {targetTanggal25.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}
+                </span>
+              </div>
+
+              {/* Batas Pengeluaran Per Hari */}
+              <div className="bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/30 rounded-lg p-3 flex flex-col">
+                <label className="text-[10px] font-semibold text-indigo-300 uppercase tracking-wider mb-1.5">Batas Pengeluaran Per Hari</label>
+                <div className="flex flex-col">
+                  <span className="text-lg sm:text-xl font-bold font-mono text-white">
+                    {nominalHarianValue > 0 ? formatRupiah(Math.floor(batasPerHari)) : 'Rp 0'}
+                  </span>
+                  <span className="text-[9px] text-indigo-300/70 mt-0.5">
+                    {nominalHarianValue > 0 && sisaHariKe25 > 0 ? `${formatRupiah(nominalHarianValue)} ÷ ${sisaHariKe25} hari` : 'Isi nominal dulu'}
+                  </span>
+                </div>
+                <span className="text-[9px] text-slate-500 mt-1.5">
+                  {sisaHariKe25 === 0 ? 'Hari ini tanggal 25 - pakai semua!' : 'Jangan lewat dari ini per hari'}
+                </span>
+              </div>
+            </div>
+
+            {nominalHarianValue > 0 && (
+              <div className="mt-3 p-2.5 bg-slate-900/50 border border-slate-800/50 rounded-lg flex items-start gap-2">
+                <svg className="w-3.5 h-3.5 text-indigo-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <p className="text-[10px] leading-relaxed text-slate-400">
+                  Dengan sisa <span className="text-slate-200 font-semibold">{formatRupiah(nominalHarianValue)}</span> dan <span className="text-indigo-300 font-semibold">{sisaHariKe25} hari</span> lagi menuju tanggal 25, kamu aman kalau pengeluaran maksimal <span className="text-white font-bold">{formatRupiah(Math.floor(batasPerHari))}/hari</span>. 
+                  {sisaHariKe25 > 0 && ` Contoh: hari ini tanggal ${new Date().getDate()}, tanggal 25 - ${new Date().getDate()} = ${sisaHariKe25} hari.`}
+                </p>
+              </div>
+            )}
+          </div>
+
           <form onSubmit={handleAddTransaction} className="bg-[#111827] border border-slate-800 rounded-xl p-4 mb-4 shrink-0 flex flex-col sm:flex-row gap-3">
             <select value={typeInput} onChange={(e) => setTypeInput(e.target.value)} className="border border-slate-700 text-sm font-semibold rounded-lg px-3 py-2.5 outline-none focus:border-indigo-500" style={{ backgroundColor: '#0B0F19', color: typeInput === 'pendapatan' ? '#10b981' : '#ef4444' }}>
               <option value="pendapatan" style={{ color: '#10b981', backgroundColor: '#0B0F19', fontWeight: 'bold' }}>Pendapatan (+)</option>
