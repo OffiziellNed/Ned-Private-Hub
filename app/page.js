@@ -868,6 +868,18 @@ const GAME_PSP_DATA = [
     "status": "OK",
     "jumlah": "",
     "keterangan": ""
+  },
+  {
+    "no": 15,
+    "nama": "Metal Slug Anthology",
+    "link": "https://drive.google.com/file/d/1V2thXFfHyXiM_TU_PMc31WRNdP_WKV24/view?usp=sharing",
+    "ukuran": "-",
+    "ukuran_gb": "",
+    "platform": "Google Drive",
+    "konsol": "PSP",
+    "status": "OK",
+    "jumlah": "",
+    "keterangan": ""
   }
 ];
 
