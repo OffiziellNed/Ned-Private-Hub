@@ -897,8 +897,8 @@ const parseImageUrl = (url) => {
   return url;
 };
 
-// --- KOMPONEN KHUSUS KARTU PROMPT (Desain Pinterest / Midjourney Clean UI) ---
-function PromptCard({ p, onDelete, copyToClipboard, copySuccess }) {
+// --- KOMPONEN KHUSUS KARTU GALLERY (Dipakai Gemini & ChatGPT - Desain Pinterest / Midjourney Clean UI) ---
+function GalleryCard({ p, onDelete, copyToClipboard, copySuccess, copyLabel = "Copy Prompt" }) {
   const [activeSlide, setActiveSlide] = useState(0);
   const images = [p.image1, p.image2, p.image3].filter(img => img && img.trim() !== '');
 
@@ -986,7 +986,7 @@ function PromptCard({ p, onDelete, copyToClipboard, copySuccess }) {
             ) : (
               <>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                Copy Prompt
+                {copyLabel}
               </>
             )}
           </button>
@@ -996,6 +996,8 @@ function PromptCard({ p, onDelete, copyToClipboard, copySuccess }) {
     </div>
   );
 }
+// Alias untuk backward compatibility
+const PromptCard = GalleryCard;
 
 export default function Dashboard() {
   const [view, setView] = useState('locked');
@@ -1015,10 +1017,25 @@ export default function Dashboard() {
   const [nominalHarianInput, setNominalHarianInput] = useState('');
   const [nominalHarianValue, setNominalHarianValue] = useState(0);
 
-  const [prompts, setPrompts] = useState([]);
-  const [showPromptForm, setShowPromptForm] = useState(false);
-  const [promptForm, setPromptForm] = useState({ title: '', image1: '', image2: '', image3: '', text: '' });
+  // === STATE UNTUK GEMINI (sebelumnya Prompt) ===
+  const [prompts, setPrompts] = useState([]); // keep old for backward compat
+  const [geminiPrompts, setGeminiPrompts] = useState([]);
+  const [showGeminiForm, setShowGeminiForm] = useState(false);
+  const [geminiForm, setGeminiForm] = useState({ title: '', image1: '', image2: '', image3: '', text: '' });
   const [copySuccess, setCopySuccess] = useState(null);
+  const [geminiCopySuccess, setGeminiCopySuccess] = useState(null);
+
+  // Alias state lama biar gak error di tempat lain (sync)
+  const showPromptForm = showGeminiForm;
+  const setShowPromptForm = setShowGeminiForm;
+  const promptForm = geminiForm;
+  const setPromptForm = setGeminiForm;
+
+  // === STATE UNTUK CHAT GPT (konsep sama dengan Gemini) ===
+  const [chatGptPrompts, setChatGptPrompts] = useState([]);
+  const [showChatGptForm, setShowChatGptForm] = useState(false);
+  const [chatGptForm, setChatGptForm] = useState({ title: '', image1: '', image2: '', image3: '', text: '' });
+  const [chatGptCopySuccess, setChatGptCopySuccess] = useState(null);
 
   // === STATE BARU UNTUK GAME PS1 - TIDAK MENGGANGGU STATE LAMA ===
   const [selectedGameIds, setSelectedGameIds] = useState({});
@@ -1058,8 +1075,28 @@ export default function Dashboard() {
       const { data: trxData } = await supabase.from('transaksi_keuangan').select('*').order('id', { ascending: false });
       if (trxData) setTransactions(trxData);
 
-      const { data: promptData } = await supabase.from('prompts_gallery').select('*').order('id', { ascending: false });
-      if (promptData) setPrompts(promptData);
+      // --- FETCH GEMINI (coba table baru dulu, fallback ke prompts_gallery lama) ---
+      let gData = null;
+      try {
+        const resGemini = await supabase.from('gemini_gallery').select('*').order('id', { ascending: false });
+        if (resGemini.data && resGemini.data.length > 0) gData = resGemini.data;
+      } catch (e) {}
+      if (!gData) {
+        const { data: promptData } = await supabase.from('prompts_gallery').select('*').order('id', { ascending: false });
+        if (promptData) gData = promptData;
+      }
+      if (gData) {
+        setGeminiPrompts(gData);
+        setPrompts(gData); // backward compat
+      }
+
+      // --- FETCH CHATGPT ---
+      try {
+        const { data: chatData } = await supabase.from('chatgpt_gallery').select('*').order('id', { ascending: false });
+        if (chatData) setChatGptPrompts(chatData);
+      } catch (e) {
+        // table belum ada, biarin kosong
+      }
 
       setIsSyncing(false);
     };
@@ -1246,24 +1283,75 @@ export default function Dashboard() {
     reader.readAsText(file); e.target.value = null;
   };
 
-  const handleAddPrompt = async (e) => {
+  // === HANDLER GEMINI ===
+  const handleAddGemini = async (e) => {
     e.preventDefault();
-    if (!promptForm.title.trim() || !promptForm.text.trim()) return;
+    if (!geminiForm.title.trim() || !geminiForm.text.trim()) return;
 
-    const newPromptEntry = {
-      id: Date.now(), title: promptForm.title.trim(), image1: promptForm.image1.trim(), image2: promptForm.image2.trim(), image3: promptForm.image3.trim(), prompt_text: promptForm.text.trim()
+    const newEntry = {
+      id: Date.now(), title: geminiForm.title.trim(), image1: geminiForm.image1.trim(), image2: geminiForm.image2.trim(), image3: geminiForm.image3.trim(), prompt_text: geminiForm.text.trim()
     };
-    setPrompts([newPromptEntry, ...prompts]);
-    setPromptForm({ title: '', image1: '', image2: '', image3: '', text: '' });
-    setShowPromptForm(false);
+    setGeminiPrompts([newEntry, ...geminiPrompts]);
+    setPrompts([newEntry, ...prompts]);
+    setGeminiForm({ title: '', image1: '', image2: '', image3: '', text: '' });
+    setShowGeminiForm(false);
 
-    if (supabase) await supabase.from('prompts_gallery').insert([newPromptEntry]);
+    if (supabase) {
+      try { await supabase.from('gemini_gallery').insert([newEntry]); } catch {}
+      // simpan juga ke prompts_gallery lama biar gak hilang
+      try { await supabase.from('prompts_gallery').insert([newEntry]); } catch {}
+    }
   };
 
-  const handleDeletePrompt = async (id) => {
-    if (!confirm("Hapus prompt ini dari gallery?")) return;
+  const handleDeleteGemini = async (id) => {
+    if (!confirm("Hapus item Gemini ini?")) return;
+    setGeminiPrompts(geminiPrompts.filter(p => p.id !== id));
     setPrompts(prompts.filter(p => p.id !== id));
-    if (supabase) await supabase.from('prompts_gallery').delete().eq('id', id);
+    if (supabase) {
+      await supabase.from('gemini_gallery').delete().eq('id', id);
+      await supabase.from('prompts_gallery').delete().eq('id', id);
+    }
+  };
+
+  // backward compat alias
+  const handleAddPrompt = handleAddGemini;
+  const handleDeletePrompt = handleDeleteGemini;
+
+  // === HANDLER CHAT GPT (konsep sama persis) ===
+  const handleAddChatGpt = async (e) => {
+    e.preventDefault();
+    if (!chatGptForm.title.trim() || !chatGptForm.text.trim()) return;
+
+    const newEntry = {
+      id: Date.now(), title: chatGptForm.title.trim(), image1: chatGptForm.image1.trim(), image2: chatGptForm.image2.trim(), image3: chatGptForm.image3.trim(), prompt_text: chatGptForm.text.trim()
+    };
+    setChatGptPrompts([newEntry, ...chatGptPrompts]);
+    setChatGptForm({ title: '', image1: '', image2: '', image3: '', text: '' });
+    setShowChatGptForm(false);
+
+    if (supabase) {
+      try { await supabase.from('chatgpt_gallery').insert([newEntry]); } catch {}
+    }
+  };
+
+  const handleDeleteChatGpt = async (id) => {
+    if (!confirm("Hapus item Chat GPT ini?")) return;
+    setChatGptPrompts(chatGptPrompts.filter(p => p.id !== id));
+    if (supabase) {
+      await supabase.from('chatgpt_gallery').delete().eq('id', id);
+    }
+  };
+
+  // copy handler yang support kedua gallery
+  const handleCopyGemini = (text, id) => {
+    copyToClipboard(text, id);
+    setGeminiCopySuccess(id);
+    setTimeout(() => setGeminiCopySuccess(null), 2000);
+  };
+  const handleCopyChatGpt = (text, id) => {
+    copyToClipboard(text, id);
+    setChatGptCopySuccess(id);
+    setTimeout(() => setChatGptCopySuccess(null), 2000);
   };
 
   const copyToClipboard = (text, id) => {
@@ -1540,9 +1628,14 @@ Size: ${g.ukuran}
             <span className="text-xl font-medium text-slate-200 group-hover:text-white transition-colors">Finansial</span>
           </button>
 
-          <button onClick={() => setView('prompt_gallery')} className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-purple-500/10 hover:-translate-y-1 group w-72 justify-start">
-            <svg className="w-8 h-8 text-purple-400 group-hover:text-purple-300 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
-            <span className="text-xl font-medium text-slate-200 group-hover:text-white transition-colors">Prompt</span>
+          <button onClick={() => setView('gemini')} className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-blue-500/10 hover:-translate-y-1 group w-72 justify-start">
+            <svg className="w-8 h-8 text-blue-400 group-hover:text-blue-300 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+            <span className="text-xl font-medium text-slate-200 group-hover:text-white transition-colors">Gemini</span>
+          </button>
+
+          <button onClick={() => setView('chatgpt')} className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-emerald-500/10 hover:-translate-y-1 group w-72 justify-start">
+            <svg className="w-8 h-8 text-emerald-400 group-hover:text-emerald-300 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+            <span className="text-xl font-medium text-slate-200 group-hover:text-white transition-colors">Chat GPT</span>
           </button>
 
           {/* MENU BARU SHOPEE - TIDAK GANGGU YANG LAMA */}
@@ -1583,50 +1676,102 @@ Size: ${g.ukuran}
     );
   }
 
-  // 3. PROMPT GALLERY (Masonry-style Grid)
-  if (view === 'prompt_gallery') {
+  // 3. GEMINI GALLERY (dulu Prompt Gallery - Masonry-style Grid)
+  if (view === 'gemini' || view === 'prompt_gallery') {
     return (
-      <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-purple-500/30 overflow-hidden">
+      <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-blue-500/30 overflow-hidden">
         <header className="shrink-0 py-6 sm:py-8 px-4 bg-[#0B0F19] border-b-2 border-[#05070B] flex flex-col items-center justify-center relative z-30 shadow-md">
           <button onClick={() => setView('home')} className="absolute left-4 top-6 sm:left-12 sm:top-1/2 sm:-translate-y-1/2 p-2 sm:p-3 rounded-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700/50">
             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
           </button>
-          <h2 className="text-lg sm:text-2xl font-bold text-slate-100 text-center">Prompt Gallery</h2>
-          <p className="text-[10px] sm:text-sm text-slate-500 mt-1 text-center">Library referensi visual & AI prompt</p>
-          <button onClick={() => setShowPromptForm(!showPromptForm)} className="absolute right-4 top-6 sm:right-12 sm:top-1/2 sm:-translate-y-1/2 p-2 sm:px-4 sm:py-2 rounded-full sm:rounded-lg bg-purple-600/20 hover:bg-purple-600/40 text-purple-400 transition-colors border border-purple-500/50 flex items-center gap-2">
+          <h2 className="text-lg sm:text-2xl font-bold text-slate-100 text-center flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>Gemini Gallery</h2>
+          <p className="text-[10px] sm:text-sm text-slate-500 mt-1 text-center">Library referensi visual & Gemini prompt</p>
+          <button onClick={() => setShowGeminiForm(!showGeminiForm)} className="absolute right-4 top-6 sm:right-12 sm:top-1/2 sm:-translate-y-1/2 p-2 sm:px-4 sm:py-2 rounded-full sm:rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 transition-colors border border-blue-500/50 flex items-center gap-2">
             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg>
-            <span className="hidden sm:inline text-sm font-medium">Tambah Prompt</span>
+            <span className="hidden sm:inline text-sm font-medium">Tambah Gemini</span>
           </button>
         </header>
 
         <div className="flex-1 overflow-y-auto p-4 sm:p-8 custom-scrollbar w-full">
           <div className="w-full max-w-[1600px] mx-auto">
-            {showPromptForm && (
-              <form onSubmit={handleAddPrompt} className="max-w-3xl mx-auto w-full bg-[#111827] border border-slate-800 rounded-2xl p-6 mb-10 shadow-xl flex flex-col animate-fadeIn">
-                <input type="text" placeholder="Nama / Judul Prompt" required value={promptForm.title} onChange={(e) => setPromptForm({...promptForm, title: e.target.value})} className="w-full border border-slate-700 text-sm rounded-lg px-4 py-3 outline-none focus:border-purple-500 font-bold mb-5" style={{ backgroundColor: '#0B0F19', color: '#e2e8f0' }} />
+            {showGeminiForm && (
+              <form onSubmit={handleAddGemini} className="max-w-3xl mx-auto w-full bg-[#111827] border border-slate-800 rounded-2xl p-6 mb-10 shadow-xl flex flex-col animate-fadeIn">
+                <input type="text" placeholder="Nama / Judul Gemini Prompt" required value={geminiForm.title} onChange={(e) => setGeminiForm({...geminiForm, title: e.target.value})} className="w-full border border-slate-700 text-sm rounded-lg px-4 py-3 outline-none focus:border-blue-500 font-bold mb-5" style={{ backgroundColor: '#0B0F19', color: '#e2e8f0' }} />
                 <div className="flex flex-col gap-3 mb-5">
-                  <input type="text" placeholder="Link Gambar 1 (Google Drive / URL)" value={promptForm.image1} onChange={(e) => setPromptForm({...promptForm, image1: e.target.value})} className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-purple-500" style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }} />
-                  <input type="text" placeholder="Link Gambar 2 (Google Drive / URL)" value={promptForm.image2} onChange={(e) => setPromptForm({...promptForm, image2: e.target.value})} className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-purple-500" style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }} />
-                  <input type="text" placeholder="Link Gambar 3 (Google Drive / URL)" value={promptForm.image3} onChange={(e) => setPromptForm({...promptForm, image3: e.target.value})} className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-purple-500" style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }} />
+                  <input type="text" placeholder="Link Gambar 1 (Google Drive / URL)" value={geminiForm.image1} onChange={(e) => setGeminiForm({...geminiForm, image1: e.target.value})} className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-blue-500" style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }} />
+                  <input type="text" placeholder="Link Gambar 2 (Google Drive / URL)" value={geminiForm.image2} onChange={(e) => setGeminiForm({...geminiForm, image2: e.target.value})} className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-blue-500" style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }} />
+                  <input type="text" placeholder="Link Gambar 3 (Google Drive / URL)" value={geminiForm.image3} onChange={(e) => setGeminiForm({...geminiForm, image3: e.target.value})} className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-blue-500" style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }} />
                 </div>
-                <textarea placeholder="Masukkan text prompt AI di sini (bisa pakai enter / paragraf)..." required value={promptForm.text} onChange={(e) => setPromptForm({...promptForm, text: e.target.value})} className="w-full min-h-[140px] border border-slate-700 text-sm rounded-lg px-4 py-3 outline-none focus:border-purple-500 resize-none leading-relaxed mb-5" style={{ backgroundColor: '#0B0F19', color: '#cbd5e1' }}></textarea>
+                <textarea placeholder="Masukkan text prompt Gemini di sini..." required value={geminiForm.text} onChange={(e) => setGeminiForm({...geminiForm, text: e.target.value})} className="w-full min-h-[140px] border border-slate-700 text-sm rounded-lg px-4 py-3 outline-none focus:border-blue-500 resize-none leading-relaxed mb-5" style={{ backgroundColor: '#0B0F19', color: '#cbd5e1' }}></textarea>
                 <div className="flex justify-end gap-3">
-                  <button type="button" onClick={() => setShowPromptForm(false)} className="px-6 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition-colors">Batal</button>
-                  <button type="submit" className="px-6 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium transition-colors shadow-lg shadow-purple-500/20">Simpan Prompt</button>
+                  <button type="button" onClick={() => setShowGeminiForm(false)} className="px-6 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition-colors">Batal</button>
+                  <button type="submit" className="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-colors shadow-lg shadow-blue-500/20">Simpan Gemini</button>
                 </div>
               </form>
             )}
 
-            {prompts.length === 0 && !showPromptForm ? (
+            {geminiPrompts.length === 0 && !showGeminiForm ? (
               <div className="text-center py-20 text-slate-500 flex flex-col items-center">
                 <svg className="w-16 h-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                <p>Belum ada prompt yang disimpan.</p>
+                <p>Belum ada Gemini prompt yang disimpan.</p>
               </div>
             ) : (
-              // GRID OVERLAY (Card-less design)
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 pb-20">
-                {prompts.map((p, idx) => (
-                   <PromptCard key={p.id} p={p} index={idx} onDelete={handleDeletePrompt} copyToClipboard={copyToClipboard} copySuccess={copySuccess} />
+                {geminiPrompts.map((p, idx) => (
+                   <GalleryCard key={p.id} p={p} index={idx} onDelete={handleDeleteGemini} copyToClipboard={handleCopyGemini} copySuccess={geminiCopySuccess || copySuccess} copyLabel="Copy Gemini" />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 3b. CHAT GPT GALLERY - konsep sama dengan Gemini
+  if (view === 'chatgpt') {
+    return (
+      <div className="flex flex-col h-[100dvh] bg-[#0B0F19] text-slate-300 font-sans selection:bg-emerald-500/30 overflow-hidden">
+        <header className="shrink-0 py-6 sm:py-8 px-4 bg-[#0B0F19] border-b-2 border-[#05070B] flex flex-col items-center justify-center relative z-30 shadow-md">
+          <button onClick={() => setView('home')} className="absolute left-4 top-6 sm:left-12 sm:top-1/2 sm:-translate-y-1/2 p-2 sm:p-3 rounded-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700/50">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+          </button>
+          <h2 className="text-lg sm:text-2xl font-bold text-slate-100 text-center flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>Chat GPT Gallery</h2>
+          <p className="text-[10px] sm:text-sm text-slate-500 mt-1 text-center">Library referensi visual & Chat GPT prompt</p>
+          <button onClick={() => setShowChatGptForm(!showChatGptForm)} className="absolute right-4 top-6 sm:right-12 sm:top-1/2 sm:-translate-y-1/2 p-2 sm:px-4 sm:py-2 rounded-full sm:rounded-lg bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 transition-colors border border-emerald-500/50 flex items-center gap-2">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg>
+            <span className="hidden sm:inline text-sm font-medium">Tambah Chat GPT</span>
+          </button>
+        </header>
+
+        <div className="flex-1 overflow-y-auto p-4 sm:p-8 custom-scrollbar w-full">
+          <div className="w-full max-w-[1600px] mx-auto">
+            {showChatGptForm && (
+              <form onSubmit={handleAddChatGpt} className="max-w-3xl mx-auto w-full bg-[#111827] border border-slate-800 rounded-2xl p-6 mb-10 shadow-xl flex flex-col animate-fadeIn">
+                <input type="text" placeholder="Nama / Judul Chat GPT Prompt" required value={chatGptForm.title} onChange={(e) => setChatGptForm({...chatGptForm, title: e.target.value})} className="w-full border border-slate-700 text-sm rounded-lg px-4 py-3 outline-none focus:border-emerald-500 font-bold mb-5" style={{ backgroundColor: '#0B0F19', color: '#e2e8f0' }} />
+                <div className="flex flex-col gap-3 mb-5">
+                  <input type="text" placeholder="Link Gambar 1 (Google Drive / URL)" value={chatGptForm.image1} onChange={(e) => setChatGptForm({...chatGptForm, image1: e.target.value})} className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-emerald-500" style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }} />
+                  <input type="text" placeholder="Link Gambar 2 (Google Drive / URL)" value={chatGptForm.image2} onChange={(e) => setChatGptForm({...chatGptForm, image2: e.target.value})} className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-emerald-500" style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }} />
+                  <input type="text" placeholder="Link Gambar 3 (Google Drive / URL)" value={chatGptForm.image3} onChange={(e) => setChatGptForm({...chatGptForm, image3: e.target.value})} className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none focus:border-emerald-500" style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }} />
+                </div>
+                <textarea placeholder="Masukkan text prompt Chat GPT di sini..." required value={chatGptForm.text} onChange={(e) => setChatGptForm({...chatGptForm, text: e.target.value})} className="w-full min-h-[140px] border border-slate-700 text-sm rounded-lg px-4 py-3 outline-none focus:border-emerald-500 resize-none leading-relaxed mb-5" style={{ backgroundColor: '#0B0F19', color: '#cbd5e1' }}></textarea>
+                <div className="flex justify-end gap-3">
+                  <button type="button" onClick={() => setShowChatGptForm(false)} className="px-6 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition-colors">Batal</button>
+                  <button type="submit" className="px-6 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium transition-colors shadow-lg shadow-emerald-500/20">Simpan Chat GPT</button>
+                </div>
+              </form>
+            )}
+
+            {chatGptPrompts.length === 0 && !showChatGptForm ? (
+              <div className="text-center py-20 text-slate-500 flex flex-col items-center">
+                <svg className="w-16 h-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                <p>Belum ada Chat GPT prompt yang disimpan.</p>
+                <p className="text-[11px] mt-2 opacity-60">Konsep sama persis dengan Gemini</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 pb-20">
+                {chatGptPrompts.map((p, idx) => (
+                   <GalleryCard key={p.id} p={p} index={idx} onDelete={handleDeleteChatGpt} copyToClipboard={handleCopyChatGpt} copySuccess={chatGptCopySuccess} copyLabel="Copy ChatGPT" />
                 ))}
               </div>
             )}
