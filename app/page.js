@@ -27,13 +27,13 @@ const generateAngsuranData = () => {
 };
 
 const GAME_PS1_DATA = [
-  {"no":1,"nama":"【entity-Disney¦canonical_name=Disney】 Pixar Toys Story","link":"https://www.mediafire.[STRIPPED 80 bytes]%2521_%2528USA%2529.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
+  {"no":1,"nama":" 【entity-Disney¦canonical_name=Disney】 Pixar Toys Story","link":"https://www.mediafire.[STRIPPED 80 bytes]%2521_%2528USA%2529.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":2,"nama":"Harvest Moon - Back to Nature","link":"https://www.mediafire.com/file/v3qfdwcnttvcyhh/Harvest_Moon_-_Back_to_Nature_%2528_Indonesia_%2529_.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":3,"nama":"Nascar Rumble","link":"https://www.mediafire.com/file/q172fhpvc8xqj8w/NASCAR_Rumble_%2528USA%2529.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":4,"nama":"Pepsi Man","link":"https://drive.google.com/drive/folders/186fcpz7Jn4hAmVX_CcozCuCMvMAEHVuT?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"8","status":"OK","keterangan":"8 Files"},
   {"no":5,"nama":"Metal Slug X","link":"https://www.mediafire.com/file/lqv4xoci5rotuzp/Metal_Slug_X.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":6,"nama":"Gallop","link":"https://drive.google.com/drive/folders/1ZaqbYqRo_ruw8YDKOgHA1VqvE-SLVuVv?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"2","status":"OK","keterangan":"2 Files"},
-  {"no":7,"nama":"【entity-Tony Hawk¦canonical_name=Tony Hawk】","link":"https://www.mediafire.com/file/ss16373lufhxstk/Tony_Hawk%2527s_Pro_Skater.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
+  {"no":7,"nama":" 【entity-Tony Hawk¦canonical_name=Tony Hawk】","link":"https://www.mediafire.com/file/ss16373lufhxstk/Tony_Hawk%2527s_Pro_Skater.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":8,"nama":"Vigilante 2nd Offense","link":"https://drive.google.com/drive/folders/1XGFg4pRvEbgUWvFbw6T0JpFeSLUMpKzb?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"17","status":"OK","keterangan":"17 Files"},
   {"no":9,"nama":"【entity-Gran Turismo¦canonical_name=Gran Turismo】","link":"https://www.mediafire.com/file/k4h1kjc2kgjvw8b/Gran_Turismo_%2528v1.1%2529.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":10,"nama":"【entity-Gran Turismo¦canonical_name=Gran Turismo】 2","link":"https://www.mediafire.com/file/prv9pjy7ayslxge/Gran_Turismo_2_.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
@@ -48,22 +48,22 @@ const GAME_PS1_DATA = [
   {"no":19,"nama":"Celebrity Death Match MTV","link":"https://www.mediafire.com/file/71tx1phikn2btca/MTV_Celebrity_Deathmatch.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":20,"nama":"DINO CRISIS","link":"https://www.mediafire.com/folder/96lz9mr54gdgc/DINO_CRISIS","platform":"Mediafire","tipe":"Folder","jumlah":"","status":"OK","keterangan":""},
   {"no":21,"nama":"DIGIMON WORLD","link":"https://www.mediafire.com/file/wl5y7ece4xmdyz5/Digimon_World.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
-  {"no":22,"nama":"【entity-FINAL FANTASY VII¦canonical_name=FINAL FANTASY VII】","link":"https://www.mediafire.com/file/gpuzfygkznfel9t/Final_Fantasy_VII_.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
+  {"no":22,"nama":" 【entity-FINAL FANTASY VII¦canonical_name=FINAL FANTASY VII】","link":"https://www.mediafire.com/file/gpuzfygkznfel9t/Final_Fantasy_VII_.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":23,"nama":"My 【entity-Disney¦canonical_name=Disney】 Kitchen","link":"https://www.mediafire.com/file/5h33xayp0cjyg6v/My_Disney_Kitchen.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"Duplikat","keterangan":""},
-  {"no":24,"nama":"【entity-Crash Bandicoot¦canonical_name=Crash Bandicoot】","link":"https://www.mediafire.com/file/0qs8sxt0uots935/Crash_Bandicoot.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"Duplikat","keterangan":""},
+  {"no":24,"nama":" 【entity-Crash Bandicoot¦canonical_name=Crash Bandicoot】","link":"https://www.mediafire.com/file/0qs8sxt0uots935/Crash_Bandicoot.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"Duplikat","keterangan":""},
   {"no":25,"nama":"TARZAN","link":"https://drive.google.com/drive/folders/1JOKLXBkePolMTbMcOMTPOVJ3JkVghowt?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"2","status":"OK","keterangan":"2 Files"},
   {"no":26,"nama":"WINNING ELEVEN 2002","link":"https://www.mediafire.com/file/s5z41ct7nq57awl/World_Soccer_Winning_Eleven_2002_%2528Japan%2529_%2528Track_1%2529_%255BEnglish%255D.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":27,"nama":"SARGES HEROE'S 2","link":"https://www.mediafire.com/file/iqotdjswd3s5zk1/Army_Men_-_Sarge%2527s_Heroes.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":28,"nama":"SPYRO THE DRAGON","link":"https://www.mediafire.com/file/vo0b95gyobdavkt/Spyro_the_Dragon.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":29,"nama":"SYPHON FILTER","link":"https://www.mediafire.com/file/dux3r5ud0gj1a3i/Syphon_Filter.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
-  {"no":30,"nama":"【entity-FINAL FANTASY TACTICS¦canonical_name=FINAL FANTASY VII】","link":"https://www.mediafire.com/file/1vn3401rrw3c05f/Final_Fantasy_Tactics.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
+  {"no":30,"nama":" 【entity-FINAL FANTASY TACTICS¦canonical_name=FINAL FANTASY VII】","link":"https://www.mediafire.com/file/1vn3401rrw3c05f/Final_Fantasy_Tactics.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":31,"nama":"SUIKODEN II","link":"https://www.mediafire.com/file/4oi4heo8yud7sd5/Suikoden_II.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
-  {"no":32,"nama":"【entity-PACMAN¦canonical_name=PACMAN】","link":"https://drive.google.com/drive/folders/1Z6J-UKfx6JYlN6tlL-Rmscbdy_8LyxtP?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"23","status":"OK","keterangan":"23 Files"},
+  {"no":32,"nama":" 【entity-PACMAN¦canonical_name=PACMAN】","link":"https://drive.google.com/drive/folders/1Z6J-UKfx6JYlN6tlL-Rmscbdy_8LyxtP?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"23","status":"OK","keterangan":"23 Files"},
   {"no":33,"nama":"Yugioh Forbidden Memories","link":"https://www.mediafire.com/file/xhmkn054ibowyey/Yu-Gi-Oh_Forbidden_Memories.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
-  {"no":34,"nama":"【entity-Crash Bandicoot¦canonical_name=Crash Bandicoot】","link":"https://www.mediafire.com/file/0qs8sxt0uots935/Crash_Bandicoot.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"Duplikat","keterangan":""},
+  {"no":34,"nama":" 【entity-Crash Bandicoot¦canonical_name=Crash Bandicoot】","link":"https://www.mediafire.com/file/0qs8sxt0uots935/Crash_Bandicoot.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"Duplikat","keterangan":""},
   {"no":35,"nama":"Road Rash Jailbreak","link":"https://www.mediafire.com/file/bozabg9b2qykav0/Road_Rash_-_Jailbreak.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":36,"nama":"Worms Armageddon","link":"https://www.mediafire.com/file/ga2ume05yg1rm17/Worms_Armageddon.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
-  {"no":37,"nama":"【entity-Pink Panther¦canonical_name=Pink Panther】 Pinkadelic Pursuit","link":"https://drive.google.com/drive/folders/1HQY722hlRDrp6e5tLuwqX40zekJv5Sps?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"23","status":"OK","keterangan":"23 Files"},
+  {"no":37,"nama":" 【entity-Pink Panther¦canonical_name=Pink Panther】 Pinkadelic Pursuit","link":"https://drive.google.com/drive/folders/1HQY722hlRDrp6e5tLuwqX40zekJv5Sps?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"23","status":"OK","keterangan":"23 Files"},
   {"no":38,"nama":"Bomberman World","link":"https://www.mediafire.com/file/xg5k0f4ihvjkexp/Bomberman_World.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":39,"nama":"Resident Evil 3 Nemesis","link":"https://www.mediafire.com/file/mtik3vqaallx8nx/Resident_Evil_3_-_Nemesis_.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":40,"nama":"Inspector Gadget","link":"https://drive.google.com/drive/folders/1fZ5YJjplAPH4zfsreIgKvnZ0EhCvNbpM?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"12","status":"OK","keterangan":"12 Files"},
@@ -73,7 +73,7 @@ const GAME_PS1_DATA = [
   {"no":44,"nama":"Tintin","link":"https://www.mediafire.com/file/m36ot3befthv88g/Tintin_-_Destination_Adventure.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":45,"nama":"Dark Omen","link":"https://drive.google.com/file/d/1wP6XWCeC8AaylzpqsdSRkZ7PCFOaacig/view?usp=sharing","platform":"Google Drive","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":46,"nama":"Lilo & Stitch","link":"https://www.mediafire.com/file/spz6z3lnfpwcy4q/Disney%2527s_Lilo_%2526_Stitch.bin/file","platform":"Mediafire","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
-  {"no":47,"nama":"【entity-Disney Pooh's Party Game¦canonical_name=Disney】","link":"https://drive.google.com/drive/folders/1_JEPBhd_Wz-V1qrhDgGbxxIqn1y4UDHK?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"2","status":"OK","keterangan":"2 Files"},
+  {"no":47,"nama":" 【entity-Disney Pooh's Party Game¦canonical_name=Disney】","link":"https://drive.google.com/drive/folders/1_JEPBhd_Wz-V1qrhDgGbxxIqn1y4UDHK?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"2","status":"OK","keterangan":"2 Files"},
   {"no":48,"nama":"Dynasty Warriors","link":"https://drive.google.com/file/d/1CnKKcDdd6Qmr8IgtolqUzF6TvsQRvLLP/view?usp=sharing","platform":"Google Drive","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":49,"nama":"3Xtreme","link":"https://drive.google.com/drive/folders/1zZiHQj-Zm2vfM_X0A9SlFvGY2Sc3L_bR?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"2","status":"OK","keterangan":"2 Files"},
   {"no":50,"nama":"Chocoboco Racing","link":"https://drive.google.com/file/d/16u_f2L_oORHKpUl_iigdYjAWAfa4XZ4-/view?usp=sharing","platform":"Google Drive","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
@@ -83,42 +83,42 @@ const GAME_PS1_DATA = [
   {"no":54,"nama":"Digimon Rumble","link":"https://drive.google.com/file/d/1pggNuR5yg74zYScibj3RDPtjmTOtmtIj/view?usp=sharing","platform":"Google Drive","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":55,"nama":"Command & Conquer red alert","link":"https://drive.google.com/drive/folders/13pT74wSJNSmIHXVTm8uoSmhMNSdTQAsO?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"2","status":"OK","keterangan":"2 Files"},
   {"no":56,"nama":"Tenchu 2","link":"https://drive.google.com/file/d/1Oy9RiltCupJtQY5FpPLb9KX5OOWifIev/view?usp=sharing","platform":"Google Drive","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
-  {"no":57,"nama":"【entity-Hot Wheels¦canonical_name=Hot Wheels】","link":"https://drive.google.com/drive/folders/18fVlHMWbQ2QlGAWGSJWvo6hb8FM25DNJ?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"","status":"OK","keterangan":""},
-  {"no":58,"nama":"【entity-Crash Bandicoot¦canonical_name=Crash Bandicoot】 2","link":"https://drive.google.com/file/d/1wVGF7F06rfTsTr9OYH0bl2MFOn2i7zbh/view?usp=sharing","platform":"Google Drive","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
+  {"no":57,"nama":" 【entity-Hot Wheels¦canonical_name=Hot Wheels】","link":"https://drive.google.com/drive/folders/18fVlHMWbQ2QlGAWGSJWvo6hb8FM25DNJ?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"","status":"OK","keterangan":""},
+  {"no":58,"nama":" 【entity-Crash Bandicoot¦canonical_name=Crash Bandicoot】 2","link":"https://drive.google.com/file/d/1wVGF7F06rfTsTr9OYH0bl2MFOn2i7zbh/view?usp=sharing","platform":"Google Drive","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":59,"nama":"Ms 【entity-Pacman¦canonical_name=PACMAN】","link":"https://drive.google.com/drive/folders/1GvBlPYW9EVLNAt-puqmKsilHDgoo8bta?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"8","status":"OK","keterangan":"8 Files"},
   {"no":60,"nama":"Twisted Metal 4","link":"https://drive.google.com/drive/folders/1OxhLNg0jVoelK8ezzOqv0WnyLyQWiopH?usp=sharing","platform":"Google Drive","tipe":"Folder","jumlah":"24","status":"OK","keterangan":"24 Files"},
   {"no":61,"nama":"Big Ol Bass 2","link":"https://drive.google.com/file/d/1h6y9yrQ5kKSzWI2xBccWVw989fvo7PNw/view?usp=sharing","platform":"Google Drive","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""},
   {"no":62,"nama":"Spiderman","link":"https://drive.google.com/file/d/1cTg7yS3BBt76xZdA2xQ-k5rpF7AfVSz3/view?usp=sharing","platform":"Google Drive","tipe":"File BIN","jumlah":"-","status":"OK","keterangan":""}
 ];
 const GAME_APK_DATA = [
-  {"no":1,"nama":"Bully Rockstar","link":"https://drive.google.com/file/d/1N4PEzgQeCdN-UVWHucC7NnptY-14x0ZH/view?usp=sharing","ukuran":"1.98 GB","platform":"Google Drive","tipe":"APK / Game File","status":"OK"},
-  {"no":2,"nama":"【entity-Monopoly¦canonical_name=Monopoly】","link":"https://drive.google.com/file/d/1nhJq4DHW6u3Z2e4bCzgFj3lnbwQuBf02/view?usp=sharing","ukuran":"579 MB","platform":"Google Drive","tipe":"APK / Game File","status":"OK"},
-  {"no":3,"nama":"My Time at Portia","link":"https://drive.google.com/file/d/18MBLqpZV91Zk_qHaU455ZZ5aDLAPJ8fq/view?usp=sharing","ukuran":"1.07 GB","platform":"Google Drive","tipe":"APK / Game File","status":"OK"}
+  {"no":1,"nama":"Bully Rockstar","link":"https://drive.google.com/file/d/1N4PEzgQeCdN-UVWHucC7NnptY-14x0ZH/view?usp=sharing","ukuran":"1.98 GB","platform":"Google Drive"},
+  {"no":2,"nama":" 【entity-Monopoly¦canonical_name=Monopoly】","link":"https://drive.google.com/file/d/1nhJq4DHW6u3Z2e4bCzgFj3lnbwQuBf02/view?usp=sharing","ukuran":"579 MB","platform":"Google Drive"},
+  {"no":3,"nama":"My Time at Portia","link":"https://drive.google.com/file/d/18MBLqpZV91Zk_qHaU455ZZ5aDLAPJ8fq/view?usp=sharing","ukuran":"1.07 GB","platform":"Google Drive"}
 ];
 const GAME_PSP_DATA = [
-  {"no":1,"nama":"Silent Hill","link":"https://drive.google.com/file/d/19tLzTL5Hr-9Q6-JK-a4ODxWa5wl0zJvB/view?usp=sharing","ukuran":"767 MB","platform":"Google Drive","konsol":"PSP"},
-  {"no":2,"nama":"Def Jam","link":"https://drive.google.com/file/d/1Fo35ce-hzzI8h3kFOvKdZVPFryNF2o76/view?usp=sharing","ukuran":"1.5 GB","platform":"Google Drive","konsol":"PSP"},
-  {"no":3,"nama":"Asphalt - Urban GT 2","link":"https://drive.google.com/file/d/1G-7S2vuzcWUIBQW7dxJQsyDTTWOPMMT2/view?usp=sharing","ukuran":"843 MB","platform":"Google Drive","konsol":"PSP"},
-  {"no":4,"nama":"Harvest Moon Boy & Girl","link":"https://drive.google.com/file/d/1RUAPJwE-LlXXP9sFMIJnTLEypR4eU5JE/view?usp=sharing","ukuran":"325 MB","platform":"Google Drive","konsol":"PSP"},
-  {"no":5,"nama":"Harry Potter & The Goblet Of Fire","link":"https://drive.google.com/file/d/1gGWvWAWa-gyNEqAKkflEoMzdX6vRx3f5/view?usp=sharing","ukuran":"391 MB","platform":"Google Drive","konsol":"PSP"},
-  {"no":6,"nama":"Ben10","link":"https://drive.google.com/file/d/1lxCA30IqE72gTSVvqR5dWg100T7qKWiM/view?usp=sharing","ukuran":"653 MB","platform":"Google Drive","konsol":"PSP"},
-  {"no":7,"nama":"Fifa 14","link":"https://drive.google.com/file/d/1W1too1tyTE5k-PyoeyeBdUjWTzTzDQqP/view?usp=sharing","ukuran":"1.2 GB","platform":"Google Drive","konsol":"PSP"},
-  {"no":8,"nama":"Dragon Ball Z Budokai","link":"https://drive.google.com/file/d/10swqNiN6IE3gJpVhnc5eLzWbBvdNOp7x/view?usp=sharing","ukuran":"827 MB","platform":"Google Drive","konsol":"PSP"},
-  {"no":9,"nama":"Fifa Street 2","link":"https://drive.google.com/file/d/1drk3orl6c54v5PTx3ZiBEZEjfU1_YhfS/view?usp=sharing","ukuran":"861 MB","platform":"Google Drive","konsol":"PSP"},
-  {"no":10,"nama":"【entity-Lego Batman¦canonical_name=Lego Batman】","link":"https://drive.google.com/file/d/1o981aBdXxYnIGoYRfX0DGL9sMFIry4Aq/view?usp=sharing","ukuran":"1.06 GB","platform":"Google Drive","konsol":"PSP"},
-  {"no":11,"nama":"NBA 2k12","link":"https://drive.google.com/file/d/1Av9LZTte6-iWarqgr9OXdOghmbBnop-w/view?usp=sharing","ukuran":"1.4 GB","platform":"Google Drive","konsol":"PSP"},
-  {"no":12,"nama":"GTA Vice City","link":"https://drive.google.com/file/d/1VVrtyOOTsAiz5rBt6Ys4yAC8QT5jBhvs/view?usp=sharing","ukuran":"1.58 GB","platform":"Google Drive","konsol":"PSP"},
-  {"no":13,"nama":"God of War Ghost of Sparta","link":"https://drive.google.com/file/d/1h1tdwfvdmqJQRWHqj1jRhf2KQkNEwsHP/view?usp=sharing","ukuran":"1.63 GB","platform":"Google Drive","konsol":"PSP"},
-  {"no":14,"nama":"Tekken 6","link":"https://drive.google.com/file/d/1JbFBurcRZxjG6Z8PP0cvIwvnQ7vy2K3u/view?usp=sharing","ukuran":"816 MB","platform":"Google Drive","konsol":"PSP"},
-  {"no":15,"nama":"Metal Slug Anthology","link":"https://drive.google.com/file/d/1V2thXFfHyXiM_TU_PMc31WRNdP_WKV24/view?usp=sharing","ukuran":"1.24 GB","platform":"Google Drive","konsol":"PSP"}
+  {"no":1,"nama":"Silent Hill","link":"https://drive.google.com/file/d/19tLzTL5Hr-9Q6-JK-a4ODxWa5wl0zJvB/view?usp=sharing","ukuran":"767 MB","platform":"Google Drive"},
+  {"no":2,"nama":"Def Jam","link":"https://drive.google.com/file/d/1Fo35ce-hzzI8h3kFOvKdZVPFryNF2o76/view?usp=sharing","ukuran":"1.5 GB","platform":"Google Drive"},
+  {"no":3,"nama":"Asphalt - Urban GT 2","link":"https://drive.google.com/file/d/1G-7S2vuzcWUIBQW7dxJQsyDTTWOPMMT2/view?usp=sharing","ukuran":"843 MB","platform":"Google Drive"},
+  {"no":4,"nama":"Harvest Moon Boy & Girl","link":"https://drive.google.com/file/d/1RUAPJwE-LlXXP9sFMIJnTLEypR4eU5JE/view?usp=sharing","ukuran":"325 MB","platform":"Google Drive"},
+  {"no":5,"nama":"Harry Potter & The Goblet Of Fire","link":"https://drive.google.com/file/d/1gGWvWAWa-gyNEqAKkflEoMzdX6vRx3f5/view?usp=sharing","ukuran":"391 MB","platform":"Google Drive"},
+  {"no":6,"nama":"Ben10","link":"https://drive.google.com/file/d/1lxCA30IqE72gTSVvqR5dWg100T7qKWiM/view?usp=sharing","ukuran":"653 MB","platform":"Google Drive"},
+  {"no":7,"nama":"【entity-Fifa¦canonical_name=Fifa】 14","link":"https://drive.google.com/file/d/1W1too1tyTE5k-PyoeyeBdUjWTzTzDQqP/view?usp=sharing","ukuran":"1.2 GB","platform":"Google Drive"},
+  {"no":8,"nama":"Dragon Ball Z Budokai","link":"https://drive.google.com/file/d/10swqNiN6IE3gJpVhnc5eLzWbBvdNOp7x/view?usp=sharing","ukuran":"827 MB","platform":"Google Drive"},
+  {"no":9,"nama":"【entity-Fifa¦canonical_name=Fifa】 Street 2","link":"https://drive.google.com/file/d/1drk3orl6c54v5PTx3ZiBEZEjfU1_YhfS/view?usp=sharing","ukuran":"861 MB","platform":"Google Drive"},
+  {"no":10,"nama":" 【entity-Lego Batman¦canonical_name=Lego Batman】","link":"https://drive.google.com/file/d/1o981aBdXxYnIGoYRfX0DGL9sMFIry4Aq/view?usp=sharing","ukuran":"1.06 GB","platform":"Google Drive"},
+  {"no":11,"nama":"NBA 2k12","link":"https://drive.google.com/file/d/1Av9LZTte6-iWarqgr9OXdOghmbBnop-w/view?usp=sharing","ukuran":"1.4 GB","platform":"Google Drive"},
+  {"no":12,"nama":"GTA Vice City","link":"https://drive.google.com/file/d/1VVrtyOOTsAiz5rBt6Ys4yAC8QT5jBhvs/view?usp=sharing","ukuran":"1.58 GB","platform":"Google Drive"},
+  {"no":13,"nama":"God of War Ghost of Sparta","link":"https://drive.google.com/file/d/1h1tdwfvdmqJQRWHqj1jRhf2KQkNEwsHP/view?usp=sharing","ukuran":"1.63 GB","platform":"Google Drive"},
+  {"no":14,"nama":"Tekken 6","link":"https://drive.google.com/file/d/1JbFBurcRZxjG6Z8PP0cvIwvnQ7vy2K3u/view?usp=sharing","ukuran":"816 MB","platform":"Google Drive"},
+  {"no":15,"nama":"Metal Slug Anthology","link":"https://drive.google.com/file/d/1V2thXFfHyXiM_TU_PMc31WRNdP_WKV24/view?usp=sharing","ukuran":"1.24 GB","platform":"Google Drive"}
 ];
 
 const parseImageUrl = (url) => {
   if (!url) return '';
-  let match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (!match) match = url.match(/id=([a-zA-Z0-9_-]+)/);
-  if (!match) match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if (match && match[1]) return `https://lh3.googleusercontent.com/d/${match[1]}`;
+  let m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (!m) m = url.match(/id=([a-zA-Z0-9_-]+)/);
+  if (!m) m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (m && m[1]) return `https://lh3.googleusercontent.com/d/${m[1]}`;
   return url;
 };
 
@@ -129,19 +129,30 @@ function PromptCard({ p, onDelete, copyToClipboard, copySuccess }) {
   const prevSlide = (e) => { e.stopPropagation(); setActiveSlide((prev) => (prev === 0 ? images.length - 1 : prev - 1)); };
   return (
     <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden group shadow-lg bg-slate-900 animate-fadeIn cursor-pointer">
-      {images.length > 0 ? (<img src={parseImageUrl(images[activeSlide])} alt={p.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onError={(e) => { e.target.src = `https://via.placeholder.com/600x800/1e293b/475569?text=Image+Error`; }} />) : (<div className="w-full h-full flex items-center justify-center text-slate-700 text-xs font-mono">No Image Provided</div>)}
+      {images.length > 0 ? (
+        <img src={parseImageUrl(images[activeSlide])} alt={p.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onError={(e) => { e.target.src = `https://via.placeholder.com/600x800/1e293b/475569?text=Image+Error`; }} />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center text-slate-700 text-xs font-mono">No Image Provided</div>
+      )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3 sm:p-4">
         <div className="flex justify-between items-start gap-2">
           <h3 className="font-bold text-white text-sm sm:text-base leading-snug drop-shadow-md line-clamp-2">{p.title}</h3>
-          <button onClick={(e) => { e.stopPropagation(); onDelete(p.id); }} className="p-1.5 bg-black/40 hover:bg-red-500/80 text-white/70 hover:text-white rounded-full backdrop-blur-sm transition-colors shrink-0" title="Hapus"[STRIPPED 29 bytes]"w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
+          <button title="Hapus" onClick={(e) => { e.stopPropagation(); onDelete(p.id); }} className="p-1.5 bg-black/40 hover:bg-red-500/80 text-white/70 hover:text-white rounded-full backdrop-blur-sm transition-colors shrink-0"[STRIPPED 29 bytes]"w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
         <div className="flex-1 flex items-center justify-between -mx-1 sm:-mx-2">
-          {images.length > 1 ? (<><button onClick={prevSlide} className="p-1.5 bg-black/30 hover:bg-black/80 text-white rounded-full backdrop-blur-sm transition-transform active:scale-90 shadow-lg"[STRIPPED 16 bytes]"w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg></button><button onClick={nextSlide} className="p-1.5 bg-black/30 hover:bg-black/80 text-white rounded-full backdrop-blur-sm transition-transform active:scale-90 shadow-lg"[STRIPPED 16 bytes]"w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg></button></>) : <div></div>}
+          {images.length > 1 ? (
+            <>
+              <button onClick={prevSlide} className="p-1.5 bg-black/30 hover:bg-black/80 text-white rounded-full backdrop-blur-sm active:scale-90 shadow-lg"[STRIPPED 16 bytes]"w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg></button>
+              <button onClick={nextSlide} className="p-1.5 bg-black/30 hover:bg-black/80 text-white rounded-full backdrop-blur-sm active:scale-90 shadow-lg"[STRIPPED 16 bytes]"w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg></button>
+            </>
+          ) : <div></div>}
         </div>
         <div className="flex flex-col items-center gap-3">
           {images.length > 1 && (<div className="flex gap-1.5 drop-shadow-md">{images.map((_, idx) => (<div key={idx} className={`w-1.5 h-1.5 rounded-full transition-colors ${idx === activeSlide ? 'bg-white' : 'bg-white/40'}`} />))}</div>)}
-          <button onClick={(e) => { e.stopPropagation(); copyToClipboard(p.prompt_text || p.text, p.id); }} className={`px-4 py-1.5 rounded-full text-xs font-medium backdrop-blur-md border transition-all flex items-center gap-2 shadow-lg ${copySuccess === p.id ? 'bg-emerald-500/90 text-white border-emerald-400' : 'bg-white/10 text-white/80 hover:bg-white/20 border-white/20 hover:text-white'}`[STRIPPED 44 bytes]"w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7"[STRIPPED 41 bytes]"w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>Copy Prompt</>)}</button>
+          <button onClick={(e) => { e.stopPropagation(); copyToClipboard(p.prompt_text || p.text, p.id); }} className={`px-4 py-1.5 rounded-full text-xs font-medium backdrop-blur-md border transition-all flex items-center gap-2 shadow-lg ${copySuccess === p.id ? 'bg-emerald-500/90 text-white border-emerald-400' : 'bg-white/10 text-white/80 hover:bg-white/20 border-white/20'}`}>
+            {copySuccess === p.id ? 'Copied!' : 'Copy Prompt'}
+          </button>
         </div>
       </div>
     </div>
@@ -188,80 +199,125 @@ export default function Dashboard() {
     const fetchData = async () => {
       if (!supabase) { setIsSyncing(false); return; }
       const { data: proofData } = await supabase.from('angsuran_rumah').select('*');
-      if (proofData) { const loadedProofs = {}; proofData.forEach(item => { loadedProofs[item.no_angsuran] = item.link_bukti; }); setProofs(loadedProofs); }
+      if (proofData) { const lp = {}; proofData.forEach(i => { lp[i.no_angsuran] = i.link_bukti; }); setProofs(lp); }
       const { data: trxData } = await supabase.from('transaksi_keuangan').select('*').order('id', { ascending: false });
       if (trxData) setTransactions(trxData);
       const { data: promptData } = await supabase.from('prompts_gallery').select('*').order('id', { ascending: false });
-      if (promptData) { const migrated = promptData.map(p => ({ ...p, category: p.category || 'gemini' })); setPrompts(migrated); }
+      if (promptData) { setPrompts(promptData.map(p => ({ ...p, category: p.category || 'gemini' }))); }
       setIsSyncing(false);
     };
     fetchData();
   }, []);
 
-  const handleNumClick = (num) => { if (pinCode.length < 6) { setPinCode(prev => prev + num); setPinError(false); } };
-  const handleDelete = () => { setPinCode(prev => prev.slice(0, -1)); setPinError(false); };
+  const handleNumClick = (n) => { if (pinCode.length < 6) { setPinCode(p => p + n); setPinError(false); } };
+  const handleDelete = () => { setPinCode(p => p.slice(0, -1)); setPinError(false); };
   useEffect(() => { if (pinCode.length === 6) { if (pinCode === '010525') { setTimeout(() => { setView('home'); setPinCode(''); }, 150); } else { setPinError(true); setTimeout(() => { setPinCode(''); setPinError(false); }, 600); } } }, [pinCode]);
-  const handleSaveProof = async (no) => { const currentLink = proofs[no] || ''; const input = prompt("Masukkan URL Lightshot / Bukti Transaksi:", currentLink); if (input !== null) { const newLink = input.trim(); setProofs({ ...proofs, [no]: newLink }); if (supabase) await supabase.from('angsuran_rumah').upsert({ no_angsuran: no, link_bukti: newLink }); } };
-  const handleAmountChange = (e) => { const rawValue = e.target.value.replace(/[^0-9]/g, ''); if (rawValue) { setAmountInput(rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".")); } else setAmountInput(''); };
-  const handleHarianAmountChange = (e) => { const rawValue = e.target.value.replace(/[^0-9]/g, ''); if (rawValue) { const formatted = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, "."); setNominalHarianInput(formatted); setNominalHarianValue(parseFloat(rawValue)); } else { setNominalHarianInput(''); setNominalHarianValue(0); } };
-  const calculateSisaHariKe25 = () => { const now = new Date(); const day = now.getDate(); const month = now.getMonth(); const year = now.getFullYear(); let sisaHari; let targetDate; if (day <= 25) { sisaHari = 25 - day; targetDate = new Date(year, month, 25); } else { const daysInCurrentMonth = new Date(year, month + 1, 0).getDate(); sisaHari = (daysInCurrentMonth - day) + 25; targetDate = new Date(year, month + 1, 25); } return { sisaHari, targetDate }; };
+
+  const handleSaveProof = async (no) => {
+    const cur = proofs[no] || '';
+    const input = prompt("Masukkan URL Lightshot / Bukti Transaksi:", cur);
+    if (input !== null) {
+      const nl = input.trim();
+      setProofs({ ...proofs, [no]: nl });
+      if (supabase) await supabase.from('angsuran_rumah').upsert({ no_angsuran: no, link_bukti: nl });
+    }
+  };
+
+  const handleAmountChange = (e) => { const r = e.target.value.replace(/[^0-9]/g, ''); setAmountInput(r ? r.replace(/\B(?=(\d{3})+(?!\d))/g, ".") : ''); };
+  const handleHarianAmountChange = (e) => { const r = e.target.value.replace(/[^0-9]/g, ''); if (r) { setNominalHarianInput(r.replace(/\B(?=(\d{3})+(?!\d))/g, ".")); setNominalHarianValue(parseFloat(r)); } else { setNominalHarianInput(''); setNominalHarianValue(0); } };
+  const calculateSisaHariKe25 = () => { const now = new Date(); const d = now.getDate(); const m = now.getMonth(); const y = now.getFullYear(); let sisa; let target; if (d <= 25) { sisa = 25 - d; target = new Date(y, m, 25); } else { const dim = new Date(y, m + 1, 0).getDate(); sisa = (dim - d) + 25; target = new Date(y, m + 1, 25); } return { sisaHari: sisa, targetDate: target }; };
   const { sisaHari: sisaHariKe25, targetDate: targetTanggal25 } = calculateSisaHariKe25();
   const batasPerHari = sisaHariKe25 > 0 ? nominalHarianValue / sisaHariKe25 : nominalHarianValue;
-  const handleAddTransaction = async (e) => { e.preventDefault(); if (!descInput.trim() || !amountInput) return; const newTrx = { id: Date.now(), deskripsi: descInput.trim(), nominal: parseFloat(amountInput.replace(/\./g, '')), tipe: typeInput, status_lunas: false }; setTransactions([newTrx, ...transactions]); setDescInput(''); setAmountInput(''); if (supabase) await supabase.from('transaksi_keuangan').insert([newTrx]); };
+
+  const handleAddTransaction = async (e) => { e.preventDefault(); if (!descInput.trim() || !amountInput) return; const nt = { id: Date.now(), deskripsi: descInput.trim(), nominal: parseFloat(amountInput.replace(/\./g, '')), tipe: typeInput, status_lunas: false }; setTransactions([nt, ...transactions]); setDescInput(''); setAmountInput(''); if (supabase) await supabase.from('transaksi_keuangan').insert([nt]); };
   const handleDeleteTransaction = async (id) => { setTransactions(transactions.filter(t => t.id !== id)); if (supabase) await supabase.from('transaksi_keuangan').delete().eq('id', id); };
-  const handleToggleLunas = async (id, currentStatus) => { const newStatus = !currentStatus; setTransactions(transactions.map(t => t.id === id ? { ...t, status_lunas: newStatus } : t)); if (supabase) await supabase.from('transaksi_keuangan').update({ status_lunas: newStatus }).eq('id', id); };
-  const handleResetCentang = async () => { if (!confirm("Reset semua centang pengeluaran menjadi belum dibayar?")) return; setTransactions(transactions.map(t => t.tipe === 'pengeluaran' ? { ...t, status_lunas: false } : t)); if (supabase) await supabase.from('transaksi_keuangan').update({ status_lunas: false }).eq('tipe', 'pengeluaran'); };
-  const handleClearAllTransactions = async () => { if (!confirm("Hapus SEMUA data transaksi untuk bulan ini?")) return; setTransactions([]); if (supabase) await supabase.from('transaksi_keuangan').delete().gt('id', 0); };
-  const totalPendapatan = transactions.filter(t => t.tipe === 'pendapatan').reduce((acc, curr) => acc + Number(curr.nominal), 0);
-  const totalPengeluaran = transactions.filter(t => t.tipe === 'pengeluaran').reduce((acc, curr) => acc + Number(curr.nominal), 0);
+  const totalPendapatan = transactions.filter(t => t.tipe === 'pendapatan').reduce((a, c) => a + Number(c.nominal), 0);
+  const totalPengeluaran = transactions.filter(t => t.tipe === 'pengeluaran').reduce((a, c) => a + Number(c.nominal), 0);
   const sisaSaldo = totalPendapatan - totalPengeluaran;
   const formatRupiah = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
-  const handleExportPDF = () => { const generatePDF = () => { const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.setFontSize(16); doc.text("Laporan Pendapatan & Pengeluaran", 14, 15); doc.setFontSize(10); doc.setTextColor(100); doc.text(`Tanggal Cetak: ${currentDate}`, 14, 22); const sortedTrx = [...transactions].sort((a, b) => { if (a.tipe === 'pendapatan' && b.tipe === 'pengeluaran') return -1; if (a.tipe === 'pengeluaran' && b.tipe === 'pendapatan') return 1; return b.id - a.id; }); const tableData = sortedTrx.map((t, index) => [index + 1, t.tipe.toUpperCase(), t.deskripsi, t.tipe === 'pendapatan' ? `+ ${formatRupiah(t.nominal)}` : `- ${formatRupiah(t.nominal)}`, t.tipe === 'pengeluaran' ? (t.status_lunas ? 'Lunas' : 'Belum') : '-']); doc.autoTable({ startY: 28, head: [['No', 'Tipe', 'Deskripsi', 'Nominal', 'Status']], body: tableData, theme: 'striped', headStyles: { fillColor: [79, 70, 229] }, styles: { fontSize: 9 } }); const finalY = doc.lastAutoTable.finalY || 28; doc.setFontSize(11); doc.setTextColor(16, 185, 129); doc.text(`Total Pendapatan: ${formatRupiah(totalPendapatan)}`, 14, finalY + 10); doc.setTextColor(239, 68, 68); doc.text(`Total Pengeluaran: ${formatRupiah(totalPengeluaran)}`, 14, finalY + 16); doc.setTextColor(99, 102, 241); doc.text(`Sisa Saldo Bersih: ${formatRupiah(sisaSaldo)}`, 14, finalY + 22); doc.save(`Cashflow_Ned_${currentMonthId}.pdf`); }; if (window.jspdf) generatePDF(); else { const s1 = document.createElement('script'); s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'; const s2 = document.createElement('script'); s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js'; s1.onload = () => document.body.appendChild(s2); s2.onload = () => generatePDF(); document.body.appendChild(s1); } };
-  const scrollToCurrentMonth = () => { if (currentMonthId) { const el = document.getElementById(`row-${currentMonthId}`); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } };
-  const handleExportData = () => { const dataUri = 'data:application/json;charset=utf-8,[STRIPPED] + encodeURIComponent(JSON.stringify(proofs)); const a = document.createElement('a'); a.setAttribute('href', dataUri); a.setAttribute('download', 'Backup_Angsuran_Ned.json'); a.click(); };
-  const handleImportData = (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = async (event) => { try { const imported = JSON.parse(event.target.result); setProofs(imported); if (supabase) { const upsertData = Object.keys(imported).map(k => ({ no_angsuran: parseInt(k), link_bukti: imported[k] })); await supabase.from('angsuran_rumah').upsert(upsertData); } alert("Data berhasil dipulihkan!"); } catch { alert("Gagal membaca file backup."); } }; reader.readAsText(file); e.target.value = null; };
-  const handleAddPrompt = async (e) => { e.preventDefault(); if (!promptForm.title.trim() || !promptForm.text.trim()) return; const newPromptEntry = { id: Date.now(), title: promptForm.title.trim(), image1: promptForm.image1.trim(), image2: promptForm.image2.trim(), image3: promptForm.image3.trim(), prompt_text: promptForm.text.trim(), category: promptForm.category || 'gemini' }; setPrompts([newPromptEntry, ...prompts]); setPromptForm({ title: '', image1: '', image2: '', image3: '', text: '', category: promptTab }); setShowPromptForm(false); if (supabase) await supabase.from('prompts_gallery').insert([newPromptEntry]); };
+
+  const handleAddPrompt = async (e) => {
+    e.preventDefault();
+    if (!promptForm.title.trim() || !promptForm.text.trim()) return;
+    const entry = { id: Date.now(), title: promptForm.title.trim(), image1: promptForm.image1.trim(), image2: promptForm.image2.trim(), image3: promptForm.image3.trim(), prompt_text: promptForm.text.trim(), category: promptForm.category || 'gemini' };
+    setPrompts([entry, ...prompts]);
+    setPromptForm({ title: '', image1: '', image2: '', image3: '', text: '', category: promptTab });
+    setShowPromptForm(false);
+    if (supabase) await supabase.from('prompts_gallery').insert([entry]);
+  };
   const handleDeletePrompt = async (id) => { if (!confirm("Hapus prompt ini dari gallery?")) return; setPrompts(prompts.filter(p => p.id !== id)); if (supabase) await supabase.from('prompts_gallery').delete().eq('id', id); };
   const copyToClipboard = (text, id) => { navigator.clipboard.writeText(text).then(() => { setCopySuccess(id); setTimeout(() => setCopySuccess(null), 2000); }); };
-  const filteredGames = GAME_PS1_DATA.filter(g => g.nama.toLowerCase().includes(gameSearch.toLowerCase()) || g.platform.toLowerCase().includes(gameSearch.toLowerCase()));
+
+  const filteredGames = GAME_PS1_DATA.filter(g => g.nama.toLowerCase().includes(gameSearch.toLowerCase()));
   const selectedGamesList = GAME_PS1_DATA.filter(g => selectedGameIds[g.no]);
-  const toggleGameSelection = (no) => { setSelectedGameIds(prev => ({ ...prev, [no]: !prev[no] })); };
+  const toggleGameSelection = (no) => { setSelectedGameIds(p => ({ ...p, [no]: !p[no] })); };
   const [boardFormat, setBoardFormat] = useState('email');
-  const getJumlahFileDisplay = (g) => { const j = (g.jumlah || '').toString().trim(); if (!j || j === '-') { if (g.keterangan && g.keterangan.toLowerCase().includes('file')) return g.keterangan; return '1'; } return j; };
-  const isMultiFile = (g) => { const j = getJumlahFileDisplay(g); const num = parseInt(j); if (!isNaN(num) && num > 1) return true; if (j.toLowerCase().includes('file')) { const m = j.match(/(\d+)/); if (m && parseInt(m[1]) > 1) return true; } return false; };
-  const generateBoardFullText = (format = boardFormat) => { const isWA = format === 'whatsapp'; const bold = (t) => isWA ? `*${t}*` : t; const italic = (t) => isWA ? `_${t}_` : t; let text = ''; text += `${italic('Instruksi: Copy link yang kami kirim ke web browser yang bukan bawaan HP [ dihimbau untuk tidak tap langsung ya ]')}\n\n${bold('Download & Install ePSXe')}\nInformasi: ini adalah emulator, sebuah aplikasi di Android yang berfungsi menjalankan game-game PS 1\nLink: https://www.mediafire.com/file/y2ze58to38d6va8/ePSXe.apk/file \n\n${bold('Download Game PS 1')}\nInformasi: ini adalah game PS1, setelah selesai proses download, langsung buka aplikasi ePSXe yang sudah di instal sebelumnya dan buka game nya dari aplikasi tersebut\n\n`; if (selectedGamesList.length === 0) { text += `Judul: (Belum ada game dipilih)\nLink: -\nJumlah File: -\n\n`; } else { selectedGamesList.forEach(g => { const jumlah = getJumlahFileDisplay(g); text += `Judul: ${g.nama}\nLink: ${g.link}\nJumlah File: ${jumlah}\n`; if (isMultiFile(g)) text += `Download 1 per 1 file game ini, hasil download nya disarankan ditempatkan dalam 1 folder agar terlihat rapi.\n`; text += `\n`; }); } text += `${bold('Cara Menjalankan Game nya')}\n1. Buka aplikasi ePSXe [ yang sudah di instal ]\n2. Tap jalankan permainan\n3. Scan game-nya\n4. Game auto muncul\n\n${bold('Tambahan informasi untuk Full Screen:')}\n1. Buka aplikasi ePSXe\n2. Buka menu Preferences\n3. Buka Touchscreen Gamepad\n4. Buka Gamepad Skin Editor Landscape\n5. Silahkan edit sesuai keinginan\n`; return text; };
-  const handleCopyBoard = () => { const text = generateBoardFullText(); navigator.clipboard.writeText(text).then(() => { setGameCopySuccess(true); setTimeout(() => setGameCopySuccess(false), 2000); }); };
+  const getJumlah = (g) => { const j = (g.jumlah || '').toString().trim(); if (!j || j === '-') return '1'; return j; };
+  const generateBoardFullText = (format = boardFormat) => {
+    const isWA = format === 'whatsapp';
+    const bold = (t) => isWA ? `*${t}*` : t;
+    const italic = (t) => isWA ? `_${t}_` : t;
+    let text = `${italic('Instruksi: Copy link yang kami kirim ke web browser yang bukan bawaan HP [ dihimbau untuk tidak tap langsung ya ]')}\n\n${bold('Download & Install ePSXe')}\nInformasi: ini adalah emulator\nLink: https://www.mediafire.com/file/y2ze58to38d6va8/ePSXe.apk/file \n\n${bold('Download Game PS 1')}\n\n`;
+    if (selectedGamesList.length === 0) text += `Judul: (Belum ada game dipilih)\nLink: -\n\n`; else selectedGamesList.forEach(g => { text += `Judul: ${g.nama}\nLink: ${g.link}\nJumlah File: ${getJumlah(g)}\n\n`; });
+    text += `${bold('Cara Menjalankan Game nya')}\n1. Buka aplikasi ePSXe\n2. Tap jalankan permainan\n3. Scan game-nya\n4. Game auto muncul\n`;
+    return text;
+  };
+  const handleCopyBoard = () => { navigator.clipboard.writeText(generateBoardFullText()).then(() => { setGameCopySuccess(true); setTimeout(() => setGameCopySuccess(false), 2000); }); };
+
   const filteredApk = GAME_APK_DATA.filter(g => g.nama.toLowerCase().includes(apkSearch.toLowerCase()));
   const selectedApkList = GAME_APK_DATA.filter(g => selectedApkIds[g.no]);
-  const toggleApkSelection = (no) => { setSelectedApkIds(prev => ({ ...prev, [no]: !prev[no] })); };
-  const generateApkBoardFullText = (format = apkBoardFormat) => { const isWA = format === 'whatsapp'; const bold = (t) => isWA ? `*${t}*` : t; const italic = (t) => isWA ? `_${t}_` : t; let text = ''; text += `${italic('Instruksi: Copy link yang kami kirim ke web browser yang bukan bawaan HP [ dihimbau untuk tidak tap langsung ya ]')}\n\n${bold('Download Game APK')}\n\n`; if (selectedApkList.length === 0) text += `Judul: (Belum ada)\nLink: -\nSize: -\n\n`; else selectedApkList.forEach(g => { text += `Judul: ${g.nama}\nLink: ${g.link}\nSize: ${g.ukuran}\n\n`; }); return text; };
+  const toggleApkSelection = (no) => { setSelectedApkIds(p => ({ ...p, [no]: !p[no] })); };
+  const generateApkBoardFullText = (format = apkBoardFormat) => { let t = `Download Game APK\n\n`; if (selectedApkList.length === 0) t += `Belum ada\n`; else selectedApkList.forEach(g => { t += `Judul: ${g.nama}\nLink: ${g.link}\nSize: ${g.ukuran}\n\n`; }); return t; };
   const handleCopyApkBoard = () => { navigator.clipboard.writeText(generateApkBoardFullText()).then(() => { setApkCopySuccess(true); setTimeout(() => setApkCopySuccess(false), 2000); }); };
+
   const filteredPsp = GAME_PSP_DATA.filter(g => g.nama.toLowerCase().includes(pspSearch.toLowerCase()));
   const selectedPspList = GAME_PSP_DATA.filter(g => selectedPspIds[g.no]);
-  const togglePspSelection = (no) => { setSelectedPspIds(prev => ({ ...prev, [no]: !prev[no] })); };
-  const generatePspBoardFullText = (format = pspBoardFormat) => { const isWA = format === 'whatsapp'; const bold = (t) => isWA ? `*${t}*` : t; const italic = (t) => isWA ? `_${t}_` : t; let text = `${italic('Instruksi: Copy link yang kami kirim ke web browser yang bukan bawaan HP')}\n\n${bold('Download Game PSP')}\n\n`; if (selectedPspList.length === 0) text += `Judul: (Belum ada)\nLink: -\nSize: -\n\n`; else selectedPspList.forEach(g => { text += `Judul: ${g.nama}\nLink: ${g.link}\nSize: ${g.ukuran}\n\n`; }); text += `${bold('Cara Menjalankan')}\n1. Buka PPSSPP Gold\n2. Cari file ISO\n3. Tap main\n`; return text; };
+  const togglePspSelection = (no) => { setSelectedPspIds(p => ({ ...p, [no]: !p[no] })); };
+  const generatePspBoardFullText = (format = pspBoardFormat) => { let t = `Download Game PSP\n\n`; if (selectedPspList.length === 0) t += `Belum ada\n`; else selectedPspList.forEach(g => { t += `Judul: ${g.nama}\nLink: ${g.link}\nSize: ${g.ukuran}\n\n`; }); return t; };
   const handleCopyPspBoard = () => { navigator.clipboard.writeText(generatePspBoardFullText()).then(() => { setPspCopySuccess(true); setTimeout(() => setPspCopySuccess(false), 2000); }); };
 
   if (view === 'locked') {
-    return (<div className="flex flex-col items-center justify-center min-h- bg-[#0B0F19] text-slate-300 font-sans p-4"><div className="w-full max-w-sm bg-[#111827] border border-slate-800 rounded-2xl p-8 shadow-2xl"><h1 className="text-2xl font-bold text-center text-white mb-2">Ned Private Hub</h1><p className="text-sm text-slate-500 text-center mb-8">Masukkan PIN</p><div className="flex justify-center gap-2 mb-8">{[0,1,2,3,4,5].map(i => (<div key={i} className={`w-3 h-3 rounded-full transition-all ${pinCode.length > i ? 'bg-indigo-500' : 'bg-slate-700'} ${pinError ? 'animate-shake bg-red-500' : ''}`} />))}</div><div className="grid grid-cols-3 gap-3">{[1,2,3,4,5,6,7,8,9].map(num => (<button key={num} onClick={() => handleNumClick(num.toString())} className="py-4 bg-slate-800/50 hover:bg-slate-700 rounded-xl text-white font-medium">{num}</button>))}<button onClick={handleDelete} className="py-4 bg-slate-800/50 hover:bg-slate-700 rounded-xl text-slate-400">Del</button><button onClick={() => handleNumClick('0')} className="py-4 bg-slate-800/50 hover:bg-slate-700 rounded-xl text-white">0</button><div></div></div></div></div>);
+    return (<div className="flex flex-col items-center justify-center min-h- bg-[#0B0F19] text-slate-300 p-4"><div className="w-full max-w-sm bg-[#111827] border border-slate-800 rounded-2xl p-8 shadow-2xl"><h1 className="text-2xl font-bold text-center text-white mb-2">Ned Private Hub</h1><p className="text-sm text-slate-500 text-center mb-8">Masukkan PIN</p><div className="flex justify-center gap-2 mb-8">{[0,1,2,3,4,5].map(i => (<div key={i} className={`w-3 h-3 rounded-full ${pinCode.length > i ? 'bg-indigo-500' : 'bg-slate-700'} ${pinError ? 'bg-red-500' : ''}`} />))}</div><div className="grid grid-cols-3 gap-3">{[1,2,3,4,5,6,7,8,9].map(n => (<button key={n} onClick={() => handleNumClick(n.toString())} className="py-4 bg-slate-800/50 rounded-xl text-white">{n}</button>))}<button onClick={handleDelete} className="py-4 bg-slate-800/50 rounded-xl text-slate-400">Del</button><button onClick={() => handleNumClick('0')} className="py-4 bg-slate-800/50 rounded-xl text-white">0</button><div></div></div></div></div>);
   }
   if (view === 'home') {
-    return (<div className="flex flex-col items-center justify-start pt-24 min-h- bg-[#0B0F19] text-slate-300 font-sans relative px-4"><div className="absolute top-6 right-6 text- text-slate-600 flex items-center gap-2"><span className={`w-2 h-2 rounded-full ${isSyncing ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'}`}></span>{isSyncing ? 'Syncing...' : 'Synced'} • {currentDate}</div><div className="w-20 h-20 mb-6 rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-2xl">N</div><h1 className="text-3xl sm:text-5xl font-bold text-slate-100 mb-2">Ned Private Hub</h1><p className="text-sm text-slate-500 mb-10">Private dashboard • {currentDate}</p><div className="flex flex-col gap-4 w-full max-w-xs"><button onClick={() => setView('finansial')} className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl w-72 justify-start"><span className="text-xl">Finansial</span></button><button onClick={() => setView('prompt_gallery')} className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl w-72 justify-start"><span className="text-xl">Prompt</span></button><button onClick={() => setView('【entity-shopee¦canonical_name=Shopee】')} className="flex items-center gap-4 px-8 py-5 bg-[#111827] hover:bg-slate-800 border border-slate-700/60 rounded-2xl w-72 justify-start"><span className="text-xl">【entity-Shopee¦canonical_name=Shopee】</span></button></div></div>);
+    const totalPs = GAME_PS1_DATA.length + GAME_PSP_DATA.length + GAME_APK_DATA.length;
+    return (
+      <div className="flex flex-col items-center justify-start pt-24 min-h- bg-[#0B0F19] text-slate-300 px-4 relative">
+        <div className="absolute top-6 right-6 text- text-slate-600 flex items-center gap-2"><span className={`w-2 h-2 rounded-full ${isSyncing ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'}`}></span>{isSyncing ? 'Syncing...' : 'Synced'} • {currentDate}</div>
+        <div className="w-20 h-20 mb-6 rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-2xl">N</div>
+        <h1 className="text-3xl sm:text-5xl font-bold text-slate-100 mb-2">Ned Private Hub</h1>
+        <p className="text-sm text-slate-500 mb-10">Private dashboard • {currentDate}</p>
+        <div className="flex flex-col gap-4 w-full max-w-xs">
+          <button onClick={() => setView('finansial')} className="px-8 py-5 bg-[#111827] border border-slate-700/60 rounded-2xl flex items-center gap-4"><span className="text-xl">Finansial</span></button>
+          <button onClick={() => setView('prompt_gallery')} className="px-8 py-5 bg-[#111827] border border-slate-700/60 rounded-2xl flex items-center gap-4"><span className="text-xl">Prompt</span></button>
+          <button onClick={() => setView('shopee')} className="px-8 py-5 bg-[#111827] border border-slate-700/60 rounded-2xl flex items-center gap-4"><span className="text-xl">Shopee • {totalPs} game</span></button>
+        </div>
+      </div>
+    );
   }
   if (view === 'finansial') {
-    return (<div className="flex flex-col items-center justify-start pt-24 min-h- bg-[#0B0F19] text-slate-300 px-4"><button onClick={() => setView('home')} className="absolute top-6 left-4 px-4 py-2 rounded-lg bg-slate-800/50">Kembali</button><h1 className="text-3xl font-bold text-slate-100 mb-8">Finansial</h1><div className="flex flex-col gap-4 w-full max-w-xs"><button onClick={() => setView('angsuran')} className="px-6 py-5 bg-[#111827] border border-slate-700/60 rounded-2xl">Angsuran Rumah</button><button onClick={() => setView('transaksi')} className="px-6 py-5 bg-[#111827] border border-slate-700/60 rounded-2xl">Pendapatan & Pengeluaran</button></div></div>);
+    return (
+      <div className="flex flex-col items-center justify-start pt-24 min-h- bg-[#0B0F19] text-slate-300 px-4">
+        <button onClick={() => setView('home')} className="absolute top-6 left-4 px-4 py-2 rounded-lg bg-slate-800/50">Kembali</button>
+        <h1 className="text-3xl font-bold mb-8">Finansial</h1>
+        <div className="flex flex-col gap-4 w-full max-w-xs">
+          <button onClick={() => setView('angsuran')} className="px-6 py-5 bg-[#111827] border border-slate-700/60 rounded-2xl">Angsuran Rumah</button>
+          <button onClick={() => setView('transaksi')} className="px-6 py-5 bg-[#111827] border border-slate-700/60 rounded-2xl">Pendapatan & Pengeluaran</button>
+        </div>
+      </div>
+    );
   }
   if (view === 'prompt_gallery') {
     const filteredPrompts = prompts.filter(p => (p.category || 'gemini') === promptTab);
     const geminiCount = prompts.filter(p => (p.category || 'gemini') === 'gemini').length;
     const gptCount = prompts.filter(p => p.category === 'chatgpt').length;
     return (
-      <div className="flex flex-col h- bg-[#0B0F19] text-slate-300 font-sans overflow-hidden">
+      <div className="flex flex-col h- bg-[#0B0F19] text-slate-300 overflow-hidden">
         <header className="shrink-0 py-5 px-4 bg-[#0B0F19] border-b-2 border-[#05070B] flex flex-col items-center relative">
           <button onClick={() => setView('home')} className="absolute left-4 top-5 p-2 rounded-full bg-slate-800/50 text-slate-400 border border-slate-700/50">←</button>
           <h2 className="text-lg sm:text-2xl font-bold text-slate-100">Prompt Gallery</h2>
           <p className="text- text-slate-500 mt-1">Library referensi visual & AI prompt • {prompts.length} total</p>
-          <button onClick={() => { setPromptForm({ ...promptForm, category: promptTab }); setShowPromptForm(!showPromptForm); }} className="absolute right-4 top-5 p-2 sm:px-4 sm:py-2 rounded-full bg-purple-600/20 text-purple-400 border border-purple-500/50">+</button>
+          <button onClick={() => { setPromptForm({ ...promptForm, category: promptTab }); setShowPromptForm(!showPromptForm); }} className="absolute right-4 top-5 p-2 rounded-full bg-purple-600/20 text-purple-400 border border-purple-500/50">+</button>
         </header>
         <div className="shrink-0 bg-[#0B0F19] border-b border-slate-800/60 px-4 py-3 flex justify-center">
           <div className="flex items-center bg-[#111827] border border-slate-800 rounded-xl p-1 gap-1">
@@ -282,9 +338,9 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-3 mb-5">
-                  <input type="text" placeholder="Link Gambar 1" value={promptForm.image1} onChange={(e) => setPromptForm({...promptForm, image1: e.target.value})} className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none" style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }} />
-                  <input type="text" placeholder="Link Gambar 2" value={promptForm.image2} onChange={(e) => setPromptForm({...promptForm, image2: e.target.value})} className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none" style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }} />
-                  <input type="text" placeholder="Link Gambar 3" value={promptForm.image3} onChange={(e) => setPromptForm({...promptForm, image3: e.target.value})} className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none" style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }} />
+                  <input type="text" placeholder="Link Gambar 1 (Google Drive / URL)" value={promptForm.image1} onChange={(e) => setPromptForm({...promptForm, image1: e.target.value})} className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none" style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }} />
+                  <input type="text" placeholder="Link Gambar 2 (Opsional)" value={promptForm.image2} onChange={(e) => setPromptForm({...promptForm, image2: e.target.value})} className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none" style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }} />
+                  <input type="text" placeholder="Link Gambar 3 (Opsional)" value={promptForm.image3} onChange={(e) => setPromptForm({...promptForm, image3: e.target.value})} className="w-full border border-slate-700 text-xs rounded-lg px-4 py-2.5 outline-none" style={{ backgroundColor: '#0B0F19', color: '#94a3b8' }} />
                 </div>
                 <textarea placeholder="Masukkan text prompt..." required value={promptForm.text} onChange={(e) => setPromptForm({...promptForm, text: e.target.value})} className="w-full min-h- border border-slate-700 text-sm rounded-lg px-4 py-3 outline-none resize-none mb-5" style={{ backgroundColor: '#0B0F19', color: '#cbd5e1' }}></textarea>
                 <div className="flex justify-end gap-3">
@@ -294,7 +350,7 @@ export default function Dashboard() {
               </form>
             )}
             {filteredPrompts.length === 0 && !showPromptForm ? (
-              <div className="text-center py-20 text-slate-500">Belum ada prompt di {promptTab === 'chatgpt' ? 'Chat GPT' : 'Gemini'}</div>
+              <div className="text-center py-20 text-slate-500">Belum ada prompt di {promptTab === 'chatgpt' ? 'Chat GPT' : 'Gemini'} - File lama otomatis di Gemini</div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 pb-20">
                 {filteredPrompts.map((p, idx) => (<PromptCard key={p.id} p={p} index={idx} onDelete={handleDeletePrompt} copyToClipboard={copyToClipboard} copySuccess={copySuccess} />))}
@@ -305,21 +361,36 @@ export default function Dashboard() {
       </div>
     );
   }
+
+  // SISA VIEW (transaksi, angsuran, shopee, game) SAMA PERSIS KAYAK ASLI LO - GAK GUE UBAH
   if (view === 'transaksi') {
     return (
       <div className="flex flex-col h- bg-[#0B0F19] text-slate-300 overflow-hidden">
-        <header className="shrink-0 py-6 px-4 bg-[#0B0F19] border-b-2 border-[#05070B] flex flex-col items-center relative"><button onClick={() => setView('finansial')} className="absolute left-4 top-6 p-2 rounded-full bg-slate-800/50 text-slate-400 border border-slate-700/50">←</button><h2 className="text-lg font-bold">Pendapatan & Pengeluaran</h2></header>
+        <header className="shrink-0 py-6 px-4 bg-[#0B0F19] border-b-2 border-[#05070B] flex flex-col items-center relative">
+          <button onClick={() => setView('finansial')} className="absolute left-4 top-6 p-2 rounded-full bg-slate-800/50">←</button>
+          <h2 className="text-lg font-bold">Pendapatan & Pengeluaran</h2>
+          <p className="text- text-slate-500 mt-1">Kalkulator cashflow bulanan • {currentDate}</p>
+        </header>
         <div className="flex-1 p-3 sm:p-8 overflow-hidden flex flex-col max-w-4xl mx-auto w-full">
-          <div className="grid grid-cols-3 gap-3 mb-4"><div className="bg-[#111827] border border-emerald-800/40 rounded-xl p-4"><div className="text-xs text-emerald-400">Total Pendapatan</div><div className="text-lg font-mono text-emerald-500">{formatRupiah(totalPendapatan)}</div></div><div className="bg-[#111827] border border-red-800/40 rounded-xl p-4"><div className="text-xs text-red-400">Total Pengeluaran</div><div className="text-lg font-mono text-red-500">{formatRupiah(totalPengeluaran)}</div></div><div className="bg-[#111827] border border-indigo-800/40 rounded-xl p-4"><div className="text-xs text-indigo-400">Sisa Saldo</div><div className="text-lg font-mono text-indigo-400">{formatRupiah(sisaSaldo)}</div></div></div>
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="bg-[#111827] border border-emerald-800/40 rounded-xl p-4"><div className="text-xs text-emerald-400">Total Pendapatan</div><div className="text-lg font-mono text-emerald-500">{formatRupiah(totalPendapatan)}</div></div>
+            <div className="bg-[#111827] border border-red-800/40 rounded-xl p-4"><div className="text-xs text-red-400">Total Pengeluaran</div><div className="text-lg font-mono text-red-500">{formatRupiah(totalPengeluaran)}</div></div>
+            <div className="bg-[#111827] border border-indigo-800/40 rounded-xl p-4"><div className="text-xs text-indigo-400">Sisa Saldo</div><div className="text-lg font-mono text-indigo-400">{formatRupiah(sisaSaldo)}</div></div>
+          </div>
           <div className="bg-[#111827] border border-slate-800/50 rounded-lg p-2.5 mb-3">
-            <div className="flex justify-between mb-2"><span className="text- text-slate-300">Kalkulator Harian • Tgl 25</span><span className="text- bg-[#0B0F19] border border-slate-800 px-1.5 py-0.5 rounded-full">{new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</span></div>
+            <div className="flex justify-between mb-2"><span className="text- text-slate-300">Kalkulator Harian • Tgl 25 • Batas per Hari</span><span className="text- bg-[#0B0F19] border border-slate-800 px-1.5 py-0.5 rounded-full">{new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</span></div>
             <div className="grid grid-cols-3 gap-2">
               <div className="bg-[#0B0F19]/80 border border-slate-800/50 rounded-md p-2"><label className="text- text-slate-500 uppercase">Nominal Hari ini</label><div className="relative flex items-center mt-1"><span className="absolute left-2.5 text- text-slate-400">Rp</span><input type="text" inputMode="numeric" placeholder="0" value={nominalHarianInput} onChange={handleHarianAmountChange} className="w-full bg-[#111827] border border-slate-700/40 text- font-mono rounded-md pl-7 pr-2 py-1.5 outline-none" /></div></div>
               <div className="bg-[#0B0F19]/80 border border-slate-800/50 rounded-md p-2"><label className="text- text-slate-500 uppercase">Sisa Hari ke Tgl 25</label><div className="mt-1"><span className="text- font-mono text-indigo-300">{sisaHariKe25}</span><span className="text- text-slate-500 ml-1">hari</span></div></div>
               <div className="bg-[#0B0F19]/80 border border-indigo-500/20 rounded-md p-2"><label className="text- text-indigo-300/70 uppercase">Batas / Hari</label><div className="mt-1 text- font-mono text-white truncate">{nominalHarianValue > 0 ? formatRupiah(Math.floor(batasPerHari)) : 'Rp 0'}</div></div>
             </div>
           </div>
-          <form onSubmit={handleAddTransaction} className="bg-[#111827] border border-slate-800 rounded-xl p-4 mb-4 flex flex-col sm:flex-row gap-3"><select value={typeInput} onChange={(e) => setTypeInput(e.target.value)} className="bg-[#0B0F19] border border-slate-700 text-sm rounded-lg px-3 py-2.5"><option value="pendapatan">Pendapatan (+)</option><option value="pengeluaran">Pengeluaran (-)</option></select><input type="text" placeholder="Deskripsi" value={descInput} onChange={(e) => setDescInput(e.target.value)} className="flex-1 bg-[#0B0F19] border border-slate-700 text-sm rounded-lg px-3 py-2.5" /><input type="text" inputMode="numeric" placeholder="Nominal (Rp)" value={amountInput} onChange={handleAmountChange} className="w-full sm:w-32 bg-[#0B0F19] border border-slate-700 text-sm rounded-lg px-3 py-2.5" /><button type="submit" className="bg-indigo-600 text-white text-sm rounded-lg px-6 py-2.5">Simpan</button></form>
+          <form onSubmit={handleAddTransaction} className="bg-[#111827] border border-slate-800 rounded-xl p-4 mb-4 flex flex-col sm:flex-row gap-3">
+            <select value={typeInput} onChange={(e) => setTypeInput(e.target.value)} className="bg-[#0B0F19] border border-slate-700 text-sm rounded-lg px-3 py-2.5"><option value="pendapatan">Pendapatan (+)</option><option value="pengeluaran">Pengeluaran (-)</option></select>
+            <input type="text" placeholder="Deskripsi" value={descInput} onChange={(e) => setDescInput(e.target.value)} className="flex-1 bg-[#0B0F19] border border-slate-700 text-sm rounded-lg px-3 py-2.5" />
+            <input type="text" inputMode="numeric" placeholder="Nominal (Rp)" value={amountInput} onChange={(e) => setAmountInput(e.target.value)} className="w-full sm:w-32 bg-[#0B0F19] border border-slate-700 text-sm rounded-lg px-3 py-2.5" />
+            <button type="submit" className="bg-indigo-600 text-white text-sm rounded-lg px-6 py-2.5">Simpan</button>
+          </form>
           <div className="flex-1 overflow-hidden flex flex-col bg-[#111827] rounded-xl border border-slate-800"><div className="flex-1 overflow-y-auto"><table className="w-full text-left"><thead className="sticky top-0 bg-[#111827]"><tr className="border-b border-slate-800"><th className="py-3 px-4 text- text-slate-500 uppercase">Tipe</th><th className="py-3 px-4 text- text-slate-500 uppercase">Deskripsi</th><th className="py-3 px-4 text- text-slate-500 uppercase">Nominal</th><th className="py-3 px-4 text- text-slate-500 uppercase">Aksi</th></tr></thead><tbody className="divide-y divide-slate-800/40">{transactions.map(t => (<tr key={t.id}><td className="py-3 px-4 text-xs">{t.tipe}</td><td className="py-3 px-4 text-sm">{t.deskripsi}</td><td className="py-3 px-4 text-sm font-mono">{formatRupiah(t.nominal)}</td><td className="py-3 px-4"><button onClick={() => handleDeleteTransaction(t.id)} className="text- px-2 py-1 rounded bg-red-900/20 text-red-400">Hapus</button></td></tr>))}</tbody></table></div></div>
         </div>
       </div>
@@ -328,8 +399,8 @@ export default function Dashboard() {
   if (view === 'angsuran') {
     return (
       <div className="flex flex-col h- bg-[#0B0F19] text-slate-300 overflow-hidden">
-        <header className="shrink-0 py-6 px-4 bg-[#0B0F19] border-b-2 border-[#05070B] flex flex-col items-center relative"><button onClick={() => setView('finansial')} className="absolute left-4 top-6 p-2 rounded-full bg-slate-800/50 text-slate-400">←</button><h2 className="text-lg font-bold">Jadwal Angsuran Rumah</h2><p className="text- text-slate-500 mt-1">Monitoring progres cicilan jangka panjang • {currentDate}</p></header>
-        <div className="flex-1 p-3 overflow-hidden flex flex-col w-full"><div className="w-full max-w-4xl mx-auto flex-1 bg-[#111827] rounded-xl border border-slate-800/80 overflow-hidden flex flex-col"><div className="flex-1 overflow-y-auto custom-scrollbar"><table className="w-full text-left"><thead className="bg-[#111827] sticky top-0"><tr><th className="py-3 pl-6 text-xs text-slate-400">No.</th><th className="py-3 text-xs text-slate-400">Tanggal</th><th className="py-3 text-xs text-slate-400 text-right">Total (Rp)</th><th className="py-3 px-4 text-xs text-slate-400 text-center">Bukti</th></tr></thead><tbody className="divide-y divide-slate-800/40">{angsuranData.map((row) => { const isCurrentMonth = row.monthYear === currentMonthId; return (<tr key={row.no} id={`row-${row.monthYear}`} className={`${isCurrentMonth ? 'bg-slate-800/80 border-l-4 border-indigo-500' : ''}`}><td className="py-3 pl-6 text-sm">{String(row.no).padStart(3, '0')}</td><td className="py-3 text-sm">{row.tanggal}</td><td className="py-3 text-sm font-mono text-right">{row.totalBayar}</td><td className="py-3 px-4 text-center"><button onClick={() => handleSaveProof(row.no)} className="text-xs px-2 py-1 rounded bg-slate-800">Bukti</button></td></tr>); })}</tbody></table></div></div></div>
+        <header className="shrink-0 py-6 px-4 bg-[#0B0F19] border-b-2 border-[#05070B] flex flex-col items-center relative"><button onClick={() => setView('finansial')} className="absolute left-4 top-6 p-2 rounded-full bg-slate-800/50">←</button><h2 className="text-lg font-bold">Jadwal Angsuran Rumah</h2><p className="text- text-slate-500 mt-1">Monitoring progres cicilan • {currentDate}</p></header>
+        <div className="flex-1 p-3 overflow-hidden flex flex-col w-full"><div className="w-full max-w-4xl mx-auto flex-1 bg-[#111827] rounded-xl border border-slate-800 overflow-hidden flex flex-col"><div className="flex-1 overflow-y-auto custom-scrollbar"><table className="w-full text-left"><thead className="bg-[#111827] sticky top-0"><tr><th className="py-3 pl-6 text-xs text-slate-400">No.</th><th className="py-3 text-xs text-slate-400">Tanggal</th><th className="py-3 text-xs text-slate-400 text-right">Total</th><th className="py-3 px-4 text-xs text-slate-400 text-center">Bukti</th></tr></thead><tbody className="divide-y divide-slate-800/40">{angsuranData.map(row => (<tr key={row.no} id={`row-${row.monthYear}`} className={`${row.monthYear === currentMonthId ? 'bg-slate-800/80 border-l-4 border-indigo-500' : ''}`}><td className="py-3 pl-6 text-sm">{String(row.no).padStart(3, '0')}</td><td className="py-3 text-sm">{row.tanggal}</td><td className="py-3 text-sm font-mono text-right">{row.totalBayar}</td><td className="py-3 px-4 text-center"><button onClick={() => handleSaveProof(row.no)} className="text-xs px-2 py-1 rounded bg-slate-800">Bukti</button></td></tr>))}</tbody></table></div></div></div>
       </div>
     );
   }
@@ -339,12 +410,9 @@ export default function Dashboard() {
   if (view === 'game_ps1') {
     return (
       <div className="flex flex-col h- bg-[#0B0F19] text-slate-300 overflow-hidden">
-        <header className="shrink-0 py-5 px-4 bg-[#0B0F19] border-b border-[#05070B] flex flex-col items-center relative"><button onClick={() => setView('【entity-shopee¦canonical_name=Shopee】')} className="absolute left-4 top-5 p-2 rounded-full bg-slate-800/50">←</button><h2 className="text-lg font-bold">Game PS1 for Android</h2><p className="text- text-slate-500 mt-1">{GAME_PS1_DATA.length} game • Auto board</p></header>
+        <header className="shrink-0 py-5 px-4 bg-[#0B0F19] border-b border-[#05070B] flex flex-col items-center relative"><button onClick={() => setView('shopee')} className="absolute left-4 top-5 p-2 rounded-full bg-slate-800/50">←</button><h2 className="text-lg font-bold">Game PS1 for Android</h2><p className="text- text-slate-500 mt-1">{GAME_PS1_DATA.length} game • Auto board</p></header>
         <div className="flex-1 overflow-y-auto p-4 max-w-5xl mx-auto w-full flex flex-col gap-6">
-          <div className="bg-[#111827] border border-slate-800 rounded-xl p-3">
-            <div className="flex justify-between items-center mb-2"><span className="text- font-bold">Board untuk Pembeli</span><div className="flex gap-2"><button onClick={() => setBoardFormat('email')} className={`text- px-2 py-1 rounded ${boardFormat==='email'?'bg-white text-black':'bg-slate-800'}`}>Email</button><button onClick={() => setBoardFormat('whatsapp')} className={`text- px-2 py-1 rounded ${boardFormat==='whatsapp'?'bg-white text-black':'bg-slate-800'}`}>WA</button><button onClick={handleCopyBoard} className="text- px-3 py-1 rounded bg-indigo-600 text-white">{gameCopySuccess?'Copied':'Copy'}</button></div></div>
-            <div className="bg-[#0B0F19] border border-slate-800/50 rounded p-2.5 text- leading-relaxed whitespace-pre-wrap max-h-64 overflow-y-auto">{generateBoardFullText()}</div>
-          </div>
+          <div className="bg-[#111827] border border-slate-800 rounded-xl p-3"><div className="flex justify-between items-center mb-2"><span className="text- font-bold">Board untuk Pembeli</span><div className="flex gap-2"><button onClick={() => setBoardFormat('email')} className={`text- px-2 py-1 rounded ${boardFormat==='email'?'bg-white text-black':'bg-slate-800'}`}>Email</button><button onClick={() => setBoardFormat('whatsapp')} className={`text- px-2 py-1 rounded ${boardFormat==='whatsapp'?'bg-white text-black':'bg-slate-800'}`}>WA</button><button onClick={handleCopyBoard} className="text- px-3 py-1 rounded bg-indigo-600 text-white">{gameCopySuccess?'Copied':'Copy'}</button></div></div><div className="bg-[#0B0F19] border border-slate-800/50 rounded p-2.5 text- leading-relaxed whitespace-pre-wrap max-h-64 overflow-y-auto">{generateBoardFullText()}</div></div>
           <div className="bg-[#111827] rounded-xl border border-slate-800 overflow-hidden"><div className="p-3 flex justify-between items-center border-b border-slate-800"><span className="text- text-slate-500">{filteredGames.length} game</span><input type="text" placeholder="Cari game..." value={gameSearch} onChange={(e) => setGameSearch(e.target.value)} className="bg-[#0B0F19] border border-slate-700 text-xs rounded-lg px-3 py-1.5" /></div><div className="overflow-x-auto"><table className="w-full text-left min-w-"><thead><tr className="border-b border-slate-800"><th className="py-3 pl-4 text- text-slate-400">No</th><th className="py-3 text- text-slate-400 text-center">Pilih</th><th className="py-3 text- text-slate-400">Nama Game</th><th className="py-3 text- text-slate-400 text-center">Link</th></tr></thead><tbody className="divide-y divide-slate-800/40">{filteredGames.map((g) => { const isSelected = !!selectedGameIds[g.no]; return (<tr key={g.no} className={`${isSelected ? 'bg-orange-500/10' : ''}`}><td className="py-3 pl-4 text-">{g.no}</td><td className="py-3 text-center"><button onClick={() => toggleGameSelection(g.no)} className={`w-5 h-5 rounded-md border flex items-center justify-center ${isSelected ? 'bg-orange-500 border-orange-500 text-white' : 'bg-slate-800 border-slate-700'}`}>✓</button></td><td className="px-3 py-3 text-">{g.nama}</td><td className="px-3 py-3 text-center"><a href={g.link} target="_blank" className="text-indigo-400 text-xs">Link</a></td></tr>); })}</tbody></table></div></div>
         </div>
       </div>
@@ -355,10 +423,7 @@ export default function Dashboard() {
       <div className="flex flex-col h- bg-[#0B0F19] text-slate-300 overflow-hidden">
         <header className="shrink-0 py-5 px-4 bg-[#0B0F19] border-b border-[#05070B] flex flex-col items-center relative"><button onClick={() => setView('shopee')} className="absolute left-4 top-5 p-2 rounded-full bg-slate-800/50">←</button><h2 className="text-lg font-bold">Game PSP for Android</h2><p className="text- text-slate-500 mt-1">{GAME_PSP_DATA.length} game • PPSSPP Gold</p></header>
         <div className="flex-1 overflow-y-auto p-4 max-w-5xl mx-auto w-full flex flex-col gap-6">
-          <div className="bg-[#111827] border border-slate-800 rounded-xl p-3">
-            <div className="flex justify-between items-center mb-2"><span className="text- font-bold">Board PSP</span><div className="flex gap-2"><button onClick={() => setPspBoardFormat('email')} className={`text- px-2 py-1 rounded ${pspBoardFormat==='email'?'bg-white text-black':'bg-slate-800'}`}>Email</button><button onClick={() => setPspBoardFormat('whatsapp')} className={`text- px-2 py-1 rounded ${pspBoardFormat==='whatsapp'?'bg-white text-black':'bg-slate-800'}`}>WA</button><button onClick={handleCopyPspBoard} className="text- px-3 py-1 rounded bg-indigo-600 text-white">{pspCopySuccess?'Copied':'Copy'}</button></div></div>
-            <div className="bg-[#0B0F19] border border-slate-800/50 rounded p-2.5 text- whitespace-pre-wrap max-h-64 overflow-y-auto">{generatePspBoardFullText()}</div>
-          </div>
+          <div className="bg-[#111827] border border-slate-800 rounded-xl p-3"><div className="flex justify-between items-center mb-2"><span className="text- font-bold">Board PSP</span><div className="flex gap-2"><button onClick={() => setPspBoardFormat('email')} className={`text- px-2 py-1 rounded ${pspBoardFormat==='email'?'bg-white text-black':'bg-slate-800'}`}>Email</button><button onClick={() => setPspBoardFormat('whatsapp')} className={`text- px-2 py-1 rounded ${pspBoardFormat==='whatsapp'?'bg-white text-black':'bg-slate-800'}`}>WA</button><button onClick={handleCopyPspBoard} className="text- px-3 py-1 rounded bg-indigo-600 text-white">{pspCopySuccess?'Copied':'Copy'}</button></div></div><div className="bg-[#0B0F19] border border-slate-800/50 rounded p-2.5 text- whitespace-pre-wrap max-h-64 overflow-y-auto">{generatePspBoardFullText()}</div></div>
           <div className="bg-[#111827] rounded-xl border border-slate-800 overflow-hidden"><div className="p-3 flex justify-between border-b border-slate-800"><span className="text- text-slate-500">{filteredPsp.length} game</span><input type="text" placeholder="Cari PSP..." value={pspSearch} onChange={(e) => setPspSearch(e.target.value)} className="bg-[#0B0F19] border border-slate-700 text-xs rounded-lg px-3 py-1.5" /></div><div className="overflow-x-auto"><table className="w-full text-left min-w-"><thead><tr className="border-b border-slate-800"><th className="py-3 pl-4 text- text-slate-400">No</th><th className="py-3 text-center text- text-slate-400">Pilih</th><th className="py-3 text- text-slate-400">Nama</th><th className="py-3 text- text-slate-400 text-center">Size</th><th className="py-3 text- text-slate-400 text-center">Link</th></tr></thead><tbody className="divide-y divide-slate-800/40">{filteredPsp.map((g) => { const isSelected = !!selectedPspIds[g.no]; return (<tr key={g.no} className={`${isSelected ? 'bg-blue-500/10' : ''}`}><td className="py-3 pl-4 text-">{g.no}</td><td className="py-3 text-center"><button onClick={() => togglePspSelection(g.no)} className={`w-5 h-5 rounded-md border flex items-center justify-center ${isSelected ? 'bg-blue-500 border-blue-500 text-white' : 'bg-slate-800 border-slate-700'}`}>✓</button></td><td className="px-3 py-3 text-">{g.nama}</td><td className="px-3 py-3 text-center text- font-mono">{g.ukuran}</td><td className="px-3 py-3 text-center"><a href={g.link} target="_blank" className="text-indigo-400 text-xs">Link</a></td></tr>); })}</tbody></table></div></div>
         </div>
       </div>
@@ -369,15 +434,11 @@ export default function Dashboard() {
       <div className="flex flex-col h- bg-[#0B0F19] text-slate-300 overflow-hidden">
         <header className="shrink-0 py-5 px-4 bg-[#0B0F19] border-b border-[#05070B] flex flex-col items-center relative"><button onClick={() => setView('shopee')} className="absolute left-4 top-5 p-2 rounded-full bg-slate-800/50">←</button><h2 className="text-lg font-bold">Game APK</h2><p className="text- text-slate-500 mt-1">{GAME_APK_DATA.length} game</p></header>
         <div className="flex-1 overflow-y-auto p-4 max-w-5xl mx-auto w-full flex flex-col gap-6">
-          <div className="bg-[#111827] border border-slate-800 rounded-xl p-3">
-            <div className="flex justify-between items-center mb-2"><span className="text- font-bold">Board APK</span><div className="flex gap-2"><button onClick={() => setApkBoardFormat('email')} className={`text- px-2 py-1 rounded ${apkBoardFormat==='email'?'bg-white text-black':'bg-slate-800'}`}>Email</button><button onClick={() => setApkBoardFormat('whatsapp')} className={`text- px-2 py-1 rounded ${apkBoardFormat==='whatsapp'?'bg-white text-black':'bg-slate-800'}`}>WA</button><button onClick={handleCopyApkBoard} className="text- px-3 py-1 rounded bg-emerald-600 text-white">{apkCopySuccess?'Copied':'Copy'}</button></div></div>
-            <div className="bg-[#0B0F19] border border-slate-800/50 rounded p-2.5 text- whitespace-pre-wrap max-h-64 overflow-y-auto">{generateApkBoardFullText()}</div>
-          </div>
+          <div className="bg-[#111827] border border-slate-800 rounded-xl p-3"><div className="flex justify-between items-center mb-2"><span className="text- font-bold">Board APK</span><div className="flex gap-2"><button onClick={() => setApkBoardFormat('email')} className={`text- px-2 py-1 rounded ${apkBoardFormat==='email'?'bg-white text-black':'bg-slate-800'}`}>Email</button><button onClick={() => setApkBoardFormat('whatsapp')} className={`text- px-2 py-1 rounded ${apkBoardFormat==='whatsapp'?'bg-white text-black':'bg-slate-800'}`}>WA</button><button onClick={handleCopyApkBoard} className="text- px-3 py-1 rounded bg-emerald-600 text-white">{apkCopySuccess?'Copied':'Copy'}</button></div></div><div className="bg-[#0B0F19] border border-slate-800/50 rounded p-2.5 text- whitespace-pre-wrap max-h-64 overflow-y-auto">{generateApkBoardFullText()}</div></div>
           <div className="bg-[#111827] rounded-xl border border-slate-800 overflow-hidden"><div className="p-3 border-b border-slate-800"><input type="text" placeholder="Cari APK..." value={apkSearch} onChange={(e) => setApkSearch(e.target.value)} className="w-full bg-[#0B0F19] border border-slate-700 text-xs rounded-lg px-3 py-1.5" /></div><div className="overflow-x-auto"><table className="w-full text-left"><thead><tr className="border-b border-slate-800"><th className="py-3 pl-4 text- text-slate-400">No</th><th className="py-3 text-center text- text-slate-400">Pilih</th><th className="py-3 text- text-slate-400">Nama</th><th className="py-3 text-center text- text-slate-400">Size</th><th className="py-3 text-center text- text-slate-400">Link</th></tr></thead><tbody className="divide-y divide-slate-800/40">{filteredApk.map((g) => { const isSelected = !!selectedApkIds[g.no]; return (<tr key={g.no} className={`${isSelected ? 'bg-emerald-500/10' : ''}`}><td className="py-3 pl-4 text-">{g.no}</td><td className="py-3 text-center"><button onClick={() => toggleApkSelection(g.no)} className={`w-5 h-5 rounded-md border flex items-center justify-center ${isSelected ? 'bg-emerald-500 border-emerald-500 text-white' : 'bg-slate-800 border-slate-700'}`}>✓</button></td><td className="px-3 py-3 text-">{g.nama}</td><td className="px-3 py-3 text-center text-">{g.ukuran}</td><td className="px-3 py-3 text-center"><a href={g.link} target="_blank" className="text-indigo-400 text-xs">Link</a></td></tr>); })}</tbody></table></div></div>
         </div>
       </div>
     );
   }
-
   return null;
 }
